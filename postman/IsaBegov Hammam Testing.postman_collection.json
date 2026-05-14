@@ -1,0 +1,761 @@
+{
+  "info": {
+    "_postman_id": "2fe003ca-d7f3-4ce1-8869-a62007541202",
+    "name": "IsaBegov Hammam Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51211703",
+    "_collection_link": "https://go.postman.co/collection/51211703-2fe003ca-d7f3-4ce1-8869-a62007541202?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Login successful\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "    pm.expect(json.data).to.have.property(\"role\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "Get all tasks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark complete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/:id/complete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                ":id",
+                "complete"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "Get all rooms",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update room status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "rooms",
+                ":id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Requests",
+      "item": [
+        {
+          "name": "Get all notes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create note",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete note",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/requests/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "requests",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Get all bookings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Paste this in Scripts → Post-response for every request\r",
+                  "\r",
+                  "pm.test(\"Response is 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has success field\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"success\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success is true\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.success).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time under 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    }
+  ]
+}
