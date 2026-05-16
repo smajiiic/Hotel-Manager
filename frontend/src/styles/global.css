@@ -1,0 +1,147 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #f6f4ef;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0 0 0.5em;
+  line-height: 1.2;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid #1a1a1a;
+  background: #fff;
+  color: #1a1a1a;
+  border-radius: 6px;
+  transition: background-color 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  background: #ece8de;
+}
+
+button:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.primary {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+button.primary:hover:not(:disabled) {
+  background: #000;
+}
+
+button.danger {
+  background: #b00020;
+  color: #fff;
+  border-color: #b00020;
+}
+
+button.danger:hover:not(:disabled) {
+  background: #8a0019;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #c8c4bb;
+  border-radius: 6px;
+  background: #fff;
+  width: 100%;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
+  border-color: #1a1a1a;
+}
+
+a {
+  color: #1a1a1a;
+}
+
+a:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder-page {
+  padding: 24px;
+  color: #555;
+}
+
+/* ConfirmDialog — shared modal */
+.confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+
+.confirm-dialog {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-dialog h2 {
+  font-size: 1.1rem;
+}
+
+.confirm-dialog p {
+  margin: 0 0 16px;
+  color: #444;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

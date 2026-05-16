@@ -1,0 +1,4 @@
+# Monorepo-wide ignores. Subproject-specific patterns live in <subproject>/.gitignore.
+**/node_modules/
+**/dist/
+**/.env
