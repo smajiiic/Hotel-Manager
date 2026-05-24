@@ -1,0 +1,204 @@
+.navbar {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #111827;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navbar-brand:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.navbar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #111827;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.navbar-toggle:hover {
+  background: #f5f3ee;
+}
+
+.navbar-toggle:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.navbar-collapse {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 8px 16px 16px;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-collapse.is-open {
+  display: flex;
+}
+
+.navbar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navbar-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  text-decoration: none;
+  color: #1a1a1a;
+  border-radius: 6px;
+  transition: background-color 120ms ease;
+}
+
+.navbar-link:hover {
+  background: #f5f3ee;
+}
+
+.navbar-link:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
+}
+
+.navbar-link.active {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.navbar-link.active:hover {
+  background: #333;
+}
+
+.navbar-user {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 8px;
+}
+
+.navbar-username {
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.navbar-role {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 2px 6px;
+  align-self: flex-start;
+}
+
+.navbar-logout {
+  align-self: flex-start;
+  min-height: 40px;
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.navbar-logout:hover {
+  background: #f5f3ee;
+}
+
+.navbar-logout:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.navbar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 40;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    padding: 12px 24px;
+  }
+
+  .navbar-toggle {
+    display: none;
+  }
+
+  .navbar-collapse {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+    padding: 0;
+    border-bottom: none;
+    box-shadow: none;
+    gap: 24px;
+  }
+
+  .navbar-links {
+    flex-direction: row;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .navbar-user {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+    border-top: none;
+    margin-top: 0;
+  }
+
+  .navbar-logout {
+    margin-left: 4px;
+  }
+
+  /* Edge case: user opened drawer on mobile, then resized to desktop.
+     Hide the (now-meaningless) backdrop so the inline layout isn't dimmed. */
+  .navbar-backdrop {
+    display: none;
+  }
+}
