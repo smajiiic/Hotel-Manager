@@ -27,8 +27,11 @@ async function request(path, { method = 'GET', body } = {}) {
   const res = await fetch(`${API_BASE}${path}`, init)
 
   if (res.status === 401) {
-    if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
-      window.location.assign('/login')
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('auth:expired'))
+      if (!window.location.pathname.startsWith('/login')) {
+        window.location.assign('/login')
+      }
     }
     throw new ApiError('Unauthorized', 401)
   }
