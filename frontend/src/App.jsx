@@ -20,7 +20,14 @@ function App() {
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/requests" element={<RequestsPage />} />
             <Route path="/rooms" element={<RoomsPage />} />
-            <Route path="/bookings" element={<BookingsPage />} />
+            <Route
+              path="/bookings"
+              element={
+                <ProtectedRoute roles={['reception', 'manager']}>
+                  <BookingsPage />
+                </ProtectedRoute>
+              }
+            />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
