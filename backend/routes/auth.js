@@ -28,5 +28,22 @@ router.post('/logout', async (req, res) => {
     return res.status(500).json({ success: false, error: err.message });
   }
 });
+// Get current logged-in user
+router.get('/me', (req, res) => {
+  if (req.session && req.session.userId) {
+    return res.json({
+      success: true,
+      data: {
+        username: req.session.username,
+        role: req.session.role
+      }
+    });
+  }
+  
+  return res.status(401).json({
+    success: false,
+    message: 'Not authenticated'
+  });
+});
 
 module.exports = router;
