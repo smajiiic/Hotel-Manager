@@ -10,7 +10,7 @@ mongoose
     process.exit(1);
   });
 
-// Schemas — userSchema must match backend/models/user.js (passwordHash, not password)
+// Schemas — must match backend/models/*
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
@@ -35,9 +35,15 @@ const requestSchema = new mongoose.Schema({
 
 const bookingSchema = new mongoose.Schema({
   guestName: { type: String, required: true },
-  roomId: { type: Number, required: true },
+  roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
   checkIn: { type: String, required: true },
   checkOut: { type: String, required: true },
+  occupancyStatus: {
+    type: String,
+    enum: ['confirmed', 'checked-in', 'checked-out'],
+    required: true,
+    default: 'confirmed',
+  },
 });
 
 const User = mongoose.model('User', userSchema);
@@ -84,10 +90,18 @@ const requestsData = [
   { note: 'Room 106 checkout delayed until 14:00', roomId: 106 },
 ];
 
-const bookingsData = [
-  { guestName: 'Ana Kovač',     roomId: 102, checkIn: '2026-04-10', checkOut: '2026-04-13' },
-  { guestName: 'Emir Hadžić',   roomId: 105, checkIn: '2026-04-11', checkOut: '2026-04-14' },
-  { guestName: 'Sara Petrović', roomId: 109, checkIn: '2026-04-12', checkOut: '2026-04-15' },
+const dateOffset = (days) => {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toLocaleDateString('sv-SE');
+};
+
+const bookingsTemplate = [
+  { guestName: 'Emir Hadžić',         roomNumber: 105, checkIn: dateOffset(-2), checkOut: dateOffset(0), occupancyStatus: 'checked-in' },
+  { guestName: 'Ana Kovač',           roomNumber: 102, checkIn: dateOffset(0),  checkOut: dateOffset(3), occupancyStatus: 'checked-in' },
+  { guestName: 'Sara Petrović',       roomNumber: 109, checkIn: dateOffset(1),  checkOut: dateOffset(4), occupancyStatus: 'confirmed'  },
+  { guestName: 'Damir Bajraktarević', roomNumber: 108, checkIn: dateOffset(2),  checkOut: dateOffset(6), occupancyStatus: 'confirmed'  },
+  { guestName: 'Lana Smajić',         roomNumber: 204, checkIn: dateOffset(4),  checkOut: dateOffset(9), occupancyStatus: 'confirmed'  },
 ];
 
 async function seedDatabase() {
@@ -99,18 +113,28 @@ async function seedDatabase() {
     await Booking.deleteMany({});
     console.log('🗑️  Cleaned up existing collections.');
 
-    console.log('🔒 Hashing user passwords...');
     const saltRounds = 10;
     const hashedUsers = await Promise.all(
       rawUsers.map(async ({ username, password, role }) => ({
-        username,
-        role,
+        username, role,
         passwordHash: await bcrypt.hash(password, saltRounds),
       }))
     );
-
     await User.insertMany(hashedUsers);
-    await Room.insertMany(roomsData);
+    console.log('👤 Users inserted.');
+
+    const insertedRooms = await Room.insertMany(roomsData);
+    const roomIdByNumber = Object.fromEntries(
+      insertedRooms.map((r) => [r.roomNumber, r._id])
+    );
+    console.log('🏨 Rooms inserted.');
+
+    const bookingsData = bookingsTemplate.map(({ roomNumber, ...rest }) => {
+      const roomId = roomIdByNumber[roomNumber];
+      if (!roomId) throw new Error('Seed error: booking refers to missing room ' + roomNumber);
+      return { ...rest, roomId };
+    });
+
     await Task.insertMany(tasksData);
     await Request.insertMany(requestsData);
     await Booking.insertMany(bookingsData);
