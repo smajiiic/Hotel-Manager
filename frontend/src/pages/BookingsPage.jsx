@@ -2,6 +2,9 @@ import { useEffect, useState, useCallback } from 'react'
 import { getBookings } from '../api/bookingsApi.js'
 import { getRooms } from '../api/roomsApi.js'
 import BookingRow from '../components/BookingRow.jsx'
+import LoadingState from '../components/LoadingState.jsx'
+import ErrorState from '../components/ErrorState.jsx'
+import EmptyState from '../components/EmptyState.jsx'
 import '../styles/bookings.css'
 
 function BookingsPage() {
@@ -39,18 +42,11 @@ function BookingsPage() {
         <h1>Bookings</h1>
       </header>
 
-      {status === 'loading' && <div className="bookings-status">Loading…</div>}
+      {status === 'loading' && <LoadingState />}
 
-      {status === 'error' && (
-        <div className="bookings-status bookings-status-error">
-          <span>{loadError}</span>
-          <button type="button" onClick={load}>Retry</button>
-        </div>
-      )}
+      {status === 'error' && <ErrorState message={loadError} onRetry={load} />}
 
-      {status === 'empty' && (
-        <div className="bookings-status">No upcoming bookings.</div>
-      )}
+      {status === 'empty' && <EmptyState message="No upcoming bookings." />}
 
       {status === 'populated' && (
         <ul className="bookings-list">
