@@ -6,6 +6,8 @@ const session = require('express-session');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
+const roomRoutes = require('./routes/rooms');
+const bookingRoutes = require('./routes/bookings');
 const roomOpsFacade = require('./services/RoomOperationsFacade');
 
 const app = express();
@@ -36,6 +38,8 @@ app.use(
 );
 
 app.use('/api/auth', authRoutes);
+app.use('/api/rooms', roomRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 app.get('/test-checkout', async (req, res) => {
   const result = await roomOpsFacade.checkoutRoom('101');
