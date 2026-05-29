@@ -61,7 +61,7 @@ mongoose.connect(process.env.MONGO_URI)
 // 2. DEFINE SCHEMAS & MODELS
 const userSchema = new mongoose.Schema({
 username: { type: String, required: true, unique: true },
-password: { type: String, required: true },
+passwordHash: { type: String, required: true },
 role: { type: String, enum: ['reception', 'cleaning', 'manager'], required: true }
 });
 
@@ -157,7 +157,7 @@ async function seedDatabase() {
         const hashedPassword = await bcrypt.hash(user.password, saltRounds);
         return {
     ...user,
-        password: hashedPassword
+        passwordHash: hashedPassword
         };
     })
     );
