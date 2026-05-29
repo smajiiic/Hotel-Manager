@@ -1,21 +1,36 @@
 class RoomService {
   constructor() {
-    this.subs = [];
+    this.observers = []; // List of subscribers
   }
 
-  subscribe(service) {
-    this.subs.push(service);
+  // Add a new observer (Subscribe)
+  addObserver(observer) {
+    this.observers.push(observer);
   }
 
-  async updateRoomStatus(roomId, newStatus) {
-    console.log(`Room ${roomId} status shifted to: ${newStatus}`);
-    
-    for (let sub of this.subs) {
-      if (typeof sub.onRoomStatusChanged === 'function') {
-        sub.onRoomStatusChanged(roomId, newStatus);
-      }
+  // Notify all observers when a room's state changes
+  notifyObservers(roomData) {
+    for (let observer of this.observers) {
+      observer.update(roomData);
     }
-    return { success: true };
+  }
+
+  // Checkout process
+  checkout(roomNumber) {
+    console.log(`[RoomService] Processing checkout for room ${roomNumber}...`);
+    
+    // Update room status to 'needs cleaning'
+    const updatedRoom = {
+      roomNumber: roomNumber,
+      status: 'needs cleaning'
+    };
+
+    console.log(`[RoomService] Room ${roomNumber} status changed. Notifying everyone...`);
+    
+    // Notify everyone listening about the change!
+    this.notifyObservers(updatedRoom);
+    
+    return updatedRoom;
   }
 }
 
