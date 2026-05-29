@@ -3,6 +3,9 @@ import { getTasks, completeTask } from '../api/tasksApi.js'
 import { getRooms } from '../api/roomsApi.js'
 import { useAuth } from '../hooks/useAuth.js'
 import TaskCard from '../components/TaskCard.jsx'
+import LoadingState from '../components/LoadingState.jsx'
+import ErrorState from '../components/ErrorState.jsx'
+import EmptyState from '../components/EmptyState.jsx'
 import '../styles/tasks.css'
 
 const FILTERS = [
@@ -71,19 +74,14 @@ function TasksPage() {
 
       {actionError && <div className="tasks-banner">{actionError}</div>}
 
-      {status === 'loading' && <div className="tasks-status">Loading…</div>}
+      {status === 'loading' && <LoadingState />}
 
-      {status === 'error' && (
-        <div className="tasks-status tasks-status-error">
-          <span>{loadError}</span>
-          <button type="button" onClick={load}>Retry</button>
-        </div>
-      )}
+      {status === 'error' && <ErrorState message={loadError} onRetry={load} />}
 
-      {status === 'empty' && <div className="tasks-status">No tasks yet.</div>}
+      {status === 'empty' && <EmptyState message="No tasks yet." />}
 
       {status === 'populated' && visibleTasks.length === 0 && (
-        <div className="tasks-status">No {filter} tasks.</div>
+        <EmptyState message={`No ${filter} tasks.`} />
       )}
 
       {status === 'populated' && visibleTasks.length > 0 && (
