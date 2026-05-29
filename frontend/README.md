@@ -1,120 +1,157 @@
-# Isa Begov Hamam — Service Tracker (Frontend)
+# Frontend — IsaBegov Hamam Hotel Service Tracker
 
-Internal web app for Isa Begov Hamam, a 15-room boutique hotel in Sarajevo.
-Replaces a mix of WhatsApp and paper with a single tool for tasks, room
-status, shift notes, and bookings.
+React + Vite single-page app for the IsaBegov Hamam internal staff tool —
+auth, role-aware navigation, tasks, rooms, requests, bookings, dashboard.
+For full-stack setup (backend, MongoDB, seeding), see `../SETUP.md` at the
+repo root. This README covers the frontend-only workflow.
 
-CS308 group project, IUS. Frontend lead: Tarik.
+## Prerequisites
 
-## Stack
+- **Node.js 20+** (CI runs on 20)
+- **Backend** running on `http://localhost:5050` — see `../SETUP.md`
+- **MongoDB** running and seeded — required by the backend, not by the
+  frontend itself
 
-- Vite + React (JSX, not TypeScript)
-- React Router v6+
-- Plain CSS (no Tailwind / MUI / CSS-in-JS)
-- Backend: Node + Express + MongoDB, session cookies for auth — separate repo, not built yet (see "Mock backend" below)
+For UI-only development without the backend, the `tasksApi.js` and
+`requestsApi.js` ship with a mock data layer by default; see "Real backend
+vs mocks" below.
 
-## Run
+## Install
 
 ```bash
+cd frontend
 npm install
-npm run dev
 ```
 
-Dev server: <http://localhost:5173>.
+## Run dev server
 
-No `.env` is required for sprint 1 — every API call is intercepted by the mock layer so the dev proxy in `vite.config.js` never gets hit. `.env.example` exists for sprint 2 when the real backend lands.
-
-## Mock backend (sprint 1)
-
-The backend isn't built yet. Until it is:
-
-- Fixtures live in `src/mocks/` — `tasks.js`, `requests.js`, `rooms.js`, `users.js`.
-- The clients in `src/api/` (`tasksApi.js`, `requestsApi.js`, `roomsApi.js`) currently return from those mocks with a ~200ms delay so the UI exercises real loading states.
-- The real fetch wrapper sits in `src/api/client.js`, ready to use. It handles the `{ success, data, error }` envelope, sends the session cookie via `credentials: 'include'`, and redirects to `/login` on 401.
-- Each `*Api.js` file ends with a commented "sprint 2 swap" block showing the exact lines to paste in once `/api/*` goes live. Components never import from `mocks/` directly — they only see the api functions — so each module is a one-file swap.
-
-### Hardcoded auth
-
-`src/hooks/useAuth.js` returns a hardcoded user instead of pinging `/api/auth/me`. To test role-gated UI before the real session ships, edit the role in `src/mocks/users.js`:
-
-```js
-export const mockCurrentUser = { username: 'tarik', role: 'reception' }
-//                                                       ^^^^^^^^^^^
-// Change to: 'reception' | 'cleaning' | 'manager'
+```bash
+npm run dev -- --port 3000
 ```
 
-Effect on the UI:
+Open <http://localhost:3000>. The `--port 3000` flag is important — the
+backend's CORS allowlist is `http://localhost:3000`, and the session cookie
+won't survive cross-origin requests otherwise. Vite's default `:5173` will
+not work for end-to-end auth.
 
-| Role        | Nav links visible                  | Mark complete on tasks |
-|-------------|------------------------------------|------------------------|
-| `reception` | Tasks, Requests, Rooms, Bookings   | shown                  |
-| `cleaning`  | Tasks, Rooms                       | shown                  |
-| `manager`   | Tasks, Requests, Rooms, Bookings   | hidden (read-only)     |
+`/api/*` is proxied to `VITE_API_PROXY` (default `http://localhost:5050` —
+the backend port).
 
-`useAuth().logout()` is a no-op in sprint 1; it'll call `POST /api/auth/logout` in sprint 2.
+## Tests
 
-## Folder layout
-
-```
-src/
-  main.jsx
-  App.jsx                  BrowserRouter, ProtectedRoute wrapping, routes
-  api/
-    client.js              real fetch wrapper (used in sprint 2)
-    tasksApi.js            mock-backed, sprint 2 swap commented at the bottom
-    requestsApi.js
-    roomsApi.js
-  mocks/
-    tasks.js               7 tasks, mix of pending/completed
-    requests.js            4 shift notes
-    rooms.js               15 rooms, mixed statuses
-    users.js               hardcoded current user
-  components/
-    Layout.jsx             header + NavBar + <Outlet/>
-    NavBar.jsx             role-aware nav
-    ProtectedRoute.jsx     auth gate + optional roles prop
-    TaskCard.jsx           single task row
-    ConfirmDialog.jsx      reusable modal for destructive actions
-  pages/
-    LoginPage.jsx          teammate-owned placeholder
-    TasksPage.jsx          Tarik — sprint 1 focus
-    RequestsPage.jsx       Tarik — placeholder until sprint 2
-    RoomsPage.jsx          teammate-owned placeholder
-    BookingsPage.jsx       teammate-owned placeholder
-    NotFoundPage.jsx       Tarik — 404 fallback
-  hooks/
-    useAuth.js             hardcoded for sprint 1
-  styles/
-    global.css             reset, button base, ConfirmDialog modal
-    layout.css             header, NavBar, main content wrapper
-    tasks.css              TasksPage + TaskCard
+```bash
+npm test
 ```
 
-## Page ownership
+Runs Vitest in jsdom with React Testing Library. CI runs the same command
+on push and PR to `main` (see `../.github/workflows/ci.yml`). Setup file:
+`src/test/setup.js`.
 
-| Page              | Owner    | State                                  |
-|-------------------|----------|----------------------------------------|
-| `LoginPage`       | teammate | placeholder — replace file contents    |
-| `TasksPage`       | Tarik    | done — list + filter + mark complete   |
-| `RequestsPage`    | Tarik    | placeholder until sprint 2             |
-| `RoomsPage`       | teammate | placeholder — replace file contents    |
-| `BookingsPage`    | teammate | placeholder — replace file contents    |
-| `NotFoundPage`    | Tarik    | done                                   |
+Current coverage: pages (Rooms, Bookings, Dashboard, Login), components
+(RoomRow, StatusBadge, ConfirmModal, NavBar), hooks (useAuth).
 
-`Layout.jsx`, `NavBar.jsx`, `ProtectedRoute.jsx`, `ConfirmDialog.jsx`, plus the entire `api/` and `mocks/` trees are Tarik's. Teammates consume them but don't edit them — the routing in `App.jsx` already plugs the teammate pages into `<Layout/>` via `<Outlet/>`.
+## Other scripts
+
+| Script | What it does |
+| --- | --- |
+| `npm run build` | Production bundle to `dist/` |
+| `npm run preview` | Serve the built `dist/` for smoke-testing |
+| `npm run lint` | ESLint over the source tree |
+
+## Test credentials (seeded by `seed.js`)
+
+| Username | Password | Role |
+| --- | --- | --- |
+| `admin` | `admin123` | manager |
+| `reception1` | `test1234` | reception |
+| `cleaning1` | `test1234` | cleaning |
+| `manager1` | `test1234` | manager |
+
+Role permissions (frontend role-gating + backend enforcement):
+
+| | Tasks | Rooms | Requests | Bookings | Dashboard |
+| --- | --- | --- | --- | --- | --- |
+| `reception` | full CRUD | view, update status | full CRUD | view | — |
+| `cleaning` | view, mark complete | view, update status | view | — | — |
+| `manager` | view only | view only | view only | view only | view |
+
+## Real backend vs mocks
+
+`tasksApi.js` and `requestsApi.js` are env-gated dual-mode wrappers. Default
+is **mocks active** so you can run dev / tests without the backend.
+
+To exercise the real backend:
+
+```bash
+# in frontend/.env (copy from .env.example)
+VITE_USE_REAL_API=true
+```
+
+`/api/auth`, `/api/rooms`, `/api/bookings` always hit the real backend
+regardless of this flag — they don't ship a frontend mock layer (Mirza
+swapped them to real in `ad216b7`).
+
+Contract for the gated endpoints: `../docs/api-contracts-tasks-requests.md`.
+
+## Project structure
+
+```
+frontend/src/
+├── main.jsx                  entry, BrowserRouter
+├── App.jsx                   routes + AuthProvider mount
+├── api/                      HTTP wrappers — call backend, not models
+│   ├── client.js             fetch + {success,data,error} envelope + 401 handler
+│   ├── tasksApi.js           dual-mode (mock | real)
+│   ├── requestsApi.js        dual-mode (mock | real)
+│   ├── roomsApi.js           real backend
+│   └── bookingsApi.js        real backend
+├── components/               shared UI
+│   ├── AuthProvider.jsx      context + localStorage persistence
+│   ├── Layout.jsx            NavBar + <Outlet />
+│   ├── NavBar.jsx            role-aware links + mobile drawer
+│   ├── ProtectedRoute.jsx    auth gate + optional role gate
+│   ├── LoadingState/ErrorState/EmptyState
+│   ├── ConfirmDialog.jsx     reusable confirm modal (Tarik's)
+│   ├── ConfirmModal.jsx      reusable confirm modal (Mirza's — to reconcile)
+│   ├── TaskCard.jsx, RequestRow.jsx, RequestForm.jsx
+│   ├── BookingRow.jsx, RoomRow.jsx, StatusBadge.jsx
+├── hooks/
+│   └── useAuth.js            consumes AuthContext
+├── mocks/                    fixtures for the dual-mode APIs
+├── pages/                    one file per route
+├── styles/                   plain CSS per page + global.css
+├── test/                     Vitest + RTL specs + setup.js
+└── utils/
+    └── formatRelative.js     timestamp formatter shared by TaskCard + RequestRow
+```
+
+## Architecture
+
+Three-tier layered: React (presentation) → Express REST (business logic) →
+MongoDB via Mongoose (data). Frontend never queries the database directly;
+all data flows through `src/api/*Api.js` → `/api/*` routes → backend
+services. Details in the Architectural Design Document at the repo root.
 
 ## Conventions
 
-- camelCase variables, PascalCase components, camelCase non-component files
-- Every API response is `{ success, data, error }` — handled in `client.js`
-- Mobile-first CSS; test at 380px width; tap targets ≥ 44px
-- Confirmation dialog (`ConfirmDialog`) before any destructive action
-- Branches: `feature/[module]-[short-desc]` (e.g. `feature/tasks-list-page`)
+- Components: PascalCase (`TaskCard.jsx`); hooks / utils / api: camelCase
+  (`useAuth.js`, `tasksApi.js`)
+- CSS classes: kebab-case (`task-card`)
+- API responses always use `{ success, data, error }`
+- No `console.log` in committed code
+- Confirmation dialog (`ConfirmDialog` / `ConfirmModal`) before destructive
+  actions
 
-## Roles
+## Git workflow
 
-- `reception` — full CRUD on tasks & requests, updates room status
-- `cleaning` — views tasks, marks complete, views rooms (mobile-first user)
-- `manager` — read-only across everything
+Branch off `main`, one feature per branch, push and open a PR. CI must be
+green before merge.
 
-Role-gating helper for sprint 2: `<ProtectedRoute roles={['reception','manager']}>...`.
+```bash
+git checkout main && git pull
+git checkout -b feature/<descriptor>
+# work, commit
+npm test                          # must pass locally before push
+git push origin feature/<descriptor>
+# then open PR on GitHub
+```
