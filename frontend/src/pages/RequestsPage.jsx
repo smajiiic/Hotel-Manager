@@ -5,6 +5,9 @@ import { useAuth } from '../hooks/useAuth.js'
 import RequestRow from '../components/RequestRow.jsx'
 import RequestForm from '../components/RequestForm.jsx'
 import ConfirmDialog from '../components/ConfirmDialog.jsx'
+import LoadingState from '../components/LoadingState.jsx'
+import ErrorState from '../components/ErrorState.jsx'
+import EmptyState from '../components/EmptyState.jsx'
 import '../styles/requests.css'
 
 function RequestsPage() {
@@ -102,18 +105,13 @@ function RequestsPage() {
         </div>
       )}
 
-      {status === 'loading' && <div className="requests-status">Loading…</div>}
+      {status === 'loading' && <LoadingState />}
 
       {status === 'error' && (
-        <div className="requests-status requests-status-error">
-          <span>{loadError}</span>
-          <button type="button" onClick={load}>Retry</button>
-        </div>
+        <ErrorState message={`Could not load requests: ${loadError}`} onRetry={load} />
       )}
 
-      {status === 'empty' && (
-        <div className="requests-status">No shift notes yet.</div>
-      )}
+      {status === 'empty' && <EmptyState message="No requests yet." />}
 
       {status === 'populated' && (
         <ul className="requests-list">
