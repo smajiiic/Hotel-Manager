@@ -6,10 +6,11 @@ import '../styles/navbar.css'
 const linksByRole = {
   reception: ['tasks', 'requests', 'rooms', 'bookings'],
   cleaning: ['tasks', 'requests', 'rooms'],
-  manager: ['tasks', 'requests', 'rooms', 'bookings'],
+  manager: ['dashboard', 'tasks', 'requests', 'rooms', 'bookings'],
 }
 
 const labels = {
+  dashboard: 'Dashboard',
   tasks: 'Tasks',
   requests: 'Requests',
   rooms: 'Rooms',

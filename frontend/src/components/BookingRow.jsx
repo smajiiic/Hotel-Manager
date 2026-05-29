@@ -1,10 +1,6 @@
-// Absolute date formatter — 'Tue, May 24'. Bookings care about WHEN
-// (planning), not how-long-ago, so this is distinct from formatRelative.
-// If a second consumer ever needs the same shape, extract to utils/.
+import StatusBadge from './StatusBadge.jsx'
+
 function formatBookingDate(iso) {
-  // 'T00:00:00' forces local-midnight interpretation; without it, plain
-  // 'YYYY-MM-DD' parses as UTC midnight and can shift a day backward in
-  // negative timezone offsets.
   return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {
     weekday: 'short',
     month: 'short',
@@ -27,6 +23,7 @@ function BookingRow({ booking, room }) {
       <div className="booking-row-header">
         <span className="booking-row-guest">{booking.guestName}</span>
         <span className="booking-row-room">Room {room?.roomNumber ?? '—'}</span>
+        {room?.status && <StatusBadge status={room.status} />}
       </div>
 
       <div className="booking-row-dates">

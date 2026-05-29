@@ -3,6 +3,7 @@ import AuthProvider from './components/AuthProvider.jsx'
 import Layout from './components/Layout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import LoginPage from './pages/LoginPage.jsx'
+import DashboardPage from './pages/DashboardPage.jsx'
 import TasksPage from './pages/TasksPage.jsx'
 import RequestsPage from './pages/RequestsPage.jsx'
 import RoomsPage from './pages/RoomsPage.jsx'
@@ -17,6 +18,14 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/tasks" replace />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute roles={['manager']}>
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/requests" element={<RequestsPage />} />
             <Route path="/rooms" element={<RoomsPage />} />
