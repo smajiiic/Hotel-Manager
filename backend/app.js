@@ -1,56 +1,27 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
-
+require('dotenv').config(); // Loads your MONGO_URI from the .env file
 const express = require('express');
-const session = require('express-session');
-const cors = require('cors');
 const mongoose = require('mongoose');
-const authRoutes = require('./routes/auth');
+
+// Import the route files you created in Step 2
+const taskRoutes = require('./routes/tasks');
+const requestRoutes = require('./routes/requests');
 const roomRoutes = require('./routes/rooms');
-const bookingRoutes = require('./routes/bookings');
-const roomOpsFacade = require('./services/RoomOperationsFacade');
 
 const app = express();
 
-// 1) Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI || 'mongodb://localhost:27017/hotelDB')
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
-
-// 2) CORS — allow Vite dev server to send the session cookie
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  })
-);
-
+// Middleware: This is CRITICAL. It allows your server to read JSON bodies sent by the frontend
 app.use(express.json());
 
-app.use(
-  session({
-    secret: 'hotel_secret_key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
-  })
-);
-
-app.use('/api/auth', authRoutes);
+// Bind your routes to the specific URLs your partners requested
+app.use('/api/tasks', taskRoutes);
+app.use('/api/requests', requestRoutes);
 app.use('/api/rooms', roomRoutes);
-app.use('/api/bookings', bookingRoutes);
 
-app.get('/test-checkout', async (req, res) => {
-  const result = await roomOpsFacade.checkoutRoom('101');
-  res.json(result);
-});
+// Connect to MongoDB using Mongoose (matching your seed.js setup)
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ Connected to MongoDB successfully.'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
-app.get('/', (req, res) => {
-  res.send('Hotel Manager Backend is running...');
-});
-
-const PORT = 5050;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Hotel Manager Backend running on port ${PORT}`));
