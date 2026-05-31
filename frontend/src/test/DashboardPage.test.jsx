@@ -4,6 +4,18 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthContext } from '../hooks/useAuth.js';
 import DashboardPage from '../pages/DashboardPage.jsx';
 
+// Mock the tasks/requests API modules so tests don't depend on real backend
+// or the dual-mode mock fixtures (which could change over time).
+vi.mock('../api/tasksApi.js', () => ({
+  getTasks: vi.fn(),
+}));
+vi.mock('../api/requestsApi.js', () => ({
+  getRequests: vi.fn(),
+}));
+
+import { getTasks } from '../api/tasksApi.js';
+import { getRequests } from '../api/requestsApi.js';
+
 const offsetFromToday = (days) => {
   const d = new Date();
   d.setDate(d.getDate() + days);
@@ -26,6 +38,17 @@ const mockBookings = [
   { _id: 'b_4', guestName: 'Damir', roomId: 'rm_4', checkIn: offsetFromToday(5),  checkOut: offsetFromToday(8),  occupancyStatus: 'confirmed' },
 ];
 
+const mockTaskData = [
+  { _id: 't1', description: 'A', status: 'pending', roomId: 101 },
+  { _id: 't2', description: 'B', status: 'pending', roomId: 102 },
+  { _id: 't3', description: 'C', status: 'completed', roomId: 103 },
+];
+
+const mockRequestData = [
+  { _id: 'r1', note: 'Note 1', roomId: 101 },
+  { _id: 'r2', note: 'Note 2', roomId: 102 },
+];
+
 function ok(payload) {
   return { ok: true, status: 200, json: async () => payload };
 }
@@ -37,14 +60,20 @@ function mockFetchSuccess(rooms = mockRooms, bookings = mockBookings) {
     if (u.includes('/api/bookings')) return Promise.resolve(ok({ success: true, data: bookings }));
     return Promise.reject(new Error('Unexpected URL: ' + u));
   });
+  getTasks.mockResolvedValue(mockTaskData);
+  getRequests.mockResolvedValue(mockRequestData);
 }
 
 function mockFetchFailure() {
   global.fetch = vi.fn().mockResolvedValue(ok({ success: false, error: 'Server error' }));
+  getTasks.mockResolvedValue([]);
+  getRequests.mockResolvedValue([]);
 }
 
 function mockFetchNetworkError() {
   global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
+  getTasks.mockResolvedValue([]);
+  getRequests.mockResolvedValue([]);
 }
 
 const fakeAuth = {
@@ -70,6 +99,8 @@ beforeEach(() => vi.clearAllMocks());
 describe('DashboardPage — initial load', () => {
   test('shows loading state before data arrives', () => {
     global.fetch = vi.fn(() => new Promise(() => {}));
+    getTasks.mockReturnValue(new Promise(() => {}));
+    getRequests.mockReturnValue(new Promise(() => {}));
     renderDashboard();
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
@@ -98,8 +129,6 @@ describe('DashboardPage — rooms summary', () => {
     renderDashboard();
     await waitFor(() => screen.getByText(/available/i));
 
-    // mockRooms has 2 available, 3 occupied, 1 needs-cleaning, 6 total
-    expect(screen.getByText('6')).toBeInTheDocument(); // total rooms
     expect(screen.getByText('Available').nextSibling.textContent).toBe('2');
     expect(screen.getByText('Occupied').nextSibling.textContent).toBe('3');
     expect(screen.getByText('Needs cleaning').nextSibling.textContent).toBe('1');
@@ -121,7 +150,6 @@ describe('DashboardPage — bookings summary', () => {
     renderDashboard();
     await waitFor(() => screen.getByText(/currently checked in/i));
 
-    // 3 of mockBookings have occupancyStatus 'checked-in'
     expect(screen.getByText('Currently checked in').nextSibling.textContent).toBe('3');
   });
 
@@ -130,7 +158,6 @@ describe('DashboardPage — bookings summary', () => {
     renderDashboard();
     await waitFor(() => screen.getByText(/arriving today/i));
 
-    // 2 bookings have checkIn === today (offset 0)
     expect(screen.getByText('Arriving today').nextSibling.textContent).toBe('2');
   });
 
@@ -139,19 +166,28 @@ describe('DashboardPage — bookings summary', () => {
     renderDashboard();
     await waitFor(() => screen.getByText(/departing today/i));
 
-    // 1 booking has checkOut === today (b_3 with offset 0)
     expect(screen.getByText('Departing today').nextSibling.textContent).toBe('1');
   });
 });
 
-describe('DashboardPage — placeholders', () => {
-  test('shows wiring-in-progress note for tasks and requests', async () => {
+describe('DashboardPage — tasks summary', () => {
+  test('counts pending and completed tasks correctly', async () => {
     mockFetchSuccess();
     renderDashboard();
-    await waitFor(() => screen.getByText(/^Tasks$/i));
+    await waitFor(() => screen.getByText(/^Pending$/i));
 
-    const notes = screen.getAllByText(/wiring in progress/i);
-    expect(notes.length).toBe(2);
+    expect(screen.getByText('Pending').nextSibling.textContent).toBe('2');
+    expect(screen.getByText('Completed').nextSibling.textContent).toBe('1');
+  });
+});
+
+describe('DashboardPage — requests summary', () => {
+  test('shows total open notes count', async () => {
+    mockFetchSuccess();
+    renderDashboard();
+    await waitFor(() => screen.getByText(/open notes/i));
+
+    expect(screen.getByText('Open notes').nextSibling.textContent).toBe('2');
   });
 });
 

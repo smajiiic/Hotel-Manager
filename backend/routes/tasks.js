@@ -2,54 +2,58 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
 
-// GET /api/tasks -> Get all tasks
+const ok = (data, status = 200) => ({ status, body: { success: true, data } });
+const fail = (error, status = 500) => ({ status, body: { success: false, error } });
+const send = (res, { status, body }) => res.status(status).json(body);
+
+// GET /api/tasks
 router.get('/', async (req, res) => {
   try {
-    const tasks = await Task.find();
-    res.status(200).json(tasks);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const tasks = await Task.find().sort({ createdAt: -1 });
+    send(res, ok(tasks));
+  } catch (err) {
+    send(res, fail(err.message));
   }
 });
 
-// POST /api/tasks -> Create a task
+// POST /api/tasks
 router.post('/', async (req, res) => {
   try {
     const newTask = new Task({
       description: req.body.description,
       roomId: req.body.roomId,
-      status: req.body.status || 'pending'
+      status: req.body.status || 'pending',
     });
-    const savedTask = await newTask.save();
-    res.status(201).json(savedTask);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const saved = await newTask.save();
+    send(res, ok(saved, 201));
+  } catch (err) {
+    send(res, fail(err.message, 400));
   }
 });
 
-// DELETE /api/tasks/:id -> Delete a task by id
+// DELETE /api/tasks/:id
 router.delete('/:id', async (req, res) => {
   try {
-    const removedTask = await Task.findByIdAndDelete(req.params.id);
-    if (!removedTask) return res.status(404).json({ message: "Task not found" });
-    res.status(200).json({ message: "Task successfully deleted" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const removed = await Task.findByIdAndDelete(req.params.id);
+    if (!removed) return send(res, fail('Task not found', 404));
+    send(res, ok({ deleted: true, _id: req.params.id }));
+  } catch (err) {
+    send(res, fail(err.message));
   }
 });
 
-// PATCH /api/tasks/:id/complete -> Mark task status as completed
+// PATCH /api/tasks/:id/complete
 router.patch('/:id/complete', async (req, res) => {
   try {
-    const completedTask = await Task.findByIdAndUpdate(
+    const completed = await Task.findByIdAndUpdate(
       req.params.id,
       { status: 'completed' },
       { new: true }
     );
-    if (!completedTask) return res.status(404).json({ message: "Task not found" });
-    res.status(200).json(completedTask);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (!completed) return send(res, fail('Task not found', 404));
+    send(res, ok(completed));
+  } catch (err) {
+    send(res, fail(err.message));
   }
 });
 

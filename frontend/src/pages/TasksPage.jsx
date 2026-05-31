@@ -48,7 +48,7 @@ function TasksPage() {
     }
   }
 
-  const roomById = Object.fromEntries(rooms.map((r) => [r._id, r]))
+  const roomById = Object.fromEntries(rooms.flatMap((r) => [[r._id, r], [r.roomNumber, r]]))
   const visibleTasks = tasks.filter((t) => filter === 'all' || t.status === filter)
 
   return (

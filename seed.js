@@ -10,7 +10,6 @@ mongoose
     process.exit(1);
   });
 
-// Schemas — must match backend/models/*
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
@@ -26,12 +25,12 @@ const taskSchema = new mongoose.Schema({
   description: { type: String, required: true },
   roomId: { type: Number, required: true },
   status: { type: String, enum: ['pending', 'completed'], default: 'pending' },
-});
+}, { timestamps: true });
 
 const requestSchema = new mongoose.Schema({
   note: { type: String, required: true },
   roomId: { type: Number, required: true },
-});
+}, { timestamps: true });
 
 const bookingSchema = new mongoose.Schema({
   guestName: { type: String, required: true },

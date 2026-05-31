@@ -2,6 +2,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { getRooms } from '../api/roomsApi.js'
 import { getBookings } from '../api/bookingsApi.js'
+import { getTasks } from '../api/tasksApi.js'
+import { getRequests } from '../api/requestsApi.js'
 import { useAuth } from '../hooks/useAuth.js'
 import LoadingState from '../components/LoadingState.jsx'
 import ErrorState from '../components/ErrorState.jsx'
@@ -77,12 +79,6 @@ const styles = {
     color: '#374151',
   },
   breakdownLabel: { color: '#6b7280' },
-  placeholderNote: {
-    fontSize: '0.825rem',
-    color: '#9ca3af',
-    fontStyle: 'italic',
-    marginTop: '0.5rem',
-  },
 }
 
 function countByRoomStatus(rooms) {
@@ -104,10 +100,23 @@ function bookingsForToday(bookings) {
   }
 }
 
+function countTasksByStatus(tasks) {
+  return tasks.reduce(
+    (acc, t) => {
+      if (t.status === 'pending') acc.pending++
+      else if (t.status === 'completed') acc.completed++
+      return acc
+    },
+    { pending: 0, completed: 0 }
+  )
+}
+
 export default function DashboardPage() {
   const { user } = useAuth()
   const [rooms, setRooms] = useState([])
   const [bookings, setBookings] = useState([])
+  const [tasks, setTasks] = useState([])
+  const [requests, setRequests] = useState([])
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState(null)
 
@@ -115,9 +124,16 @@ export default function DashboardPage() {
     setStatus('loading')
     setError(null)
     try {
-      const [roomList, bookingList] = await Promise.all([getRooms(), getBookings()])
+      const [roomList, bookingList, taskList, requestList] = await Promise.all([
+        getRooms(),
+        getBookings(),
+        getTasks(),
+        getRequests(),
+      ])
       setRooms(roomList)
       setBookings(bookingList)
+      setTasks(taskList)
+      setRequests(requestList)
       setStatus('loaded')
     } catch (err) {
       setError(err?.message ?? 'Failed to load dashboard')
@@ -131,6 +147,7 @@ export default function DashboardPage() {
 
   const roomCounts = countByRoomStatus(rooms)
   const todayBookings = bookingsForToday(bookings)
+  const taskCounts = countTasksByStatus(tasks)
 
   return (
     <div style={styles.page}>
@@ -195,10 +212,17 @@ export default function DashboardPage() {
               <h2 style={styles.cardTitle}>Tasks</h2>
               <Link to="/tasks" style={styles.cardLink}>View →</Link>
             </div>
-            <p style={styles.bigNumber}>—</p>
-            <p style={styles.placeholderNote}>
-              Wiring in progress — counts will populate once <code>/api/tasks</code> ships.
-            </p>
+            <p style={styles.bigNumber}>{tasks.length}</p>
+            <div style={styles.breakdown}>
+              <div style={styles.breakdownRow}>
+                <span style={styles.breakdownLabel}>Pending</span>
+                <strong>{taskCounts.pending}</strong>
+              </div>
+              <div style={styles.breakdownRow}>
+                <span style={styles.breakdownLabel}>Completed</span>
+                <strong>{taskCounts.completed}</strong>
+              </div>
+            </div>
           </div>
 
           <div style={styles.card}>
@@ -206,10 +230,13 @@ export default function DashboardPage() {
               <h2 style={styles.cardTitle}>Requests</h2>
               <Link to="/requests" style={styles.cardLink}>View →</Link>
             </div>
-            <p style={styles.bigNumber}>—</p>
-            <p style={styles.placeholderNote}>
-              Wiring in progress — counts will populate once <code>/api/requests</code> ships.
-            </p>
+            <p style={styles.bigNumber}>{requests.length}</p>
+            <div style={styles.breakdown}>
+              <div style={styles.breakdownRow}>
+                <span style={styles.breakdownLabel}>Open notes</span>
+                <strong>{requests.length}</strong>
+              </div>
+            </div>
           </div>
         </div>
       )}

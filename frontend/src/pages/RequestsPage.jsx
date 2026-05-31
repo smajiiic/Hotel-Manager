@@ -43,8 +43,7 @@ function RequestsPage() {
     load()
   }, [load])
 
-  const roomById = Object.fromEntries(rooms.map((r) => [r._id, r]))
-
+  const roomById = Object.fromEntries(rooms.flatMap((r) => [[r._id, r], [r.roomNumber, r]]))
   const handleAdd = async ({ roomId, note }) => {
     setActionError(null)
     // createdBy is honored by the mock; the real backend sets it from the
