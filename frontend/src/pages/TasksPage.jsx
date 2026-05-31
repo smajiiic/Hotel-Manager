@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getTasks, completeTask } from '../api/tasksApi.js'
+import { getTasks, completeTask, createTask } from '../api/tasksApi.js'
 import { getRooms } from '../api/roomsApi.js'
 import { useAuth } from '../hooks/useAuth.js'
 import TaskCard from '../components/TaskCard.jsx'
+import NewTaskForm from '../components/NewTaskForm.jsx'
 import '../styles/tasks.css'
 
 const FILTERS = [
@@ -10,6 +11,20 @@ const FILTERS = [
   { value: 'pending', label: 'Pending' },
   { value: 'completed', label: 'Completed' },
 ]
+
+const addButtonStyles = {
+  alignSelf: 'flex-start',
+  padding: '0.55rem 1rem',
+  border: 'none',
+  backgroundColor: '#111827',
+  color: '#fff',
+  borderRadius: '6px',
+  fontSize: '0.9rem',
+  fontFamily: "'DM Sans', sans-serif",
+  fontWeight: '600',
+  cursor: 'pointer',
+  marginBottom: '0.5rem',
+}
 
 function TasksPage() {
   const { role } = useAuth()
@@ -19,6 +34,9 @@ function TasksPage() {
   const [status, setStatus] = useState('loading')
   const [loadError, setLoadError] = useState(null)
   const [actionError, setActionError] = useState(null)
+  const [showForm, setShowForm] = useState(false)
+
+  const canCreate = role === 'manager' || role === 'reception'
 
   const load = useCallback(async () => {
     setStatus('loading')
@@ -48,12 +66,36 @@ function TasksPage() {
     }
   }
 
+  const handleCreate = async (data) => {
+    await createTask(data)
+    setShowForm(false)
+    await load()
+  }
+
   const roomById = Object.fromEntries(rooms.flatMap((r) => [[r._id, r], [r.roomNumber, r]]))
   const visibleTasks = tasks.filter((t) => filter === 'all' || t.status === filter)
 
   return (
     <section className="tasks-page">
       <h1>Tasks</h1>
+
+      {canCreate && !showForm && (
+        <button
+          type="button"
+          onClick={() => setShowForm(true)}
+          style={addButtonStyles}
+        >
+          + New task
+        </button>
+      )}
+
+      {canCreate && showForm && (
+        <NewTaskForm
+          rooms={rooms}
+          onSubmit={handleCreate}
+          onCancel={() => setShowForm(false)}
+        />
+      )}
 
       <div className="tasks-filters" aria-label="Filter tasks">
         {FILTERS.map((f) => (
