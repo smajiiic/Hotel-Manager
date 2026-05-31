@@ -59,22 +59,23 @@ const rawUsers = [
   { username: 'manager1',   password: 'test1234', role: 'manager' },
 ];
 
+// Rooms: 5 occupied (one for each checked-in guest below), 3 needs-cleaning, 7 available
 const roomsData = [
   { roomNumber: 101, status: 'occupied' },
   { roomNumber: 102, status: 'occupied' },
   { roomNumber: 103, status: 'needs-cleaning' },
-  { roomNumber: 104, status: 'occupied' },
+  { roomNumber: 104, status: 'available' },
   { roomNumber: 105, status: 'occupied' },
   { roomNumber: 106, status: 'needs-cleaning' },
   { roomNumber: 107, status: 'occupied' },
   { roomNumber: 108, status: 'available' },
   { roomNumber: 109, status: 'available' },
-  { roomNumber: 110, status: 'occupied' },
+  { roomNumber: 110, status: 'available' },
   { roomNumber: 201, status: 'available' },
   { roomNumber: 202, status: 'occupied' },
   { roomNumber: 203, status: 'needs-cleaning' },
   { roomNumber: 204, status: 'available' },
-  { roomNumber: 205, status: 'occupied' },
+  { roomNumber: 205, status: 'available' },
 ];
 
 const tasksData = [
@@ -96,12 +97,18 @@ const dateOffset = (days) => {
   return d.toLocaleDateString('sv-SE');
 };
 
+// 5 checked-in guests in the 5 occupied rooms + 3 upcoming confirmed bookings
 const bookingsData = [
+  // checked-in (matches "occupied" rooms)
   { guestName: 'Emir Hadžić',         roomId: 105, checkIn: dateOffset(-2), checkOut: dateOffset(0), occupancyStatus: 'checked-in' },
   { guestName: 'Ana Kovač',           roomId: 102, checkIn: dateOffset(0),  checkOut: dateOffset(3), occupancyStatus: 'checked-in' },
-  { guestName: 'Sara Petrović',       roomId: 109, checkIn: dateOffset(1),  checkOut: dateOffset(4), occupancyStatus: 'confirmed'  },
-  { guestName: 'Damir Bajraktarević', roomId: 108, checkIn: dateOffset(2),  checkOut: dateOffset(6), occupancyStatus: 'confirmed'  },
-  { guestName: 'Lana Smajić',         roomId: 204, checkIn: dateOffset(4),  checkOut: dateOffset(9), occupancyStatus: 'confirmed'  },
+  { guestName: 'Jasmin Begić',        roomId: 101, checkIn: dateOffset(-1), checkOut: dateOffset(2), occupancyStatus: 'checked-in' },
+  { guestName: 'Selma Dizdar',        roomId: 107, checkIn: dateOffset(-3), checkOut: dateOffset(1), occupancyStatus: 'checked-in' },
+  { guestName: 'Marko Jurić',         roomId: 202, checkIn: dateOffset(-2), checkOut: dateOffset(2), occupancyStatus: 'checked-in' },
+  // upcoming
+  { guestName: 'Sara Petrović',       roomId: 109, checkIn: dateOffset(1),  checkOut: dateOffset(4), occupancyStatus: 'confirmed' },
+  { guestName: 'Damir Bajraktarević', roomId: 108, checkIn: dateOffset(2),  checkOut: dateOffset(6), occupancyStatus: 'confirmed' },
+  { guestName: 'Lana Smajić',         roomId: 204, checkIn: dateOffset(4),  checkOut: dateOffset(9), occupancyStatus: 'confirmed' },
 ];
 
 async function seedDatabase() {
