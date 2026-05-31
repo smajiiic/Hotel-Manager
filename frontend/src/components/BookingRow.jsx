@@ -13,7 +13,21 @@ function isToday(iso) {
   return iso === today
 }
 
-function BookingRow({ booking, room }) {
+const cancelBtnStyles = {
+  alignSelf: 'flex-start',
+  padding: '0.4rem 0.85rem',
+  border: '1px solid #fecaca',
+  backgroundColor: '#fff',
+  color: '#b00020',
+  borderRadius: '6px',
+  fontSize: '0.82rem',
+  fontFamily: "'DM Sans', sans-serif",
+  fontWeight: '500',
+  cursor: 'pointer',
+  marginTop: '0.5rem',
+}
+
+function BookingRow({ booking, room, onCancel }) {
   const checkInToday = isToday(booking.checkIn)
   const checkOutToday = isToday(booking.checkOut)
   const highlightClass = checkInToday || checkOutToday ? 'is-today' : ''
@@ -45,6 +59,16 @@ function BookingRow({ booking, room }) {
           <span className="booking-tag booking-tag-today">Departing today</span>
         )}
       </div>
+
+      {onCancel && (
+        <button
+          type="button"
+          onClick={() => onCancel(booking)}
+          style={cancelBtnStyles}
+        >
+          Cancel booking
+        </button>
+      )}
     </article>
   )
 }

@@ -12,12 +12,7 @@ const styles = {
     gap: '0.85rem',
     fontFamily: "'DM Sans', sans-serif",
   },
-  title: {
-    margin: 0,
-    fontSize: '1.05rem',
-    fontWeight: '700',
-    color: '#111827',
-  },
+  title: { margin: 0, fontSize: '1.05rem', fontWeight: '700', color: '#111827' },
   field: { display: 'flex', flexDirection: 'column', gap: '0.3rem' },
   row: { display: 'flex', gap: '0.85rem' },
   label: {
@@ -74,7 +69,7 @@ const styles = {
 
 function NewBookingForm({ rooms, onSubmit, onCancel }) {
   const [guestName, setGuestName] = useState('')
-  const [roomId, setRoomId] = useState('')
+  const [roomNumber, setRoomNumber] = useState('')
   const [checkIn, setCheckIn] = useState('')
   const [checkOut, setCheckOut] = useState('')
   const [occupancyStatus, setOccupancyStatus] = useState('confirmed')
@@ -86,7 +81,7 @@ function NewBookingForm({ rooms, onSubmit, onCancel }) {
     setError(null)
 
     const trimmedName = guestName.trim()
-    if (!trimmedName || !roomId || !checkIn || !checkOut) {
+    if (!trimmedName || !roomNumber || !checkIn || !checkOut) {
       setError('All fields are required.')
       return
     }
@@ -99,7 +94,7 @@ function NewBookingForm({ rooms, onSubmit, onCancel }) {
     try {
       await onSubmit({
         guestName: trimmedName,
-        roomId,
+        roomId: Number(roomNumber),
         checkIn,
         checkOut,
         occupancyStatus,
@@ -132,15 +127,15 @@ function NewBookingForm({ rooms, onSubmit, onCancel }) {
         <label style={styles.label} htmlFor="new-booking-room">Room</label>
         <select
           id="new-booking-room"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value)}
+          value={roomNumber}
+          onChange={(e) => setRoomNumber(e.target.value)}
           disabled={submitting}
           style={styles.input}
           required
         >
           <option value="" disabled>Select a room…</option>
           {rooms.map((r) => (
-            <option key={r._id} value={r._id}>
+            <option key={r._id} value={r.roomNumber}>
               Room {r.roomNumber} ({r.status})
             </option>
           ))}

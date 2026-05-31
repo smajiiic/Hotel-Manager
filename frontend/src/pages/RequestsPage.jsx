@@ -1,5 +1,11 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getRequests, createRequest, deleteRequest } from '../api/requestsApi.js'
+import {
+  getRequests,
+  createRequest,
+  deleteRequest,
+  resolveRequest,
+  unresolveRequest,
+} from '../api/requestsApi.js'
 import { getRooms } from '../api/roomsApi.js'
 import { useAuth } from '../hooks/useAuth.js'
 import RequestRow from '../components/RequestRow.jsx'
@@ -12,7 +18,7 @@ import '../styles/requests.css'
 
 function RequestsPage() {
   const { user, role } = useAuth()
-  const canEdit = role === 'reception'
+  const canEdit = role === 'reception' || role === 'manager'
 
   const [requests, setRequests] = useState([])
   const [rooms, setRooms] = useState([])
@@ -44,14 +50,33 @@ function RequestsPage() {
   }, [load])
 
   const roomById = Object.fromEntries(rooms.flatMap((r) => [[r._id, r], [r.roomNumber, r]]))
+
   const handleAdd = async ({ roomId, note }) => {
     setActionError(null)
-    // createdBy is honored by the mock; the real backend sets it from the
-    // session and will ignore any value we send here.
     const created = await createRequest({ roomId, note, createdBy: user?.username })
     setRequests((prev) => [created, ...prev])
     setShowForm(false)
     if (status === 'empty') setStatus('populated')
+  }
+
+  const handleResolve = async (id) => {
+    setActionError(null)
+    try {
+      await resolveRequest(id)
+      await load()
+    } catch (err) {
+      setActionError(err?.message ?? 'Failed to mark note resolved')
+    }
+  }
+
+  const handleUnresolve = async (id) => {
+    setActionError(null)
+    try {
+      await unresolveRequest(id)
+      await load()
+    } catch (err) {
+      setActionError(err?.message ?? 'Failed to reopen note')
+    }
   }
 
   const handleConfirmDelete = async () => {
@@ -121,6 +146,8 @@ function RequestsPage() {
                 room={roomById[req.roomId]}
                 canDelete={canEdit}
                 onDelete={() => setPendingDelete(req)}
+                onResolve={canEdit ? handleResolve : undefined}
+                onUnresolve={canEdit ? handleUnresolve : undefined}
               />
             </li>
           ))}

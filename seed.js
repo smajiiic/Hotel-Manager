@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
 const roomSchema = new mongoose.Schema({
   roomNumber: { type: Number, required: true, unique: true },
   status: { type: String, enum: ['occupied', 'available', 'needs-cleaning'], required: true },
-});
+}, { timestamps: true });
 
 const taskSchema = new mongoose.Schema({
   description: { type: String, required: true },
@@ -30,11 +30,12 @@ const taskSchema = new mongoose.Schema({
 const requestSchema = new mongoose.Schema({
   note: { type: String, required: true },
   roomId: { type: Number, required: true },
+  resolved: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const bookingSchema = new mongoose.Schema({
   guestName: { type: String, required: true },
-  roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
+  roomId: { type: Number, required: true },
   checkIn: { type: String, required: true },
   checkOut: { type: String, required: true },
   occupancyStatus: {
@@ -43,7 +44,7 @@ const bookingSchema = new mongoose.Schema({
     required: true,
     default: 'confirmed',
   },
-});
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 const Room = mongoose.model('Room', roomSchema);
@@ -60,10 +61,10 @@ const rawUsers = [
 
 const roomsData = [
   { roomNumber: 101, status: 'occupied' },
-  { roomNumber: 102, status: 'available' },
+  { roomNumber: 102, status: 'occupied' },
   { roomNumber: 103, status: 'needs-cleaning' },
   { roomNumber: 104, status: 'occupied' },
-  { roomNumber: 105, status: 'available' },
+  { roomNumber: 105, status: 'occupied' },
   { roomNumber: 106, status: 'needs-cleaning' },
   { roomNumber: 107, status: 'occupied' },
   { roomNumber: 108, status: 'available' },
@@ -95,12 +96,12 @@ const dateOffset = (days) => {
   return d.toLocaleDateString('sv-SE');
 };
 
-const bookingsTemplate = [
-  { guestName: 'Emir Hadžić',         roomNumber: 105, checkIn: dateOffset(-2), checkOut: dateOffset(0), occupancyStatus: 'checked-in' },
-  { guestName: 'Ana Kovač',           roomNumber: 102, checkIn: dateOffset(0),  checkOut: dateOffset(3), occupancyStatus: 'checked-in' },
-  { guestName: 'Sara Petrović',       roomNumber: 109, checkIn: dateOffset(1),  checkOut: dateOffset(4), occupancyStatus: 'confirmed'  },
-  { guestName: 'Damir Bajraktarević', roomNumber: 108, checkIn: dateOffset(2),  checkOut: dateOffset(6), occupancyStatus: 'confirmed'  },
-  { guestName: 'Lana Smajić',         roomNumber: 204, checkIn: dateOffset(4),  checkOut: dateOffset(9), occupancyStatus: 'confirmed'  },
+const bookingsData = [
+  { guestName: 'Emir Hadžić',         roomId: 105, checkIn: dateOffset(-2), checkOut: dateOffset(0), occupancyStatus: 'checked-in' },
+  { guestName: 'Ana Kovač',           roomId: 102, checkIn: dateOffset(0),  checkOut: dateOffset(3), occupancyStatus: 'checked-in' },
+  { guestName: 'Sara Petrović',       roomId: 109, checkIn: dateOffset(1),  checkOut: dateOffset(4), occupancyStatus: 'confirmed'  },
+  { guestName: 'Damir Bajraktarević', roomId: 108, checkIn: dateOffset(2),  checkOut: dateOffset(6), occupancyStatus: 'confirmed'  },
+  { guestName: 'Lana Smajić',         roomId: 204, checkIn: dateOffset(4),  checkOut: dateOffset(9), occupancyStatus: 'confirmed'  },
 ];
 
 async function seedDatabase() {
@@ -122,17 +123,8 @@ async function seedDatabase() {
     await User.insertMany(hashedUsers);
     console.log('👤 Users inserted.');
 
-    const insertedRooms = await Room.insertMany(roomsData);
-    const roomIdByNumber = Object.fromEntries(
-      insertedRooms.map((r) => [r.roomNumber, r._id])
-    );
+    await Room.insertMany(roomsData);
     console.log('🏨 Rooms inserted.');
-
-    const bookingsData = bookingsTemplate.map(({ roomNumber, ...rest }) => {
-      const roomId = roomIdByNumber[roomNumber];
-      if (!roomId) throw new Error('Seed error: booking refers to missing room ' + roomNumber);
-      return { ...rest, roomId };
-    });
 
     await Task.insertMany(tasksData);
     await Request.insertMany(requestsData);

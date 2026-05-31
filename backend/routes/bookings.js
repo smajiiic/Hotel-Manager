@@ -1,67 +1,64 @@
 const express = require('express');
 const router = express.Router();
-
-const dateOffset = (days) => {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return d.toLocaleDateString('sv-SE');
-};
-
-// In-memory mock store — POST mutates this so newly created bookings show up
-// in subsequent GETs until backend restart. Replaces with a real Mongo write
-// once Imran's bookings model is wired in.
-let mockBookings = [
-  { _id: 'bkg_1', guestName: 'Emir Hadžić',         roomId: 'rm_105', checkIn: dateOffset(-2), checkOut: dateOffset(0), occupancyStatus: 'checked-in' },
-  { _id: 'bkg_2', guestName: 'Ana Kovač',           roomId: 'rm_102', checkIn: dateOffset(0),  checkOut: dateOffset(3), occupancyStatus: 'checked-in' },
-  { _id: 'bkg_3', guestName: 'Sara Petrović',       roomId: 'rm_109', checkIn: dateOffset(1),  checkOut: dateOffset(4), occupancyStatus: 'confirmed'  },
-  { _id: 'bkg_4', guestName: 'Damir Bajraktarević', roomId: 'rm_108', checkIn: dateOffset(2),  checkOut: dateOffset(6), occupancyStatus: 'confirmed'  },
-  { _id: 'bkg_5', guestName: 'Lana Smajić',         roomId: 'rm_204', checkIn: dateOffset(4),  checkOut: dateOffset(9), occupancyStatus: 'confirmed'  },
-];
+const Booking = require('../models/Booking');
 
 const VALID_STATUSES = ['confirmed', 'checked-in', 'checked-out'];
 
+const ok = (data, status = 200) => ({ status, body: { success: true, data } });
+const fail = (error, status = 500) => ({ status, body: { success: false, error } });
+const send = (res, { status, body }) => res.status(status).json(body);
+
 // GET /api/bookings
-router.get('/', (req, res) => {
-  res.json({ success: true, data: mockBookings });
+router.get('/', async (req, res) => {
+  try {
+    const bookings = await Booking.find().sort({ checkIn: 1 });
+    send(res, ok(bookings));
+  } catch (err) {
+    send(res, fail(err.message));
+  }
 });
 
-// POST /api/bookings — body: { guestName, roomId, checkIn, checkOut, occupancyStatus? }
-router.post('/', (req, res) => {
-  const { guestName, roomId, checkIn, checkOut, occupancyStatus } = req.body || {};
+// POST /api/bookings
+router.post('/', async (req, res) => {
+  try {
+    const { guestName, roomId, checkIn, checkOut, occupancyStatus } = req.body || {};
 
-  if (!guestName || !roomId || !checkIn || !checkOut) {
-    return res.status(400).json({
-      success: false,
-      error: 'Missing required fields: guestName, roomId, checkIn, checkOut',
+    if (!guestName || roomId === undefined || roomId === null || !checkIn || !checkOut) {
+      return send(res, fail('Missing required fields: guestName, roomId, checkIn, checkOut', 400));
+    }
+
+    const status = occupancyStatus || 'confirmed';
+    if (!VALID_STATUSES.includes(status)) {
+      return send(res, fail(`Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`, 400));
+    }
+
+    if (new Date(checkOut) <= new Date(checkIn)) {
+      return send(res, fail('checkOut must be after checkIn', 400));
+    }
+
+    const newBooking = new Booking({
+      guestName: String(guestName).trim(),
+      roomId: Number(roomId),
+      checkIn,
+      checkOut,
+      occupancyStatus: status,
     });
+    const saved = await newBooking.save();
+    send(res, ok(saved, 201));
+  } catch (err) {
+    send(res, fail(err.message, 400));
   }
+});
 
-  const status = occupancyStatus || 'confirmed';
-  if (!VALID_STATUSES.includes(status)) {
-    return res.status(400).json({
-      success: false,
-      error: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`,
-    });
+// DELETE /api/bookings/:id
+router.delete('/:id', async (req, res) => {
+  try {
+    const removed = await Booking.findByIdAndDelete(req.params.id);
+    if (!removed) return send(res, fail('Booking not found', 404));
+    send(res, ok({ deleted: true, _id: req.params.id }));
+  } catch (err) {
+    send(res, fail(err.message));
   }
-
-  if (new Date(checkOut) <= new Date(checkIn)) {
-    return res.status(400).json({
-      success: false,
-      error: 'checkOut must be after checkIn',
-    });
-  }
-
-  const newBooking = {
-    _id: `bkg_${Date.now()}`,
-    guestName: String(guestName).trim(),
-    roomId,
-    checkIn,
-    checkOut,
-    occupancyStatus: status,
-  };
-
-  mockBookings.push(newBooking);
-  res.status(201).json({ success: true, data: newBooking });
 });
 
 module.exports = router;

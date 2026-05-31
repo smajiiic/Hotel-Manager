@@ -6,7 +6,6 @@ const ok = (data, status = 200) => ({ status, body: { success: true, data } });
 const fail = (error, status = 500) => ({ status, body: { success: false, error } });
 const send = (res, { status, body }) => res.status(status).json(body);
 
-// GET /api/tasks
 router.get('/', async (req, res) => {
   try {
     const tasks = await Task.find().sort({ createdAt: -1 });
@@ -16,7 +15,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/tasks
 router.post('/', async (req, res) => {
   try {
     const newTask = new Task({
@@ -31,7 +29,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE /api/tasks/:id
 router.delete('/:id', async (req, res) => {
   try {
     const removed = await Task.findByIdAndDelete(req.params.id);
@@ -42,7 +39,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// PATCH /api/tasks/:id/complete
 router.patch('/:id/complete', async (req, res) => {
   try {
     const completed = await Task.findByIdAndUpdate(
@@ -52,6 +48,20 @@ router.patch('/:id/complete', async (req, res) => {
     );
     if (!completed) return send(res, fail('Task not found', 404));
     send(res, ok(completed));
+  } catch (err) {
+    send(res, fail(err.message));
+  }
+});
+
+router.patch('/:id/reopen', async (req, res) => {
+  try {
+    const reopened = await Task.findByIdAndUpdate(
+      req.params.id,
+      { status: 'pending' },
+      { new: true }
+    );
+    if (!reopened) return send(res, fail('Task not found', 404));
+    send(res, ok(reopened));
   } catch (err) {
     send(res, fail(err.message));
   }

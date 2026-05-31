@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getTasks, completeTask, createTask } from '../api/tasksApi.js'
+import { getTasks, completeTask, createTask, reopenTask, deleteTask } from '../api/tasksApi.js'
 import { getRooms } from '../api/roomsApi.js'
 import { useAuth } from '../hooks/useAuth.js'
 import TaskCard from '../components/TaskCard.jsx'
 import NewTaskForm from '../components/NewTaskForm.jsx'
+import ConfirmDialog from '../components/ConfirmDialog.jsx'
 import '../styles/tasks.css'
 
 const FILTERS = [
@@ -35,8 +36,10 @@ function TasksPage() {
   const [loadError, setLoadError] = useState(null)
   const [actionError, setActionError] = useState(null)
   const [showForm, setShowForm] = useState(false)
+  const [pendingDelete, setPendingDelete] = useState(null)
 
   const canCreate = role === 'manager' || role === 'reception'
+  const canManage = role === 'manager' || role === 'reception'
 
   const load = useCallback(async () => {
     setStatus('loading')
@@ -66,10 +69,33 @@ function TasksPage() {
     }
   }
 
+  const handleReopen = async (id) => {
+    setActionError(null)
+    try {
+      await reopenTask(id)
+      await load()
+    } catch (err) {
+      setActionError(err?.message ?? 'Failed to reopen task')
+    }
+  }
+
   const handleCreate = async (data) => {
     await createTask(data)
     setShowForm(false)
     await load()
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!pendingDelete) return
+    const target = pendingDelete
+    setPendingDelete(null)
+    setActionError(null)
+    try {
+      await deleteTask(target._id)
+      await load()
+    } catch (err) {
+      setActionError(err?.message ?? 'Failed to delete task')
+    }
   }
 
   const roomById = Object.fromEntries(rooms.flatMap((r) => [[r._id, r], [r.roomNumber, r]]))
@@ -137,11 +163,28 @@ function TasksPage() {
                 room={roomById[task.roomId]}
                 role={role}
                 onComplete={handleComplete}
+                onReopen={canManage ? handleReopen : undefined}
+                onDelete={canManage ? setPendingDelete : undefined}
               />
             </li>
           ))}
         </ul>
       )}
+
+      <ConfirmDialog
+        open={!!pendingDelete}
+        title="Delete task?"
+        message={
+          pendingDelete
+            ? `Are you sure you want to delete "${pendingDelete.description}"? This cannot be undone.`
+            : ''
+        }
+        confirmLabel="Yes, delete"
+        cancelLabel="Keep"
+        destructive
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </section>
   )
 }

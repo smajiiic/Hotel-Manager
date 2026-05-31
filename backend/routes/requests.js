@@ -6,7 +6,6 @@ const ok = (data, status = 200) => ({ status, body: { success: true, data } });
 const fail = (error, status = 500) => ({ status, body: { success: false, error } });
 const send = (res, { status, body }) => res.status(status).json(body);
 
-// GET /api/requests
 router.get('/', async (req, res) => {
   try {
     const requests = await Request.find().sort({ createdAt: -1 });
@@ -16,7 +15,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/requests
 router.post('/', async (req, res) => {
   try {
     const newRequest = new Request({
@@ -30,12 +28,39 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE /api/requests/:id
 router.delete('/:id', async (req, res) => {
   try {
     const removed = await Request.findByIdAndDelete(req.params.id);
     if (!removed) return send(res, fail('Request not found', 404));
     send(res, ok({ deleted: true, _id: req.params.id }));
+  } catch (err) {
+    send(res, fail(err.message));
+  }
+});
+
+router.patch('/:id/resolve', async (req, res) => {
+  try {
+    const resolved = await Request.findByIdAndUpdate(
+      req.params.id,
+      { resolved: true },
+      { new: true }
+    );
+    if (!resolved) return send(res, fail('Request not found', 404));
+    send(res, ok(resolved));
+  } catch (err) {
+    send(res, fail(err.message));
+  }
+});
+
+router.patch('/:id/unresolve', async (req, res) => {
+  try {
+    const unresolved = await Request.findByIdAndUpdate(
+      req.params.id,
+      { resolved: false },
+      { new: true }
+    );
+    if (!unresolved) return send(res, fail('Request not found', 404));
+    send(res, ok(unresolved));
   } catch (err) {
     send(res, fail(err.message));
   }

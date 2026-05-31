@@ -1,8 +1,10 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getBookings, createBooking } from '../api/bookingsApi.js'
+import { getBookings, createBooking, deleteBooking } from '../api/bookingsApi.js'
 import { getRooms } from '../api/roomsApi.js'
+import { useAuth } from '../hooks/useAuth.js'
 import BookingRow from '../components/BookingRow.jsx'
 import NewBookingForm from '../components/NewBookingForm.jsx'
+import ConfirmDialog from '../components/ConfirmDialog.jsx'
 import LoadingState from '../components/LoadingState.jsx'
 import ErrorState from '../components/ErrorState.jsx'
 import EmptyState from '../components/EmptyState.jsx'
@@ -22,11 +24,16 @@ const addButtonStyles = {
 }
 
 function BookingsPage() {
+  const { role } = useAuth()
   const [bookings, setBookings] = useState([])
   const [rooms, setRooms] = useState([])
   const [status, setStatus] = useState('loading')
   const [loadError, setLoadError] = useState(null)
+  const [actionError, setActionError] = useState(null)
   const [showForm, setShowForm] = useState(false)
+  const [pendingCancel, setPendingCancel] = useState(null)
+
+  const canCancel = role === 'reception' || role === 'manager'
 
   const load = useCallback(async () => {
     setStatus('loading')
@@ -53,6 +60,19 @@ function BookingsPage() {
     await createBooking(data)
     setShowForm(false)
     await load()
+  }
+
+  const handleConfirmCancel = async () => {
+    if (!pendingCancel) return
+    setActionError(null)
+    try {
+      await deleteBooking(pendingCancel._id)
+      setPendingCancel(null)
+      await load()
+    } catch (err) {
+      setActionError(err?.message ?? 'Failed to cancel booking')
+      setPendingCancel(null)
+    }
   }
 
   const roomById = Object.fromEntries(
@@ -83,6 +103,8 @@ function BookingsPage() {
         />
       )}
 
+      {actionError && <div className="bookings-status bookings-status-error">{actionError}</div>}
+
       {status === 'loading' && <LoadingState />}
 
       {status === 'error' && <ErrorState message={loadError} onRetry={load} />}
@@ -93,11 +115,30 @@ function BookingsPage() {
         <ul className="bookings-list">
           {bookings.map((booking) => (
             <li key={booking._id}>
-              <BookingRow booking={booking} room={roomById[booking.roomId]} />
+              <BookingRow
+                booking={booking}
+                room={roomById[booking.roomId]}
+                onCancel={canCancel ? setPendingCancel : undefined}
+              />
             </li>
           ))}
         </ul>
       )}
+
+      <ConfirmDialog
+        open={!!pendingCancel}
+        title="Cancel booking?"
+        message={
+          pendingCancel
+            ? `Are you sure you want to cancel the booking for ${pendingCancel.guestName}? This cannot be undone.`
+            : ''
+        }
+        confirmLabel="Yes, cancel"
+        cancelLabel="Keep"
+        destructive
+        onConfirm={handleConfirmCancel}
+        onCancel={() => setPendingCancel(null)}
+      />
     </section>
   )
 }
