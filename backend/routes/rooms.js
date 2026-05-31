@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../models/Room');
+const roomService = require('../services/RoomService'); // Wire RoomService
 
 const VALID_STATUSES = ['occupied', 'available', 'needs-cleaning'];
 
@@ -34,6 +35,10 @@ router.put('/:id/status', async (req, res) => {
       { new: true, runValidators: true }
     );
     if (!updated) return send(res, fail('Room not found', 404));
+
+    // TRIGGER OBSERVER: Notify system when room status changes
+    roomService.notifyObservers(updated);
+
     send(res, ok(updated));
   } catch (err) {
     send(res, fail(err.message));
