@@ -479,3 +479,11 @@
     border: none;
   }
 }
+
+/* Restore visible overflow so dropdown can extend below navbar */
+.navbar { overflow: visible !important; }
+
+/* Make sure the dropdown sits ABOVE everything */
+.navbar-user-dropdown {
+  z-index: 200;
+}
