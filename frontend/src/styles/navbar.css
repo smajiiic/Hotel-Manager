@@ -444,3 +444,23 @@
   right: 0;
   width: auto;
 }
+
+/* Force the navbar to float 14px below viewport top, always */
+.navbar {
+  top: 14px !important;
+  margin: 0 14px !important;
+}
+
+.layout {
+  padding-top: 14px;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    top: 18px !important;
+    margin: 0 18px !important;
+  }
+  .layout {
+    padding-top: 18px;
+  }
+}
