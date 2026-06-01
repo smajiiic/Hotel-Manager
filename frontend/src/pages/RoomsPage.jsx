@@ -5,68 +5,88 @@ import StatusBadge from '../components/StatusBadge';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
+import '../styles/dashboard.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? '';
 
 const styles = {
   page: {
     minHeight: '100vh',
-    backgroundColor: '#f8f7f4',
     fontFamily: "'DM Sans', sans-serif",
     padding: '2rem 1.5rem',
     boxSizing: 'border-box',
   },
   header: { marginBottom: '1.75rem' },
   title: {
-    margin: '0 0 0.25rem 0',
-    fontSize: '1.6rem',
-    fontWeight: '800',
-    color: '#111827',
-    letterSpacing: '-0.02em',
+    margin: '0 0 0.35rem 0',
+    fontSize: '1.875rem',
+    fontWeight: 800,
+    color: 'var(--color-text-primary)',
+    letterSpacing: '-0.025em',
   },
-  subtitle: { margin: 0, fontSize: '0.9rem', color: '#6b7280' },
-  summaryRow: { display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' },
+  subtitle: {
+    margin: 0,
+    fontSize: '0.92rem',
+    color: 'var(--color-text-secondary)',
+  },
+  summaryRow: {
+    display: 'flex',
+    gap: '0.85rem',
+    flexWrap: 'wrap',
+    marginBottom: '1.5rem',
+  },
   summaryCard: {
-    backgroundColor: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '10px',
-    padding: '0.75rem 1.1rem',
+    backgroundColor: 'var(--color-surface)',
+    border: '1px solid var(--color-border)',
+    borderRadius: 'var(--radius-lg)',
+    padding: '0.85rem 1.2rem',
     display: 'flex',
     flexDirection: 'column',
-    gap: '4px',
-    minWidth: '120px',
+    gap: '6px',
+    minWidth: '140px',
+    boxShadow: 'var(--shadow-xs)',
   },
   summaryLabel: {
-    fontSize: '0.72rem',
-    color: '#9ca3af',
-    fontWeight: '600',
+    fontSize: '0.7rem',
+    color: 'var(--color-text-secondary)',
+    fontWeight: 700,
     textTransform: 'uppercase',
-    letterSpacing: '0.05em',
+    letterSpacing: '0.08em',
   },
-  summaryCount: { fontSize: '1.5rem', fontWeight: '800', color: '#111827', lineHeight: 1 },
+  summaryCount: {
+    fontSize: '1.65rem',
+    fontWeight: 800,
+    color: 'var(--color-text-primary)',
+    lineHeight: 1,
+    letterSpacing: '-0.025em',
+    fontVariantNumeric: 'tabular-nums',
+  },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: '12px',
-    border: '1px solid #e5e7eb',
+    backgroundColor: 'var(--color-surface)',
+    borderRadius: 'var(--radius-lg)',
+    border: '1px solid var(--color-border)',
     overflow: 'hidden',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+    boxShadow: 'var(--shadow-xs)',
   },
   errorWrap: { marginBottom: '1.25rem' },
   tableHeader: {
     display: 'grid',
     gridTemplateColumns: '140px 1fr 1fr',
-    backgroundColor: '#f9fafb',
-    borderBottom: '1px solid #e5e7eb',
-    padding: '0.65rem 1rem',
+    backgroundColor: 'var(--color-surface-2)',
+    borderBottom: '1px solid var(--color-border)',
+    padding: '0.75rem 1.1rem',
   },
   tableHeaderCell: {
-    fontSize: '0.72rem',
-    fontWeight: '700',
-    color: '#9ca3af',
+    fontSize: '0.7rem',
+    fontWeight: 700,
+    color: 'var(--color-text-secondary)',
     textTransform: 'uppercase',
-    letterSpacing: '0.06em',
+    letterSpacing: '0.08em',
   },
-  tableBody: { display: 'grid', gridTemplateColumns: '140px 1fr 1fr' },
+  tableBody: {
+    display: 'grid',
+    gridTemplateColumns: '140px 1fr 1fr',
+  },
 };
 
 function countByStatus(rooms) {
@@ -101,9 +121,7 @@ export default function RoomsPage() {
     }
   }, []);
 
-  useEffect(() => {
-    fetchRooms();
-  }, [fetchRooms]);
+  useEffect(() => { fetchRooms(); }, [fetchRooms]);
 
   const handleStatusChange = useCallback(async (roomId, newStatus) => {
     const prevRooms = rooms;
@@ -143,11 +161,11 @@ export default function RoomsPage() {
         rel="stylesheet"
       />
 
-      <div style={styles.page}>
+      <div style={styles.page} className="dashboard-page-enter">
         <div style={styles.header}>
           <h1 style={styles.title}>Room Overview</h1>
           <p style={styles.subtitle}>
-            IsaBegov Hamam Hotel · {rooms.length} rooms total
+            Isa Begov Hamam · {rooms.length} rooms total
           </p>
         </div>
 
@@ -158,9 +176,9 @@ export default function RoomsPage() {
               { key: 'occupied', label: 'Occupied' },
               { key: 'needs-cleaning', label: 'Needs Cleaning' },
             ].map(({ key, label }) => (
-              <div key={key} style={styles.summaryCard}>
+              <div key={key} style={styles.summaryCard} className="app-card">
                 <span style={styles.summaryLabel}>{label}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={styles.summaryCount}>{counts[key]}</span>
                   <StatusBadge status={key} />
                 </div>

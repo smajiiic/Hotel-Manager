@@ -1,0 +1,38 @@
+/* Hover effects for dashboard/rooms cards.
+   Inline styles handle the base; this layer adds polish. */
+.app-card {
+  transition: box-shadow var(--t-base), transform var(--t-base),
+              border-color var(--t-base);
+}
+
+.app-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
+}
+
+.dashboard-link {
+  color: var(--navy-700);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+.dashboard-link:hover {
+  color: var(--navy-900);
+  text-decoration: none;
+}
+
+.dashboard-link::after {
+  content: " →";
+  transition: transform var(--t-fast);
+  display: inline-block;
+}
+
+.dashboard-link:hover::after {
+  transform: translateX(2px);
+}
+
+.dashboard-page-enter {
+  animation: slideUp var(--t-slow);
+}

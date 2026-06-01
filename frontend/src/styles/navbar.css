@@ -4,48 +4,73 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  gap: var(--space-3);
+  padding: 14px 20px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xs);
 }
 
 .navbar-brand {
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: #111827;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
   text-decoration: none;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: color var(--t-fast);
+}
+
+.navbar-brand::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.18);
+  flex-shrink: 0;
+}
+
+.navbar-brand:hover {
+  color: var(--navy-700);
+  text-decoration: none;
 }
 
 .navbar-brand:focus-visible {
-  outline: 2px solid #111827;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: 4px;
 }
 
 .navbar-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
   padding: 0;
   background: transparent;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  color: #111827;
-  font-size: 1.2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 1.15rem;
   cursor: pointer;
-  transition: background-color 120ms ease;
+  transition: background-color var(--t-fast), border-color var(--t-fast);
 }
 
 .navbar-toggle:hover {
-  background: #f5f3ee;
+  background: var(--color-hover);
+  border-color: var(--color-border-strong);
 }
 
 .navbar-toggle:focus-visible {
-  outline: 2px solid #111827;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .navbar-collapse {
@@ -54,12 +79,13 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 8px 16px 16px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-4) var(--space-4);
   flex-direction: column;
-  gap: 4px;
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
+  gap: var(--space-1);
+  box-shadow: var(--shadow-md);
+  animation: slideUp var(--t-base);
 }
 
 .navbar-collapse.is-open {
@@ -75,89 +101,104 @@
 .navbar-link {
   display: flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 14px;
   text-decoration: none;
-  color: #1a1a1a;
-  border-radius: 6px;
-  transition: background-color 120ms ease;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.92rem;
+  transition: background-color var(--t-fast), color var(--t-fast);
 }
 
 .navbar-link:hover {
-  background: #f5f3ee;
+  background: var(--color-hover);
+  color: var(--color-text-primary);
+  text-decoration: none;
 }
 
 .navbar-link:focus-visible {
-  outline: 2px solid #1a1a1a;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .navbar-link.active {
-  background: #1a1a1a;
-  color: #fff;
+  background: var(--navy-800);
+  color: var(--color-text-inverted);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .navbar-link.active:hover {
-  background: #333;
+  background: var(--navy-900);
+  color: var(--color-text-inverted);
 }
 
 .navbar-user {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px 14px 0;
-  border-top: 1px solid #e5e7eb;
-  margin-top: 8px;
+  gap: var(--space-2);
+  padding: var(--space-3) 14px 0;
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--space-2);
 }
 
 .navbar-username {
-  font-size: 0.9rem;
-  color: #111827;
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
 }
 
 .navbar-role {
-  font-size: 0.7rem;
+  font-size: 0.66rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #6b7280;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  padding: 2px 6px;
+  letter-spacing: 0.08em;
+  color: var(--accent-dk);
+  background: rgba(176, 141, 87, 0.10);
+  border: 1px solid rgba(176, 141, 87, 0.25);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
   align-self: flex-start;
 }
 
 .navbar-logout {
   align-self: flex-start;
-  min-height: 40px;
+  min-height: 36px;
   padding: 0 14px;
   background: transparent;
-  border: 1px solid #d1d5db;
-  color: #111827;
-  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
   font-weight: 500;
+  font-size: 0.88rem;
   cursor: pointer;
-  transition: background-color 120ms ease;
+  transition: background-color var(--t-fast), border-color var(--t-fast);
 }
 
 .navbar-logout:hover {
-  background: #f5f3ee;
+  background: var(--color-hover);
+  border-color: var(--color-border-strong);
 }
 
 .navbar-logout:focus-visible {
-  outline: 2px solid #111827;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .navbar-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(15, 26, 46, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   z-index: 40;
+  animation: fadeIn var(--t-base);
 }
 
 @media (min-width: 768px) {
   .navbar {
-    padding: 12px 24px;
+    padding: 14px 32px;
   }
 
   .navbar-toggle {
@@ -173,12 +214,13 @@
     padding: 0;
     border-bottom: none;
     box-shadow: none;
-    gap: 24px;
+    gap: var(--space-6);
+    animation: none;
   }
 
   .navbar-links {
     flex-direction: row;
-    gap: 4px;
+    gap: var(--space-1);
     flex: 1;
     justify-content: center;
   }
@@ -186,18 +228,16 @@
   .navbar-user {
     flex-direction: row;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-3);
     padding: 0;
     border-top: none;
     margin-top: 0;
   }
 
   .navbar-logout {
-    margin-left: 4px;
+    margin-left: var(--space-1);
   }
 
-  /* Edge case: user opened drawer on mobile, then resized to desktop.
-     Hide the (now-meaningless) backdrop so the inline layout isn't dimmed. */
   .navbar-backdrop {
     display: none;
   }
