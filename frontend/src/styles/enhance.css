@@ -1,0 +1,193 @@
+/* ============================================================
+   enhance.css — visual depth/glass/motion layer
+   Loaded AFTER global.css. Non-destructive: delete the import
+   in main.jsx to fully revert. Uses existing design tokens.
+   ============================================================ */
+
+/* ---------- 1. Page background: layered mesh + ottoman dots ---------- */
+body {
+  background:
+    radial-gradient(1200px 600px at 85% -5%, rgba(176, 141, 87, 0.10), transparent 60%),
+    radial-gradient(1000px 700px at -10% 110%, rgba(26, 41, 66, 0.08), transparent 55%),
+    radial-gradient(circle at 25% 25%, rgba(15, 26, 46, 0.025) 1px, transparent 1.6px),
+    var(--color-bg);
+  background-size: 100% 100%, 100% 100%, 30px 30px, 100% 100%;
+  background-attachment: fixed, fixed, fixed, fixed;
+}
+
+/* ---------- 2. Page containers: entrance + breathing room ---------- */
+.tasks-page,
+.rooms-page,
+.bookings-page,
+.requests-page,
+[class$="-page"] {
+  animation: enhFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes enhFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 3. Heading punch: brass underline accent ---------- */
+.tasks-page > h1,
+.rooms-page > h1,
+.bookings-page > h1,
+.requests-page > h1,
+[class$="-page"] > h1 {
+  position: relative;
+  padding-bottom: var(--space-3);
+}
+.tasks-page > h1::after,
+.rooms-page > h1::after,
+.bookings-page > h1::after,
+.requests-page > h1::after,
+[class$="-page"] > h1::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 56px;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--accent), var(--accent-dk));
+}
+
+/* ---------- 4. Glass card system ---------- */
+/* Applies to list-item cards across pages + any .card / card-ish wrapper */
+.tasks-list > li > *,
+.bookings-page ul > li > *,
+.requests-page ul > li > *,
+.card,
+.task-card,
+.booking-card,
+.note-card {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-lg) !important;
+  transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
+}
+
+.tasks-list > li > *:hover,
+.bookings-page ul > li > *:hover,
+.requests-page ul > li > *:hover,
+.card:hover,
+.task-card:hover,
+.booking-card:hover,
+.note-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(176, 141, 87, 0.4) !important;
+}
+
+/* staggered card entrance */
+.tasks-list > li,
+.bookings-page ul > li,
+.requests-page ul > li {
+  animation: enhFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.tasks-list > li:nth-child(1),
+.bookings-page ul > li:nth-child(1),
+.requests-page ul > li:nth-child(1) { animation-delay: 0.04s; }
+.tasks-list > li:nth-child(2),
+.bookings-page ul > li:nth-child(2),
+.requests-page ul > li:nth-child(2) { animation-delay: 0.10s; }
+.tasks-list > li:nth-child(3),
+.bookings-page ul > li:nth-child(3),
+.requests-page ul > li:nth-child(3) { animation-delay: 0.16s; }
+.tasks-list > li:nth-child(4),
+.bookings-page ul > li:nth-child(4),
+.requests-page ul > li:nth-child(4) { animation-delay: 0.22s; }
+.tasks-list > li:nth-child(n+5),
+.bookings-page ul > li:nth-child(n+5),
+.requests-page ul > li:nth-child(n+5) { animation-delay: 0.28s; }
+
+/* ---------- 5. Filter pills (Tasks) ---------- */
+.tasks-filters {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xs);
+  padding: 4px;
+  display: inline-flex;
+  gap: 2px;
+}
+.tasks-filter {
+  min-height: 34px;
+  border: none !important;
+  background: transparent !important;
+  border-radius: var(--radius-full) !important;
+  color: var(--color-text-secondary);
+  transition: all var(--t-fast);
+}
+.tasks-filter:hover:not(.active) {
+  background: var(--color-hover) !important;
+  color: var(--color-text-primary);
+}
+.tasks-filter.active {
+  background: var(--navy-800) !important;
+  color: var(--cream-50) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- 6. Status badge glow (matches by text-based classes) ---------- */
+[class*="badge"],
+[class*="pill"],
+[class*="status-tag"],
+[class*="chip"] {
+  border-radius: var(--radius-full) !important;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: transform var(--t-fast);
+}
+
+/* ---------- 7. Buttons: lift + brass focus ---------- */
+button:not(.tasks-filter):hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+button:not(.tasks-filter):active:not(:disabled) {
+  transform: translateY(0);
+}
+button.primary {
+  background: linear-gradient(135deg, var(--navy-700), var(--navy-900)) !important;
+}
+
+/* ---------- 8. Rooms table polish ---------- */
+.rooms-page table {
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.rooms-page thead th {
+  background: rgba(15, 26, 46, 0.04);
+  border-bottom: 2px solid var(--accent);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+}
+.rooms-page tbody tr {
+  transition: background-color var(--t-fast);
+}
+.rooms-page tbody tr:nth-child(even) {
+  background: rgba(15, 26, 46, 0.018);
+}
+.rooms-page tbody tr:hover {
+  background: rgba(176, 141, 87, 0.08);
+}
+
+/* ---------- 9. Respect reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
