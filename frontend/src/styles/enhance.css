@@ -1,193 +1,253 @@
-/* ============================================================
-   enhance.css — visual depth/glass/motion layer
-   Loaded AFTER global.css. Non-destructive: delete the import
-   in main.jsx to fully revert. Uses existing design tokens.
-   ============================================================ */
+/* ===========================================================
+   enhance.css  —  Layered glass/depth/motion atop global.css.
+   Loaded once after global.css in main.jsx. Safe to remove that
+   single import to revert all visual changes.
+   =========================================================== */
 
-/* ---------- 1. Page background: layered mesh + ottoman dots ---------- */
-body {
+/* ---------- Layered mesh background on the app shell ---------- */
+.layout {
   background:
-    radial-gradient(1200px 600px at 85% -5%, rgba(176, 141, 87, 0.10), transparent 60%),
-    radial-gradient(1000px 700px at -10% 110%, rgba(26, 41, 66, 0.08), transparent 55%),
-    radial-gradient(circle at 25% 25%, rgba(15, 26, 46, 0.025) 1px, transparent 1.6px),
+    radial-gradient(ellipse 50% 35% at  8%  6%, rgba(176, 141, 87, 0.12), transparent 65%),
+    radial-gradient(ellipse 45% 30% at 92% 18%, rgba( 45, 110, 110, 0.10), transparent 65%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(15,  26,  46, 0.06), transparent 70%),
     var(--color-bg);
-  background-size: 100% 100%, 100% 100%, 30px 30px, 100% 100%;
-  background-attachment: fixed, fixed, fixed, fixed;
+  background-attachment: fixed;
 }
 
-/* ---------- 2. Page containers: entrance + breathing room ---------- */
-.tasks-page,
-.rooms-page,
-.bookings-page,
-.requests-page,
-[class$="-page"] {
-  animation: enhFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+/* Subtle dotted texture overlay - very low opacity, adds depth */
+.layout::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 30% 30%, rgba(15, 26, 46, 0.025) 1px, transparent 1.5px),
+    radial-gradient(circle at 70% 70%, rgba(176, 141, 87, 0.035) 1px, transparent 1.5px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
 }
 
-@keyframes enhFadeUp {
+.layout-main {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Glass cards (universal) ---------- */
+.task-card,
+.request-row,
+.booking-row {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 4px 16px rgba(15, 26, 46, 0.05),
+    0 1px 3px rgba(15, 26, 46, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+  transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
+}
+
+.task-card:hover,
+.request-row:hover,
+.booking-row:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 16px 36px rgba(15, 26, 46, 0.10),
+    0 6px 12px rgba(15, 26, 46, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(176, 141, 87, 0.28) !important;
+}
+
+/* ---------- Status-colored left accents on cards ---------- */
+.task-card        { border-left: 3px solid var(--amber-600) !important; }
+.task-card:has(.task-status-completed) { border-left-color: var(--sage-600) !important; }
+
+.request-row      { border-left: 3px solid var(--burgundy-600) !important; }
+
+.booking-row      { border-left: 3px solid var(--teal-600) !important; }
+.booking-row.is-today { border-left-color: var(--accent) !important; }
+
+/* ---------- Heading + brass underline accent ---------- */
+.tasks-page > h1,
+.requests-header h1,
+.bookings-header h1 {
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.tasks-page > h1::after,
+.requests-header h1::after,
+.bookings-header h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dk) 100%);
+  box-shadow: 0 1px 2px rgba(176, 141, 87, 0.35);
+}
+
+/* ---------- Frosted pill filter group (Tasks) ---------- */
+.tasks-filters {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(14px) saturate(170%);
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 2px 8px rgba(15, 26, 46, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Status pills with soft glow ---------- */
+.task-status,
+.booking-status,
+.booking-tag {
+  font-weight: 700 !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.task-status-pending {
+  background: rgba(251, 241, 217, 0.85) !important;
+  border-color: rgba(154, 108, 20, 0.30) !important;
+  box-shadow: 0 0 0 3px rgba(194, 137, 31, 0.10), 0 1px 2px rgba(154, 108, 20, 0.15);
+}
+
+.task-status-completed {
+  background: rgba(231, 239, 233, 0.90) !important;
+  border-color: rgba(74, 110, 87, 0.28) !important;
+  box-shadow: 0 0 0 3px rgba(93, 138, 107, 0.10), 0 1px 2px rgba(74, 110, 87, 0.12);
+}
+
+.booking-status-checked-in {
+  background: rgba(231, 239, 233, 0.90) !important;
+  border-color: rgba(74, 110, 87, 0.28) !important;
+  box-shadow: 0 0 0 3px rgba(93, 138, 107, 0.12);
+}
+
+.booking-status-confirmed {
+  background: rgba(230, 240, 240, 0.90) !important;
+  border-color: rgba(32, 88, 90, 0.25) !important;
+  color: var(--teal-700) !important;
+  box-shadow: 0 0 0 3px rgba(45, 110, 110, 0.10);
+}
+
+.booking-tag-today {
+  background: rgba(176, 141, 87, 0.18) !important;
+  border-color: rgba(176, 141, 87, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.12),
+              0 0 12px rgba(176, 141, 87, 0.20);
+  color: var(--accent-dk) !important;
+}
+
+/* ---------- Brass gradient primary button ---------- */
+.btn-brass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: flex-start;
+  min-height: 40px;
+  padding: 0 18px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dk) 100%);
+  color: #fff;
+  border: 1px solid var(--accent-dk);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: -0.005em;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow:
+    0 4px 12px rgba(176, 141, 87, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  transition: background var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
+}
+
+.btn-brass:hover:not(:disabled) {
+  background: linear-gradient(180deg, var(--accent-dk) 0%, #765c3a 100%);
+  box-shadow:
+    0 6px 16px rgba(176, 141, 87, 0.40),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-brass:active:not(:disabled) { transform: translateY(0); }
+
+.btn-brass:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.35),
+              0 6px 16px rgba(176, 141, 87, 0.40);
+}
+
+.btn-brass:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ---------- Staggered fade-up on list items ---------- */
+@keyframes fadeUp {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- 3. Heading punch: brass underline accent ---------- */
-.tasks-page > h1,
-.rooms-page > h1,
-.bookings-page > h1,
-.requests-page > h1,
-[class$="-page"] > h1 {
-  position: relative;
-  padding-bottom: var(--space-3);
-}
-.tasks-page > h1::after,
-.rooms-page > h1::after,
-.bookings-page > h1::after,
-.requests-page > h1::after,
-[class$="-page"] > h1::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 56px;
-  height: 3px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--accent), var(--accent-dk));
+.tasks-list > li,
+.requests-list > li,
+.bookings-list > li {
+  animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-/* ---------- 4. Glass card system ---------- */
-/* Applies to list-item cards across pages + any .card / card-ish wrapper */
-.tasks-list > li > *,
-.bookings-page ul > li > *,
-.requests-page ul > li > *,
-.card,
-.task-card,
-.booking-card,
-.note-card {
+.tasks-list > li:nth-child(1),
+.requests-list > li:nth-child(1),
+.bookings-list > li:nth-child(1) { animation-delay: 0.04s; }
+.tasks-list > li:nth-child(2),
+.requests-list > li:nth-child(2),
+.bookings-list > li:nth-child(2) { animation-delay: 0.10s; }
+.tasks-list > li:nth-child(3),
+.requests-list > li:nth-child(3),
+.bookings-list > li:nth-child(3) { animation-delay: 0.16s; }
+.tasks-list > li:nth-child(4),
+.requests-list > li:nth-child(4),
+.bookings-list > li:nth-child(4) { animation-delay: 0.22s; }
+.tasks-list > li:nth-child(5),
+.requests-list > li:nth-child(5),
+.bookings-list > li:nth-child(5) { animation-delay: 0.28s; }
+.tasks-list > li:nth-child(n+6),
+.requests-list > li:nth-child(n+6),
+.bookings-list > li:nth-child(n+6) { animation-delay: 0.34s; }
+
+/* ---------- RoomsPage summary tiles upgrade ---------- */
+/* RoomsPage uses inline styles; we layer glass via the .app-card class */
+.app-card {
   background: rgba(255, 255, 255, 0.72) !important;
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  box-shadow: var(--shadow-md);
-  border-radius: var(--radius-lg) !important;
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    0 4px 16px rgba(15, 26, 46, 0.05),
+    0 1px 3px rgba(15, 26, 46, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
   transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
 }
 
-.tasks-list > li > *:hover,
-.bookings-page ul > li > *:hover,
-.requests-page ul > li > *:hover,
-.card:hover,
-.task-card:hover,
-.booking-card:hover,
-.note-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: rgba(176, 141, 87, 0.4) !important;
+.app-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 28px rgba(15, 26, 46, 0.10),
+    0 4px 10px rgba(15, 26, 46, 0.06) !important;
+  border-color: rgba(176, 141, 87, 0.28) !important;
 }
 
-/* staggered card entrance */
-.tasks-list > li,
-.bookings-page ul > li,
-.requests-page ul > li {
-  animation: enhFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-.tasks-list > li:nth-child(1),
-.bookings-page ul > li:nth-child(1),
-.requests-page ul > li:nth-child(1) { animation-delay: 0.04s; }
-.tasks-list > li:nth-child(2),
-.bookings-page ul > li:nth-child(2),
-.requests-page ul > li:nth-child(2) { animation-delay: 0.10s; }
-.tasks-list > li:nth-child(3),
-.bookings-page ul > li:nth-child(3),
-.requests-page ul > li:nth-child(3) { animation-delay: 0.16s; }
-.tasks-list > li:nth-child(4),
-.bookings-page ul > li:nth-child(4),
-.requests-page ul > li:nth-child(4) { animation-delay: 0.22s; }
-.tasks-list > li:nth-child(n+5),
-.bookings-page ul > li:nth-child(n+5),
-.requests-page ul > li:nth-child(n+5) { animation-delay: 0.28s; }
-
-/* ---------- 5. Filter pills (Tasks) ---------- */
-.tasks-filters {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-  box-shadow: var(--shadow-xs);
-  padding: 4px;
-  display: inline-flex;
-  gap: 2px;
-}
-.tasks-filter {
-  min-height: 34px;
-  border: none !important;
-  background: transparent !important;
-  border-radius: var(--radius-full) !important;
-  color: var(--color-text-secondary);
-  transition: all var(--t-fast);
-}
-.tasks-filter:hover:not(.active) {
-  background: var(--color-hover) !important;
-  color: var(--color-text-primary);
-}
+/* ---------- Polished filter active state ---------- */
 .tasks-filter.active {
-  background: var(--navy-800) !important;
-  color: var(--cream-50) !important;
-  box-shadow: var(--shadow-sm);
+  background: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-800) 100%) !important;
+  box-shadow:
+    0 2px 6px rgba(15, 26, 46, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
 }
 
-/* ---------- 6. Status badge glow (matches by text-based classes) ---------- */
-[class*="badge"],
-[class*="pill"],
-[class*="status-tag"],
-[class*="chip"] {
-  border-radius: var(--radius-full) !important;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  transition: transform var(--t-fast);
-}
-
-/* ---------- 7. Buttons: lift + brass focus ---------- */
-button:not(.tasks-filter):hover:not(:disabled) {
-  transform: translateY(-1px);
-}
-button:not(.tasks-filter):active:not(:disabled) {
-  transform: translateY(0);
-}
-button.primary {
-  background: linear-gradient(135deg, var(--navy-700), var(--navy-900)) !important;
-}
-
-/* ---------- 8. Rooms table polish ---------- */
-.rooms-page table {
-  border-collapse: separate;
-  border-spacing: 0;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-}
-.rooms-page thead th {
-  background: rgba(15, 26, 46, 0.04);
-  border-bottom: 2px solid var(--accent);
-  font-size: 0.74rem;
-  letter-spacing: 0.08em;
-}
-.rooms-page tbody tr {
-  transition: background-color var(--t-fast);
-}
-.rooms-page tbody tr:nth-child(even) {
-  background: rgba(15, 26, 46, 0.018);
-}
-.rooms-page tbody tr:hover {
-  background: rgba(176, 141, 87, 0.08);
-}
-
-/* ---------- 9. Respect reduced motion ---------- */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-  }
+/* ---------- Form glass overlay (NewTaskForm, NewBookingForm, RequestForm) ---------- */
+.request-form,
+form[class*="form"]:has(button[type="submit"]) {
+  backdrop-filter: blur(14px) saturate(170%);
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
 }

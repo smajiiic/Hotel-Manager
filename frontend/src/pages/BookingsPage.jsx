@@ -10,18 +10,6 @@ import ErrorState from '../components/ErrorState.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import '../styles/bookings.css'
 
-const addButtonStyles = {
-  alignSelf: 'flex-start',
-  padding: '0.55rem 1rem',
-  border: 'none',
-  backgroundColor: '#111827',
-  color: '#fff',
-  borderRadius: '6px',
-  fontSize: '0.9rem',
-  fontFamily: "'DM Sans', sans-serif",
-  fontWeight: '600',
-  cursor: 'pointer',
-}
 
 function BookingsPage() {
   const { role } = useAuth()
@@ -89,7 +77,7 @@ function BookingsPage() {
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          style={addButtonStyles}
+          className="btn-brass"
         >
           + New booking
         </button>
