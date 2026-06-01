@@ -11,85 +11,6 @@ import '../styles/dashboard.css'
 
 const todayLocal = () => new Date().toLocaleDateString('sv-SE')
 
-const styles = {
-  page: {
-    minHeight: '100vh',
-    fontFamily: "'DM Sans', sans-serif",
-    padding: '2rem 1.5rem',
-    boxSizing: 'border-box',
-  },
-  header: { marginBottom: '2rem' },
-  title: {
-    margin: '0 0 0.35rem 0',
-    fontSize: '1.875rem',
-    fontWeight: 800,
-    color: 'var(--color-text-primary)',
-    letterSpacing: '-0.025em',
-  },
-  subtitle: {
-    margin: 0,
-    fontSize: '0.95rem',
-    color: 'var(--color-text-secondary)',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-    gap: '1.1rem',
-  },
-  card: {
-    backgroundColor: 'var(--color-surface)',
-    border: '1px solid var(--color-border)',
-    borderRadius: 'var(--radius-lg)',
-    padding: '1.4rem 1.5rem',
-    boxShadow: 'var(--shadow-xs)',
-  },
-  cardHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '0.85rem',
-  },
-  cardTitle: {
-    fontSize: '0.72rem',
-    fontWeight: 700,
-    color: 'var(--color-text-secondary)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    margin: 0,
-  },
-  bigNumber: {
-    fontSize: '2.25rem',
-    fontWeight: 800,
-    color: 'var(--color-text-primary)',
-    lineHeight: 1,
-    margin: '0 0 0.5rem 0',
-    letterSpacing: '-0.03em',
-    fontVariantNumeric: 'tabular-nums',
-  },
-  breakdown: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.4rem',
-    marginTop: '0.85rem',
-    paddingTop: '0.85rem',
-    borderTop: '1px solid var(--color-border)',
-  },
-  breakdownRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontSize: '0.88rem',
-    color: 'var(--color-text-primary)',
-  },
-  breakdownLabel: {
-    color: 'var(--color-text-secondary)',
-  },
-  breakdownValue: {
-    fontWeight: 700,
-    fontVariantNumeric: 'tabular-nums',
-  },
-}
-
 function countByRoomStatus(rooms) {
   return rooms.reduce(
     (acc, r) => {
@@ -117,6 +38,14 @@ function countTasksByStatus(tasks) {
       return acc
     },
     { pending: 0, completed: 0 }
+  )
+}
+
+function StatNumber({ value, delay = 1 }) {
+  return (
+    <span className={`dash-card-number stat-number stat-number-${delay}`}>
+      {value}
+    </span>
   )
 }
 
@@ -150,103 +79,104 @@ export default function DashboardPage() {
     }
   }, [])
 
-  useEffect(() => {
-    load()
-  }, [load])
+  useEffect(() => { load() }, [load])
 
   const roomCounts = countByRoomStatus(rooms)
   const todayBookings = bookingsForToday(bookings)
   const taskCounts = countTasksByStatus(tasks)
 
   return (
-    <div style={styles.page} className="dashboard-page-enter">
-      <div style={styles.header}>
-        <h1 style={styles.title}>Dashboard</h1>
-        <p style={styles.subtitle}>
-          Welcome back{user ? `, ${user.username}` : ''} · Overview of all modules
+    <div className="dashboard-page">
+      <header className="dashboard-header">
+        <h1 className="dashboard-title">
+          Welcome back{user ? `, ${user.username}` : ''}
+        </h1>
+        <p className="dashboard-subtitle">
+          Overview of all modules
+          {user?.role && <span className="dashboard-role-pill">{user.role}</span>}
         </p>
-      </div>
+      </header>
 
       {status === 'loading' && <LoadingState />}
       {status === 'error' && <ErrorState message={error} onRetry={load} />}
 
       {status === 'loaded' && (
-        <div style={styles.grid}>
-          <div style={styles.card} className="app-card">
-            <div style={styles.cardHeader}>
-              <h2 style={styles.cardTitle}>Rooms</h2>
-              <Link to="/rooms" className="dashboard-link">View</Link>
+        <div className="dashboard-grid">
+          <article className="dash-card dash-card-rooms">
+            <div className="dash-card-header">
+              <h2 className="dash-card-title">Rooms</h2>
+              <Link to="/rooms" className="dash-card-link">View</Link>
             </div>
-            <p style={styles.bigNumber}>{rooms.length}</p>
-            <div style={styles.breakdown}>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Available</span>
-                <strong style={styles.breakdownValue}>{roomCounts.available}</strong>
+            <StatNumber value={rooms.length} delay={1} />
+            <div className="dash-card-breakdown">
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Available</span>
+                <span className="dash-card-row-value">{roomCounts.available}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Occupied</span>
-                <strong style={styles.breakdownValue}>{roomCounts.occupied}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Occupied</span>
+                <span className="dash-card-row-value">{roomCounts.occupied}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Needs cleaning</span>
-                <strong style={styles.breakdownValue}>{roomCounts['needs-cleaning']}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Needs cleaning</span>
+                <span className="dash-card-row-value">{roomCounts['needs-cleaning']}</span>
               </div>
             </div>
-          </div>
+          </article>
 
-          <div style={styles.card} className="app-card">
-            <div style={styles.cardHeader}>
-              <h2 style={styles.cardTitle}>Bookings</h2>
-              <Link to="/bookings" className="dashboard-link">View</Link>
+          <article className="dash-card dash-card-bookings">
+            <div className="dash-card-header">
+              <h2 className="dash-card-title">Bookings</h2>
+              <Link to="/bookings" className="dash-card-link">View</Link>
             </div>
-            <p style={styles.bigNumber}>{bookings.length}</p>
-            <div style={styles.breakdown}>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Currently checked in</span>
-                <strong style={styles.breakdownValue}>{todayBookings.checkedIn}</strong>
+            <StatNumber value={bookings.length} delay={2} />
+            <div className="dash-card-breakdown">
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Currently checked in</span>
+                <span className="dash-card-row-value">{todayBookings.checkedIn}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Arriving today</span>
-                <strong style={styles.breakdownValue}>{todayBookings.arriving}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Arriving today</span>
+                <span className="dash-card-row-value">{todayBookings.arriving}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Departing today</span>
-                <strong style={styles.breakdownValue}>{todayBookings.departing}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Departing today</span>
+                <span className="dash-card-row-value">{todayBookings.departing}</span>
               </div>
             </div>
-          </div>
+          </article>
 
-          <div style={styles.card} className="app-card">
-            <div style={styles.cardHeader}>
-              <h2 style={styles.cardTitle}>Tasks</h2>
-              <Link to="/tasks" className="dashboard-link">View</Link>
+          <article className="dash-card dash-card-tasks">
+            <div className="dash-card-header">
+              <h2 className="dash-card-title">Tasks</h2>
+              <Link to="/tasks" className="dash-card-link">View</Link>
             </div>
-            <p style={styles.bigNumber}>{tasks.length}</p>
-            <div style={styles.breakdown}>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Pending</span>
-                <strong style={styles.breakdownValue}>{taskCounts.pending}</strong>
+            <StatNumber value={tasks.length} delay={3} />
+            <div className="dash-card-breakdown">
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Pending</span>
+                <span className="dash-card-row-value">{taskCounts.pending}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Completed</span>
-                <strong style={styles.breakdownValue}>{taskCounts.completed}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Completed</span>
+                <span className="dash-card-row-value">{taskCounts.completed}</span>
               </div>
             </div>
-          </div>
+          </article>
 
-          <div style={styles.card} className="app-card">
-            <div style={styles.cardHeader}>
-              <h2 style={styles.cardTitle}>Requests</h2>
-              <Link to="/requests" className="dashboard-link">View</Link>
+          <article className="dash-card dash-card-requests">
+            <div className="dash-card-header">
+              <h2 className="dash-card-title">Requests</h2>
+              <Link to="/requests" className="dash-card-link">View</Link>
             </div>
-            <p style={styles.bigNumber}>{requests.length}</p>
-            <div style={styles.breakdown}>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Open notes</span>
-                <strong style={styles.breakdownValue}>{requests.length}</strong>
+            <StatNumber value={requests.length} delay={4} />
+            <div className="dash-card-breakdown">
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Open notes</span>
+                <span className="dash-card-row-value">{requests.length}</span>
               </div>
             </div>
-          </div>
+          </article>
         </div>
       )}
     </div>
