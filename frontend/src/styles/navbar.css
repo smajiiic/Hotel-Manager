@@ -464,3 +464,18 @@
     padding-top: 18px;
   }
 }
+
+/* Round every possible inner container */
+.navbar { overflow: hidden; }
+.navbar-collapse,
+.navbar-links {
+  border-radius: var(--radius-xl);
+}
+
+/* Backdrop filter sometimes needs explicit overflow clipping to respect radius */
+@media (min-width: 768px) {
+  .navbar-collapse {
+    background: transparent;
+    border: none;
+  }
+}
