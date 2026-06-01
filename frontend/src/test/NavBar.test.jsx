@@ -60,11 +60,14 @@ describe('NavBar — role-aware nav links', () => {
 })
 
 describe('NavBar — logout', () => {
-  test('logout button invokes useAuth().logout()', async () => {
+  test('sign out invokes useAuth().logout() via user dropdown', async () => {
     const logout = vi.fn().mockResolvedValue(undefined)
     renderNavBar({ role: 'reception', logout })
 
-    await userEvent.click(screen.getByRole('button', { name: /logout/i }))
+    // 1. Open the user dropdown by clicking the trigger button (named after username)
+    await userEvent.click(screen.getByRole('button', { name: /reception1/i }))
+    // 2. Click "Sign out" inside the dropdown
+    await userEvent.click(screen.getByRole('menuitem', { name: /sign out/i }))
 
     expect(logout).toHaveBeenCalled()
   })

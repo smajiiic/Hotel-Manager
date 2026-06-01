@@ -78,7 +78,7 @@ function LoginPage() {
       </form>
 
       <div className="login-footer-overlay" aria-hidden="true">
-        Sarajevo · Est. 1557 · © {year}
+        Sarajevo · Est. 1462 · © {year}
       </div>
     </div>
   )
