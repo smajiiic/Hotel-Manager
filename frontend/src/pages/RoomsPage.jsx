@@ -6,6 +6,8 @@ import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
 
+const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+
 const styles = {
   page: {
     minHeight: '100vh',
@@ -88,7 +90,7 @@ export default function RoomsPage() {
     setLoading(true);
     setFetchError(null);
     try {
-      const res = await fetch('/api/rooms');
+      const res = await fetch(`${API_BASE}/api/rooms`, { credentials: 'include' });
       const data = await res.json();
       if (!data.success) throw new Error(data.error || 'Failed to load rooms');
       setRooms(data.data);
@@ -112,8 +114,9 @@ export default function RoomsPage() {
     setUpdatingIds((prev) => new Set(prev).add(roomId));
 
     try {
-      const res = await fetch(`/api/rooms/${roomId}/status`, {
+      const res = await fetch(`${API_BASE}/api/rooms/${roomId}/status`, {
         method: 'PUT',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
