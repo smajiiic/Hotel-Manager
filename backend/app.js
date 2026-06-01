@@ -15,14 +15,26 @@ const roomOpsFacade = require('./services/RoomOperationsFacade');
 
 const app = express();
 
+const isProd = process.env.NODE_ENV === 'production';
+if (isProd) app.set('trust proxy', 1); // required so secure cookies work behind Railway's proxy
+
 mongoose
   .connect(process.env.MONGO_URI || 'mongodb://localhost:27017/hotelDB')
   .then(() => console.log('✅ MongoDB connected'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.FRONTEND_URL, // e.g. https://hotel-manager.vercel.app
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
     credentials: true,
   })
 );
@@ -31,13 +43,16 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: 'hotel_secret_key',
+    secret: process.env.SESSION_SECRET || 'hotel_secret_key',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+      sameSite: isProd ? 'none' : 'lax',
+      secure: isProd, // requires HTTPS (Railway provides)
+    },
   })
 );
-
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/bookings', bookingRoutes);
