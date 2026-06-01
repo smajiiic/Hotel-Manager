@@ -5,7 +5,6 @@ import StatusBadge from '../components/StatusBadge';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
-import '../styles/dashboard.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? '';
 
@@ -18,75 +17,49 @@ const styles = {
   },
   header: { marginBottom: '1.75rem' },
   title: {
-    margin: '0 0 0.35rem 0',
-    fontSize: '1.875rem',
-    fontWeight: 800,
-    color: 'var(--color-text-primary)',
-    letterSpacing: '-0.025em',
+    margin: '0 0 0.25rem 0',
+    fontSize: '1.6rem',
+    fontWeight: '800',
+    color: '#fff',
+    letterSpacing: '-0.02em',
+    textShadow: '0 2px 12px rgba(0,0,0,0.55)',
   },
-  subtitle: {
-    margin: 0,
-    fontSize: '0.92rem',
-    color: 'var(--color-text-secondary)',
-  },
-  summaryRow: {
-    display: 'flex',
-    gap: '0.85rem',
-    flexWrap: 'wrap',
-    marginBottom: '1.5rem',
-  },
+  subtitle: { margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 6px rgba(0,0,0,0.5)' },
+  summaryRow: { display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' },
   summaryCard: {
-    backgroundColor: 'var(--color-surface)',
-    border: '1px solid var(--color-border)',
-    borderRadius: 'var(--radius-lg)',
-    padding: '0.85rem 1.2rem',
+    padding: '0.75rem 1.1rem',
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
-    minWidth: '140px',
-    boxShadow: 'var(--shadow-xs)',
+    gap: '4px',
+    minWidth: '120px',
   },
   summaryLabel: {
-    fontSize: '0.7rem',
-    color: 'var(--color-text-secondary)',
-    fontWeight: 700,
+    fontSize: '0.72rem',
+    color: '#6b7280',
+    fontWeight: '600',
     textTransform: 'uppercase',
-    letterSpacing: '0.08em',
+    letterSpacing: '0.05em',
   },
-  summaryCount: {
-    fontSize: '1.65rem',
-    fontWeight: 800,
-    color: 'var(--color-text-primary)',
-    lineHeight: 1,
-    letterSpacing: '-0.025em',
-    fontVariantNumeric: 'tabular-nums',
-  },
+  summaryCount: { fontSize: '1.5rem', fontWeight: '800', color: '#111827', lineHeight: 1 },
   card: {
-    backgroundColor: 'var(--color-surface)',
-    borderRadius: 'var(--radius-lg)',
-    border: '1px solid var(--color-border)',
     overflow: 'hidden',
-    boxShadow: 'var(--shadow-xs)',
   },
   errorWrap: { marginBottom: '1.25rem' },
   tableHeader: {
     display: 'grid',
     gridTemplateColumns: '140px 1fr 1fr',
-    backgroundColor: 'var(--color-surface-2)',
-    borderBottom: '1px solid var(--color-border)',
-    padding: '0.75rem 1.1rem',
+    backgroundColor: 'rgba(249, 250, 251, 0.6)',
+    borderBottom: '1px solid #e5e7eb',
+    padding: '0.65rem 1rem',
   },
   tableHeaderCell: {
-    fontSize: '0.7rem',
-    fontWeight: 700,
-    color: 'var(--color-text-secondary)',
+    fontSize: '0.72rem',
+    fontWeight: '700',
+    color: '#9ca3af',
     textTransform: 'uppercase',
-    letterSpacing: '0.08em',
+    letterSpacing: '0.06em',
   },
-  tableBody: {
-    display: 'grid',
-    gridTemplateColumns: '140px 1fr 1fr',
-  },
+  tableBody: { display: 'grid', gridTemplateColumns: '140px 1fr 1fr' },
 };
 
 function countByStatus(rooms) {
@@ -121,7 +94,9 @@ export default function RoomsPage() {
     }
   }, []);
 
-  useEffect(() => { fetchRooms(); }, [fetchRooms]);
+  useEffect(() => {
+    fetchRooms();
+  }, [fetchRooms]);
 
   const handleStatusChange = useCallback(async (roomId, newStatus) => {
     const prevRooms = rooms;
@@ -161,11 +136,11 @@ export default function RoomsPage() {
         rel="stylesheet"
       />
 
-      <div style={styles.page} className="dashboard-page-enter">
+      <div style={styles.page}>
         <div style={styles.header}>
           <h1 style={styles.title}>Room Overview</h1>
           <p style={styles.subtitle}>
-            Isa Begov Hamam · {rooms.length} rooms total
+            IsaBegov Hamam Hotel · {rooms.length} rooms total
           </p>
         </div>
 
@@ -176,9 +151,9 @@ export default function RoomsPage() {
               { key: 'occupied', label: 'Occupied' },
               { key: 'needs-cleaning', label: 'Needs Cleaning' },
             ].map(({ key, label }) => (
-              <div key={key} style={styles.summaryCard} className="app-card">
+              <div key={key} className="app-card" style={styles.summaryCard}>
                 <span style={styles.summaryLabel}>{label}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={styles.summaryCount}>{counts[key]}</span>
                   <StatusBadge status={key} />
                 </div>
@@ -196,7 +171,7 @@ export default function RoomsPage() {
           </div>
         )}
 
-        <div style={styles.card}>
+        <div className="app-card" style={styles.card}>
           {loading ? (
             <LoadingState message="Loading rooms…" />
           ) : rooms.length === 0 && !fetchError ? (
