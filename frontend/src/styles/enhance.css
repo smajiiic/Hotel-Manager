@@ -10,7 +10,7 @@
   content: "";
   position: fixed;
   inset: -10%;
-  background-image: url('/hamam.jpg');
+  background-image: url('/bg.jpg');
   background-size: cover;
   background-position: center;
   filter: blur(80px) saturate(170%) brightness(1.05);
