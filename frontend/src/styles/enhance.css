@@ -1,59 +1,33 @@
-/* enhance.css — atmospheric backdrop + glass overlay */
+/* enhance.css — clean photo backdrop + card polish */
 
 .layout {
-  background: var(--color-bg);
+  background-image: url('/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   isolation: isolate;
   position: relative;
 }
 
-.layout::before {
-  content: "";
-  position: fixed;
-  inset: -10%;
-  background-image: url('/bg.jpg');
-  background-size: cover;
-  background-position: center;
-  filter: blur(80px) saturate(170%) brightness(1.05);
-  transform: scale(1.15);
-  opacity: 0.55;
-  z-index: -2;
-  pointer-events: none;
-}
-
-.layout::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 50% 45% at 12%  8%,  rgba(176, 141, 87, 0.45),  transparent 60%),
-    radial-gradient(ellipse 45% 40% at 88% 22%,  rgba( 45, 110, 110, 0.32), transparent 65%),
-    radial-gradient(ellipse 55% 50% at 50% 95%,  rgba(139,  44, 62, 0.22),  transparent 65%),
-    rgba(252, 248, 240, 0.42);
-  animation: auroraDrift 28s ease-in-out infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-
-@keyframes auroraDrift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  33%      { transform: translate3d(20px, -18px, 0) scale(1.06); }
-  66%      { transform: translate3d(-18px, 22px, 0) scale(0.96); }
-}
+.layout::before,
+.layout::after { display: none; }
 
 .layout-main { position: relative; z-index: 1; }
 
+/* ---------- Cards stay glass so the photo shows through ---------- */
 .task-card,
 .request-row,
 .booking-row,
 .app-card {
-  background: rgba(255, 255, 255, 0.78) !important;
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
   box-shadow:
-    0 4px 18px rgba(15, 26, 46, 0.08),
-    0 1px 3px rgba(15, 26, 46, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.80) !important;
+    0 6px 20px rgba(15, 26, 46, 0.12),
+    0 2px 6px rgba(15, 26, 46, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
   transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
 }
 
@@ -63,23 +37,27 @@
 .app-card:hover {
   transform: translateY(-3px);
   box-shadow:
-    0 18px 40px rgba(15, 26, 46, 0.14),
-    0 6px 14px rgba(15, 26, 46, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.90) !important;
+    0 20px 44px rgba(15, 26, 46, 0.20),
+    0 8px 16px rgba(15, 26, 46, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
   border-color: rgba(176, 141, 87, 0.32) !important;
 }
 
+/* Status-colored left accents */
 .task-card        { border-left: 3px solid var(--amber-600) !important; }
 .task-card:has(.task-status-completed) { border-left-color: var(--sage-600) !important; }
 .request-row      { border-left: 3px solid var(--burgundy-600) !important; }
 .booking-row      { border-left: 3px solid var(--teal-600) !important; }
 .booking-row.is-today { border-left-color: var(--accent) !important; }
 
+/* Heading + brass underline */
 .tasks-page > h1,
 .requests-header h1,
 .bookings-header h1 {
   position: relative;
   padding-bottom: 10px;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
 }
 .tasks-page > h1::after,
 .requests-header h1::after,
@@ -92,22 +70,23 @@
   height: 3px;
   border-radius: 3px;
   background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dk) 100%);
-  box-shadow: 0 1px 2px rgba(176, 141, 87, 0.40);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
+/* Frosted filter pills */
 .tasks-filters {
-  background: rgba(255, 255, 255, 0.70) !important;
+  background: rgba(255, 255, 255, 0.78) !important;
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.75) !important;
-  box-shadow: 0 4px 12px rgba(15, 26, 46, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 12px rgba(15, 26, 46, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
-
 .tasks-filter.active {
   background: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-800) 100%) !important;
   box-shadow: 0 2px 6px rgba(15, 26, 46, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
 }
 
+/* Status pills */
 .task-status,
 .booking-status,
 .booking-tag {
@@ -115,35 +94,33 @@
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
-
 .task-status-pending {
-  background: rgba(251, 241, 217, 0.90) !important;
-  border-color: rgba(154, 108, 20, 0.32) !important;
+  background: rgba(251, 241, 217, 0.95) !important;
+  border-color: rgba(154, 108, 20, 0.35) !important;
   box-shadow: 0 0 0 3px rgba(194, 137, 31, 0.14);
 }
 .task-status-completed {
-  background: rgba(231, 239, 233, 0.92) !important;
-  border-color: rgba(74, 110, 87, 0.30) !important;
-  box-shadow: 0 0 0 3px rgba(93, 138, 107, 0.12);
-}
-.booking-status-checked-in {
-  background: rgba(231, 239, 233, 0.92) !important;
-  border-color: rgba(74, 110, 87, 0.30) !important;
+  background: rgba(231, 239, 233, 0.95) !important;
+  border-color: rgba(74, 110, 87, 0.32) !important;
   box-shadow: 0 0 0 3px rgba(93, 138, 107, 0.14);
 }
+.booking-status-checked-in {
+  background: rgba(231, 239, 233, 0.95) !important;
+  border-color: rgba(74, 110, 87, 0.32) !important;
+}
 .booking-status-confirmed {
-  background: rgba(230, 240, 240, 0.92) !important;
-  border-color: rgba(32, 88, 90, 0.28) !important;
+  background: rgba(230, 240, 240, 0.95) !important;
+  border-color: rgba(32, 88, 90, 0.30) !important;
   color: var(--teal-700) !important;
-  box-shadow: 0 0 0 3px rgba(45, 110, 110, 0.12);
 }
 .booking-tag-today {
-  background: rgba(176, 141, 87, 0.22) !important;
-  border-color: rgba(176, 141, 87, 0.50) !important;
-  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.14), 0 0 14px rgba(176, 141, 87, 0.28);
+  background: rgba(176, 141, 87, 0.25) !important;
+  border-color: rgba(176, 141, 87, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.18), 0 0 14px rgba(176, 141, 87, 0.30);
   color: var(--accent-dk) !important;
 }
 
+/* Brass primary button */
 .btn-brass {
   display: inline-flex;
   align-items: center;
@@ -159,21 +136,20 @@
   font-size: 0.92rem;
   font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(176, 141, 87, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 14px rgba(176, 141, 87, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.22);
   transition: background var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
 }
 .btn-brass:hover:not(:disabled) {
   background: linear-gradient(180deg, var(--accent-dk) 0%, #765c3a 100%);
-  box-shadow: 0 8px 20px rgba(176, 141, 87, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.28);
   transform: translateY(-1px);
 }
 .btn-brass:disabled { opacity: 0.6; cursor: not-allowed; }
 
+/* Fade-up list anim */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 .tasks-list > li,
 .requests-list > li,
 .bookings-list > li {
@@ -186,6 +162,5 @@
 .tasks-list > li:nth-child(n+5), .requests-list > li:nth-child(n+5), .bookings-list > li:nth-child(n+5) { animation-delay: 0.28s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .layout::after { animation: none; }
   .tasks-list > li, .requests-list > li, .bookings-list > li { animation: none; }
 }
