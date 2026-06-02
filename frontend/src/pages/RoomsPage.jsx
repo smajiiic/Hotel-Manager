@@ -5,6 +5,7 @@ import StatusBadge from '../components/StatusBadge';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
+import { useSocketEvent } from '../hooks/useSocket';
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? '';
 
@@ -98,6 +99,8 @@ export default function RoomsPage() {
     fetchRooms();
   }, [fetchRooms]);
 
+  useSocketEvent("rooms:updated", fetchRooms);
+
   const handleStatusChange = useCallback(async (roomId, newStatus) => {
     const prevRooms = rooms;
     setRowErrors((prev) => ({ ...prev, [roomId]: null }));
@@ -117,7 +120,7 @@ export default function RoomsPage() {
       if (!data.success) throw new Error(data.error || 'Update failed');
     } catch (err) {
       setRooms(prevRooms);
-      setRowErrors((prev) => ({ ...prev, [roomId]: 'Failed to save. Try again.' }));
+      setRowErrors((prev) => ({ ...prev, [roomId]: err.message || 'Failed to save. Try again.' }));
     } finally {
       setUpdatingIds((prev) => {
         const next = new Set(prev);

@@ -5,6 +5,8 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const http = require('http');
+const { Server } = require('socket.io');
 
 const authRoutes = require('./routes/auth');
 const roomRoutes = require('./routes/rooms');
@@ -14,45 +16,30 @@ const requestRoutes = require('./routes/requests');
 const roomOpsFacade = require('./services/RoomOperationsFacade');
 
 const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-const isProd = process.env.NODE_ENV === 'production';
-if (isProd) app.set('trust proxy', 1); // required so secure cookies work behind Railway's proxy
+if (isProduction) app.set('trust proxy', 1);
 
 mongoose
   .connect(process.env.MONGO_URI || 'mongodb://localhost:27017/hotelDB')
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  process.env.FRONTEND_URL, // e.g. https://hotel-manager.vercel.app
-].filter(Boolean);
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error(`Origin ${origin} not allowed by CORS`));
-    },
-    credentials: true,
-  })
-);
-
+app.use(cors({ origin: frontendUrl, credentials: true }));
 app.use(express.json());
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'hotel_secret_key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
-      sameSite: isProd ? 'none' : 'lax',
-      secure: isProd, // requires HTTPS (Railway provides)
-    },
-  })
-);
+app.use(session({
+  secret: 'hotel_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24,
+    sameSite: isProduction ? 'none' : 'lax',
+    secure: isProduction,
+  },
+}));
+
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/bookings', bookingRoutes);
@@ -64,11 +51,19 @@ app.get('/test-checkout', async (req, res) => {
   res.json(result);
 });
 
-app.get('/', (req, res) => {
-  res.send('Hotel Manager Backend is running...');
+app.get('/', (req, res) => res.send('Hotel Manager Backend is running...'));
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: frontendUrl, credentials: true, methods: ['GET', 'POST', 'PUT', 'DELETE'] },
 });
 
-const PORT = process.env.PORT || 5050;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+io.on('connection', (socket) => {
+  console.log('Socket connected:', socket.id);
+  socket.on('disconnect', () => console.log('Socket disconnected:', socket.id));
 });
+
+app.set('io', io);
+
+const PORT = process.env.PORT || 5050;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

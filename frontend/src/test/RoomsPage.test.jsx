@@ -123,7 +123,7 @@ describe('RoomsPage — optimistic status update', () => {
     const selects = screen.getAllByRole('combobox');
     await userEvent.selectOptions(selects[0], 'occupied');
 
-    await waitFor(() => expect(screen.getByText(/failed to save/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/update failed/i)).toBeInTheDocument());
   });
 });
 

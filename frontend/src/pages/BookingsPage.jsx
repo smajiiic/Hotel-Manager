@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { useSocketEvent } from '../hooks/useSocket'
 import { getBookings, createBooking, deleteBooking } from '../api/bookingsApi.js'
 import { getRooms } from '../api/roomsApi.js'
 import { useAuth } from '../hooks/useAuth.js'
@@ -43,6 +44,8 @@ function BookingsPage() {
   useEffect(() => {
     load()
   }, [load])
+
+  useSocketEvent("bookings:updated", load)
 
   const handleCreate = async (data) => {
     await createBooking(data)

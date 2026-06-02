@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { useSocketEvent } from '../hooks/useSocket'
 import {
   getRequests,
   createRequest,
@@ -48,6 +49,8 @@ function RequestsPage() {
   useEffect(() => {
     load()
   }, [load])
+
+  useSocketEvent("requests:updated", load)
 
   const roomById = Object.fromEntries(rooms.flatMap((r) => [[r._id, r], [r.roomNumber, r]]))
 
