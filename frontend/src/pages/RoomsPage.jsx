@@ -117,7 +117,7 @@ export default function RoomsPage() {
       if (!data.success) throw new Error(data.error || 'Update failed');
     } catch (err) {
       setRooms(prevRooms);
-      setRowErrors((prev) => ({ ...prev, [roomId]: 'Failed to save. Try again.' }));
+      setRowErrors((prev) => ({ ...prev, [roomId]: err.message || 'Failed to save. Try again.' }));
     } finally {
       setUpdatingIds((prev) => {
         const next = new Set(prev);
