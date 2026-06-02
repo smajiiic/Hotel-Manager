@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { useSocketEvent } from '../hooks/useSocket'
 import { getTasks, completeTask, createTask, reopenTask, deleteTask } from '../api/tasksApi.js'
 import { getRooms } from '../api/roomsApi.js'
 import { useAuth } from '../hooks/useAuth.js'
@@ -45,6 +46,8 @@ function TasksPage() {
   useEffect(() => {
     load()
   }, [load])
+
+  useSocketEvent("tasks:updated", load)
 
   const handleComplete = async (id) => {
     setActionError(null)

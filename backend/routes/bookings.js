@@ -8,8 +8,12 @@ const VALID_STATUSES = ['confirmed', 'checked-in', 'checked-out'];
 const ok = (data, status = 200) => ({ status, body: { success: true, data } });
 const fail = (error, status = 500) => ({ status, body: { success: false, error } });
 const send = (res, { status, body }) => res.status(status).json(body);
+const emit = (req, event, data) => {
+  const io = req.app.get('io');
+  if (io) io.emit(event, data);
+};
 
-async function autoCheckoutOverdue() {
+async function autoCheckoutOverdue(io) {
   try {
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
@@ -26,6 +30,10 @@ async function autoCheckoutOverdue() {
       { roomNumber: { $in: overdueRoomNums } },
       { $set: { status: 'needs-cleaning' } }
     );
+    if (io) {
+      io.emit('bookings:updated');
+      io.emit('rooms:updated');
+    }
     console.log(`Auto-checked-out ${overdue.length} overdue booking(s)`);
   } catch (err) {
     console.error('autoCheckoutOverdue failed:', err.message);
@@ -34,12 +42,10 @@ async function autoCheckoutOverdue() {
 
 router.get('/', async (req, res) => {
   try {
-    await autoCheckoutOverdue();
+    await autoCheckoutOverdue(req.app.get('io'));
     const bookings = await Booking.find().sort({ checkIn: 1 });
     send(res, ok(bookings));
-  } catch (err) {
-    send(res, fail(err.message));
-  }
+  } catch (err) { send(res, fail(err.message)); }
 });
 
 router.post('/', async (req, res) => {
@@ -59,7 +65,6 @@ router.post('/', async (req, res) => {
       return send(res, fail('checkOut must be after checkIn', 400));
     }
 
-    // CONFLICT DETECTION: block if this room is already booked during these dates
     const overlap = await Booking.findOne({
       roomId: Number(roomId),
       occupancyStatus: { $ne: 'checked-out' },
@@ -82,20 +87,18 @@ router.post('/', async (req, res) => {
       occupancyStatus: status,
     });
     const saved = await newBooking.save();
+    emit(req, 'bookings:updated');
     send(res, ok(saved, 201));
-  } catch (err) {
-    send(res, fail(err.message, 400));
-  }
+  } catch (err) { send(res, fail(err.message, 400)); }
 });
 
 router.delete('/:id', async (req, res) => {
   try {
     const removed = await Booking.findByIdAndDelete(req.params.id);
     if (!removed) return send(res, fail('Booking not found', 404));
+    emit(req, 'bookings:updated');
     send(res, ok({ deleted: true, _id: req.params.id }));
-  } catch (err) {
-    send(res, fail(err.message));
-  }
+  } catch (err) { send(res, fail(err.message)); }
 });
 
 module.exports = router;
