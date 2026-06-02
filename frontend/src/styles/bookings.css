@@ -1,30 +1,32 @@
 .bookings-page {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .bookings-header h1 {
   margin: 0;
-  font-size: 1.4rem;
-  color: #111827;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--color-text-primary);
 }
 
 .bookings-status {
-  padding: 24px 12px;
+  padding: var(--space-8) var(--space-4);
   text-align: center;
-  color: #6b7280;
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
 }
 
 .bookings-status-error {
-  color: #b00020;
+  color: var(--status-danger-text);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .bookings-list {
@@ -33,21 +35,29 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .booking-row {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 14px 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--t-fast), border-color var(--t-fast);
+}
+
+.booking-row:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-border-strong);
 }
 
 .booking-row.is-today {
-  border-left: 3px solid #d4a017;
+  border-left: 3px solid var(--accent);
+  padding-left: 15px;
 }
 
 .booking-row-header {
@@ -55,84 +65,89 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .booking-row-guest {
   font-weight: 700;
-  color: #111827;
-  font-size: 1rem;
+  color: var(--color-text-primary);
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
 }
 
 .booking-row-room {
-  color: #6b7280;
-  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  font-weight: 500;
 }
 
 .booking-row-dates {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   font-size: 0.9rem;
-  color: #374151;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
 }
 
 .booking-row-arrow {
-  color: #9ca3af;
+  color: var(--color-text-tertiary);
 }
 
 .booking-row-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: center;
 }
 
 .booking-status {
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
+  letter-spacing: 0.07em;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
   border: 1px solid transparent;
 }
 
 .booking-status-confirmed {
-  background: #f3f4f6;
-  color: #374151;
-  border-color: #e5e7eb;
+  background: var(--status-info-bg);
+  color: var(--status-info-text);
+  border-color: rgba(28, 74, 133, 0.18);
 }
 
 .booking-status-checked-in {
-  background: #dceadb;
-  color: #2d6a23;
-  border-color: #b6cbb1;
+  background: var(--status-success-bg);
+  color: var(--status-success-text);
+  border-color: rgba(31, 122, 60, 0.20);
 }
 
 .booking-status-checked-out {
-  background: #f9fafb;
-  color: #9ca3af;
-  border-color: #f3f4f6;
+  background: var(--cream-200);
+  color: var(--color-text-tertiary);
+  border-color: var(--color-border);
 }
 
 .booking-tag {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
   border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .booking-tag-today {
-  background: #fef3c7;
-  color: #92400e;
-  border-color: #fcd34d;
+  background: rgba(176, 141, 87, 0.14);
+  color: var(--accent-dk);
+  border-color: rgba(176, 141, 87, 0.30);
 }
 
 @media (min-width: 480px) {
   .bookings-header h1 {
-    font-size: 1.7rem;
+    font-size: 1.875rem;
   }
 }

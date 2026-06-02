@@ -34,10 +34,16 @@ function LoginPage() {
     }
   }
 
+  const year = new Date().getFullYear()
+
   return (
     <div className="login-page">
+      <div className="login-brand-overlay" aria-hidden="true">
+        Isa Begov Hamam
+      </div>
+
       <form className="login-card" onSubmit={handleSubmit} noValidate>
-        <h1 className="login-title">Isa Begov Hamam</h1>
+        <h1 className="login-title">Welcome back</h1>
         <p className="login-subtitle">Sign in to continue</p>
 
         <label className="login-label" htmlFor="username">Username</label>
@@ -49,6 +55,7 @@ function LoginPage() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           disabled={submitting}
+          placeholder="admin"
         />
 
         <label className="login-label" htmlFor="password">Password</label>
@@ -60,18 +67,19 @@ function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={submitting}
+          placeholder="••••••••"
         />
 
         {error && <div className="login-error" role="alert">{error}</div>}
 
-        <button
-          type="submit"
-          className="login-submit"
-          disabled={submitting}
-        >
+        <button type="submit" className="login-submit" disabled={submitting}>
           {submitting ? 'Signing in…' : 'Sign in'}
         </button>
       </form>
+
+      <div className="login-footer-overlay" aria-hidden="true">
+        Sarajevo · Est. 1462 · © {year}
+      </div>
     </div>
   )
 }

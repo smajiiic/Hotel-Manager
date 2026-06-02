@@ -7,79 +7,9 @@ import { getRequests } from '../api/requestsApi.js'
 import { useAuth } from '../hooks/useAuth.js'
 import LoadingState from '../components/LoadingState.jsx'
 import ErrorState from '../components/ErrorState.jsx'
+import '../styles/dashboard.css'
 
 const todayLocal = () => new Date().toLocaleDateString('sv-SE')
-
-const styles = {
-  page: {
-    minHeight: '100vh',
-    backgroundColor: '#f8f7f4',
-    fontFamily: "'DM Sans', sans-serif",
-    padding: '2rem 1.5rem',
-    boxSizing: 'border-box',
-  },
-  header: { marginBottom: '2rem' },
-  title: {
-    margin: '0 0 0.25rem 0',
-    fontSize: '1.75rem',
-    fontWeight: '800',
-    color: '#111827',
-    letterSpacing: '-0.02em',
-  },
-  subtitle: { margin: 0, fontSize: '0.95rem', color: '#6b7280' },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-    gap: '1rem',
-  },
-  card: {
-    backgroundColor: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '12px',
-    padding: '1.25rem 1.4rem',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-  },
-  cardHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '0.75rem',
-  },
-  cardTitle: {
-    fontSize: '0.78rem',
-    fontWeight: '700',
-    color: '#9ca3af',
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    margin: 0,
-  },
-  cardLink: {
-    fontSize: '0.78rem',
-    color: '#3b82f6',
-    textDecoration: 'none',
-    fontWeight: '500',
-  },
-  bigNumber: {
-    fontSize: '2rem',
-    fontWeight: '800',
-    color: '#111827',
-    lineHeight: 1,
-    margin: '0 0 0.5rem 0',
-  },
-  breakdown: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.35rem',
-    marginTop: '0.5rem',
-  },
-  breakdownRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: '0.875rem',
-    color: '#374151',
-  },
-  breakdownLabel: { color: '#6b7280' },
-}
 
 function countByRoomStatus(rooms) {
   return rooms.reduce(
@@ -108,6 +38,14 @@ function countTasksByStatus(tasks) {
       return acc
     },
     { pending: 0, completed: 0 }
+  )
+}
+
+function StatNumber({ value, delay = 1 }) {
+  return (
+    <span className={`dash-card-number stat-number stat-number-${delay}`}>
+      {value}
+    </span>
   )
 }
 
@@ -141,103 +79,104 @@ export default function DashboardPage() {
     }
   }, [])
 
-  useEffect(() => {
-    load()
-  }, [load])
+  useEffect(() => { load() }, [load])
 
   const roomCounts = countByRoomStatus(rooms)
   const todayBookings = bookingsForToday(bookings)
   const taskCounts = countTasksByStatus(tasks)
 
   return (
-    <div style={styles.page}>
-      <div style={styles.header}>
-        <h1 style={styles.title}>Dashboard</h1>
-        <p style={styles.subtitle}>
-          Welcome back{user ? `, ${user.username}` : ''} · Overview of all modules
+    <div className="dashboard-page">
+      <header className="dashboard-header">
+        <h1 className="dashboard-title">
+          Welcome back{user ? `, ${user.username}` : ''}
+        </h1>
+        <p className="dashboard-subtitle">
+          Overview of all modules
+          {user?.role && <span className="dashboard-role-pill">{user.role}</span>}
         </p>
-      </div>
+      </header>
 
       {status === 'loading' && <LoadingState />}
       {status === 'error' && <ErrorState message={error} onRetry={load} />}
 
       {status === 'loaded' && (
-        <div style={styles.grid}>
-          <div style={styles.card}>
-            <div style={styles.cardHeader}>
-              <h2 style={styles.cardTitle}>Rooms</h2>
-              <Link to="/rooms" style={styles.cardLink}>View →</Link>
+        <div className="dashboard-grid">
+          <article className="dash-card dash-card-rooms">
+            <div className="dash-card-header">
+              <h2 className="dash-card-title">Rooms</h2>
+              <Link to="/rooms" className="dash-card-link">View</Link>
             </div>
-            <p style={styles.bigNumber}>{rooms.length}</p>
-            <div style={styles.breakdown}>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Available</span>
-                <strong>{roomCounts.available}</strong>
+            <StatNumber value={rooms.length} delay={1} />
+            <div className="dash-card-breakdown">
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Available</span>
+                <span className="dash-card-row-value">{roomCounts.available}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Occupied</span>
-                <strong>{roomCounts.occupied}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Occupied</span>
+                <span className="dash-card-row-value">{roomCounts.occupied}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Needs cleaning</span>
-                <strong>{roomCounts['needs-cleaning']}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Needs cleaning</span>
+                <span className="dash-card-row-value">{roomCounts['needs-cleaning']}</span>
               </div>
             </div>
-          </div>
+          </article>
 
-          <div style={styles.card}>
-            <div style={styles.cardHeader}>
-              <h2 style={styles.cardTitle}>Bookings</h2>
-              <Link to="/bookings" style={styles.cardLink}>View →</Link>
+          <article className="dash-card dash-card-bookings">
+            <div className="dash-card-header">
+              <h2 className="dash-card-title">Bookings</h2>
+              <Link to="/bookings" className="dash-card-link">View</Link>
             </div>
-            <p style={styles.bigNumber}>{bookings.length}</p>
-            <div style={styles.breakdown}>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Currently checked in</span>
-                <strong>{todayBookings.checkedIn}</strong>
+            <StatNumber value={bookings.length} delay={2} />
+            <div className="dash-card-breakdown">
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Currently checked in</span>
+                <span className="dash-card-row-value">{todayBookings.checkedIn}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Arriving today</span>
-                <strong>{todayBookings.arriving}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Arriving today</span>
+                <span className="dash-card-row-value">{todayBookings.arriving}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Departing today</span>
-                <strong>{todayBookings.departing}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Departing today</span>
+                <span className="dash-card-row-value">{todayBookings.departing}</span>
               </div>
             </div>
-          </div>
+          </article>
 
-          <div style={styles.card}>
-            <div style={styles.cardHeader}>
-              <h2 style={styles.cardTitle}>Tasks</h2>
-              <Link to="/tasks" style={styles.cardLink}>View →</Link>
+          <article className="dash-card dash-card-tasks">
+            <div className="dash-card-header">
+              <h2 className="dash-card-title">Tasks</h2>
+              <Link to="/tasks" className="dash-card-link">View</Link>
             </div>
-            <p style={styles.bigNumber}>{tasks.length}</p>
-            <div style={styles.breakdown}>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Pending</span>
-                <strong>{taskCounts.pending}</strong>
+            <StatNumber value={tasks.length} delay={3} />
+            <div className="dash-card-breakdown">
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Pending</span>
+                <span className="dash-card-row-value">{taskCounts.pending}</span>
               </div>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Completed</span>
-                <strong>{taskCounts.completed}</strong>
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Completed</span>
+                <span className="dash-card-row-value">{taskCounts.completed}</span>
               </div>
             </div>
-          </div>
+          </article>
 
-          <div style={styles.card}>
-            <div style={styles.cardHeader}>
-              <h2 style={styles.cardTitle}>Requests</h2>
-              <Link to="/requests" style={styles.cardLink}>View →</Link>
+          <article className="dash-card dash-card-requests">
+            <div className="dash-card-header">
+              <h2 className="dash-card-title">Requests</h2>
+              <Link to="/requests" className="dash-card-link">View</Link>
             </div>
-            <p style={styles.bigNumber}>{requests.length}</p>
-            <div style={styles.breakdown}>
-              <div style={styles.breakdownRow}>
-                <span style={styles.breakdownLabel}>Open notes</span>
-                <strong>{requests.length}</strong>
+            <StatNumber value={requests.length} delay={4} />
+            <div className="dash-card-breakdown">
+              <div className="dash-card-row">
+                <span className="dash-card-row-label">Open notes</span>
+                <span className="dash-card-row-value">{requests.length}</span>
               </div>
             </div>
-          </div>
+          </article>
         </div>
       )}
     </div>

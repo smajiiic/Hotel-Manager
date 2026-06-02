@@ -13,19 +13,6 @@ const FILTERS = [
   { value: 'completed', label: 'Completed' },
 ]
 
-const addButtonStyles = {
-  alignSelf: 'flex-start',
-  padding: '0.55rem 1rem',
-  border: 'none',
-  backgroundColor: '#111827',
-  color: '#fff',
-  borderRadius: '6px',
-  fontSize: '0.9rem',
-  fontFamily: "'DM Sans', sans-serif",
-  fontWeight: '600',
-  cursor: 'pointer',
-  marginBottom: '0.5rem',
-}
 
 function TasksPage() {
   const { role } = useAuth()
@@ -109,7 +96,7 @@ function TasksPage() {
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          style={addButtonStyles}
+          className="btn-brass"
         >
           + New task
         </button>

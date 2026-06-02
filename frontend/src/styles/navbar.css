@@ -1,51 +1,82 @@
 .navbar {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  gap: var(--space-3);
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border-bottom: 1px solid rgba(15, 26, 46, 0.08);
+  box-shadow: 0 1px 0 rgba(15, 26, 46, 0.02);
 }
 
 .navbar-brand {
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: #111827;
+  font-weight: 800;
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
   text-decoration: none;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: color var(--t-fast);
+}
+
+.navbar-brand::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--accent), var(--accent-dk) 70%);
+  box-shadow:
+    inset 0 -1px 2px rgba(15, 26, 46, 0.30),
+    inset 0 1px 1px rgba(255, 255, 255, 0.30),
+    0 0 0 4px rgba(176, 141, 87, 0.15);
+  flex-shrink: 0;
+}
+
+.navbar-brand:hover {
+  color: var(--navy-700);
+  text-decoration: none;
 }
 
 .navbar-brand:focus-visible {
-  outline: 2px solid #111827;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: 4px;
 }
 
 .navbar-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
   padding: 0;
   background: transparent;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  color: #111827;
-  font-size: 1.2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 1.15rem;
   cursor: pointer;
-  transition: background-color 120ms ease;
+  transition: background-color var(--t-fast), border-color var(--t-fast);
 }
 
 .navbar-toggle:hover {
-  background: #f5f3ee;
+  background: var(--color-hover);
+  border-color: var(--color-border-strong);
 }
 
 .navbar-toggle:focus-visible {
-  outline: 2px solid #111827;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .navbar-collapse {
@@ -54,17 +85,16 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 8px 16px 16px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-4) var(--space-4);
   flex-direction: column;
-  gap: 4px;
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.1);
+  gap: var(--space-1);
+  box-shadow: var(--shadow-md);
+  animation: slideUp var(--t-base);
 }
 
-.navbar-collapse.is-open {
-  display: flex;
-}
+.navbar-collapse.is-open { display: flex; }
 
 .navbar-links {
   display: flex;
@@ -73,97 +103,119 @@
 }
 
 .navbar-link {
+  position: relative;
   display: flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0 14px;
+  min-height: 40px;
+  padding: 0 16px;
   text-decoration: none;
-  color: #1a1a1a;
-  border-radius: 6px;
-  transition: background-color 120ms ease;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.92rem;
+  transition: background-color var(--t-fast), color var(--t-fast);
 }
 
 .navbar-link:hover {
-  background: #f5f3ee;
+  background: var(--color-hover);
+  color: var(--color-text-primary);
+  text-decoration: none;
 }
 
 .navbar-link:focus-visible {
-  outline: 2px solid #1a1a1a;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .navbar-link.active {
-  background: #1a1a1a;
-  color: #fff;
+  background: var(--navy-800);
+  background: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-800) 100%);
+  color: var(--color-text-inverted);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .navbar-link.active:hover {
-  background: #333;
+  background: linear-gradient(180deg, var(--navy-800) 0%, var(--navy-900) 100%);
+  color: var(--color-text-inverted);
 }
 
 .navbar-user {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px 14px 0;
-  border-top: 1px solid #e5e7eb;
-  margin-top: 8px;
+  gap: var(--space-2);
+  padding: var(--space-3) 14px 0;
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--space-2);
 }
 
 .navbar-username {
-  font-size: 0.9rem;
-  color: #111827;
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
 }
 
 .navbar-role {
-  font-size: 0.7rem;
+  font-size: 0.66rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #6b7280;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  padding: 2px 6px;
+  letter-spacing: 0.08em;
+  color: var(--accent-dk);
+  background: rgba(176, 141, 87, 0.12);
+  border: 1px solid rgba(176, 141, 87, 0.28);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
   align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.navbar-role::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 .navbar-logout {
   align-self: flex-start;
-  min-height: 40px;
+  min-height: 36px;
   padding: 0 14px;
   background: transparent;
-  border: 1px solid #d1d5db;
-  color: #111827;
-  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
   font-weight: 500;
+  font-size: 0.88rem;
   cursor: pointer;
-  transition: background-color 120ms ease;
+  transition: background-color var(--t-fast), border-color var(--t-fast);
 }
 
 .navbar-logout:hover {
-  background: #f5f3ee;
+  background: var(--color-hover);
+  border-color: var(--color-border-strong);
 }
 
 .navbar-logout:focus-visible {
-  outline: 2px solid #111827;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .navbar-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(15, 26, 46, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   z-index: 40;
+  animation: fadeIn var(--t-base);
 }
 
 @media (min-width: 768px) {
-  .navbar {
-    padding: 12px 24px;
-  }
-
-  .navbar-toggle {
-    display: none;
-  }
-
+  .navbar { padding: 14px 32px; }
+  .navbar-toggle { display: none; }
   .navbar-collapse {
     display: flex;
     position: static;
@@ -173,32 +225,265 @@
     padding: 0;
     border-bottom: none;
     box-shadow: none;
-    gap: 24px;
+    gap: var(--space-6);
+    animation: none;
   }
-
   .navbar-links {
     flex-direction: row;
-    gap: 4px;
+    gap: var(--space-1);
     flex: 1;
     justify-content: center;
   }
-
   .navbar-user {
     flex-direction: row;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-3);
     padding: 0;
     border-top: none;
     margin-top: 0;
   }
+  .navbar-logout { margin-left: var(--space-1); }
+  .navbar-backdrop { display: none; }
+}
 
-  .navbar-logout {
-    margin-left: 4px;
-  }
+/* ---------- User dropdown menu ---------- */
+.navbar-user-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
 
-  /* Edge case: user opened drawer on mobile, then resized to desktop.
-     Hide the (now-meaningless) backdrop so the inline layout isn't dimmed. */
-  .navbar-backdrop {
-    display: none;
+.navbar-user-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 12px 4px 4px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(15, 26, 46, 0.08);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.navbar-user-trigger:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(15, 26, 46, 0.18);
+  box-shadow: 0 2px 8px rgba(15, 26, 46, 0.06);
+}
+
+.navbar-user-trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.navbar-user-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy-700) 0%, var(--navy-900) 100%);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.navbar-user-name {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.navbar-user-chevron {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  transition: transform var(--t-fast);
+  margin-left: 2px;
+}
+
+.navbar-user-menu[data-open="true"] .navbar-user-chevron {
+  transform: rotate(180deg);
+}
+
+.navbar-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 16px 36px rgba(15, 26, 46, 0.18),
+    0 4px 10px rgba(15, 26, 46, 0.08);
+  overflow: hidden;
+  z-index: 100;
+  animation: slideUp var(--t-base);
+}
+
+.navbar-user-info {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.navbar-user-info-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.navbar-user-info-role {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-dk);
+  background: rgba(176, 141, 87, 0.12);
+  border: 1px solid rgba(176, 141, 87, 0.28);
+  border-radius: 999px;
+  padding: 3px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.navbar-user-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+  min-height: 0;
+  border-radius: 0;
+}
+
+.navbar-user-action:hover {
+  background: var(--color-hover);
+}
+
+.navbar-user-action:focus-visible {
+  outline: none;
+  background: var(--color-hover);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.navbar-user-action-icon {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  transform: scaleX(-1);
+}
+
+/* Mobile: dropdown takes full width inside drawer */
+@media (max-width: 767px) {
+  .navbar-user-menu {
+    width: 100%;
+    padding: var(--space-3) 0 0;
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-2);
   }
+  .navbar-user-trigger {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .navbar-user-dropdown {
+    position: static;
+    margin-top: 6px;
+    width: 100%;
+  }
+}
+
+/* ---------- Override: floating rounded navbar ---------- */
+.navbar {
+  margin: 14px 14px 0;
+  padding: 12px 18px;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  box-shadow:
+    0 8px 28px rgba(15, 26, 46, 0.12),
+    0 2px 6px rgba(15, 26, 46, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    margin: 18px 18px 0;
+    padding: 12px 22px;
+  }
+}
+
+/* Mobile drawer: tuck under the rounded navbar without ugly seam */
+.navbar-collapse {
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-top: none;
+  margin: 0 14px;
+  left: 0;
+  right: 0;
+  width: auto;
+}
+
+/* Force the navbar to float 14px below viewport top, always */
+.navbar {
+  top: 14px !important;
+  margin: 0 14px !important;
+}
+
+.layout {
+  padding-top: 14px;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    top: 18px !important;
+    margin: 0 18px !important;
+  }
+  .layout {
+    padding-top: 18px;
+  }
+}
+
+/* Round every possible inner container */
+.navbar { overflow: hidden; }
+.navbar-collapse,
+.navbar-links {
+  border-radius: var(--radius-xl);
+}
+
+/* Backdrop filter sometimes needs explicit overflow clipping to respect radius */
+@media (min-width: 768px) {
+  .navbar-collapse {
+    background: transparent;
+    border: none;
+  }
+}
+
+/* Restore visible overflow so dropdown can extend below navbar */
+.navbar { overflow: visible !important; }
+
+/* Make sure the dropdown sits ABOVE everything */
+.navbar-user-dropdown {
+  z-index: 200;
 }

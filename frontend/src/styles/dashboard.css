@@ -1,0 +1,249 @@
+/* ====== Dashboard header ====== */
+.dashboard-page {
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  animation: slideUp var(--t-slow);
+}
+
+.dashboard-header {
+  position: relative;
+  background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 60%, #16243a 100%);
+  color: var(--color-text-inverted);
+  border-radius: var(--radius-xl);
+  padding: 2rem 2rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.dashboard-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.05) 1.5px, transparent 2px),
+    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.04) 1.5px, transparent 2px);
+  background-size: 38px 38px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.dashboard-header::after {
+  content: "";
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  right: -100px;
+  top: -100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(176, 141, 87, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.dashboard-title {
+  position: relative;
+  margin: 0 0 0.4rem;
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 0%, #d6ccba 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboard-subtitle {
+  position: relative;
+  margin: 0;
+  font-size: 0.98rem;
+  color: rgba(255, 255, 255, 0.72);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dashboard-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: rgba(176, 141, 87, 0.14);
+  border: 1px solid rgba(176, 141, 87, 0.32);
+  padding: 4px 11px;
+  border-radius: var(--radius-full);
+}
+
+.dashboard-role-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px rgba(176, 141, 87, 0.25);
+}
+
+/* ====== Card grid ====== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.1rem;
+}
+
+.dash-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.6rem 1.4rem;
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--t-base), transform var(--t-base), border-color var(--t-base);
+  overflow: hidden;
+}
+
+.dash-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--card-accent, var(--navy-800));
+}
+
+.dash-card::after {
+  content: "";
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  right: -60px;
+  top: -60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--card-accent-tint, rgba(15,26,46,0.04)), transparent 70%);
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity var(--t-base), transform var(--t-base);
+}
+
+.dash-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-strong);
+  transform: translateY(-2px);
+}
+
+.dash-card:hover::after {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Variants per card */
+.dash-card-rooms     { --card-accent: var(--teal-600);     --card-accent-tint: rgba(45, 110, 110, 0.10); }
+.dash-card-bookings  { --card-accent: var(--accent);       --card-accent-tint: rgba(176, 141, 87, 0.10); }
+.dash-card-tasks     { --card-accent: var(--amber-600);    --card-accent-tint: rgba(194, 137, 31, 0.10); }
+.dash-card-requests  { --card-accent: var(--burgundy-600); --card-accent-tint: rgba(139, 44, 62, 0.10); }
+
+.dash-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  position: relative;
+}
+
+.dash-card-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--card-accent, var(--color-text-secondary));
+  margin: 0;
+}
+
+.dash-card-link {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: color var(--t-fast), background var(--t-fast);
+}
+
+.dash-card-link::after {
+  content: "→";
+  display: inline-block;
+  transition: transform var(--t-fast);
+}
+
+.dash-card-link:hover {
+  color: var(--color-text-primary);
+  background: var(--color-hover);
+  text-decoration: none;
+}
+
+.dash-card-link:hover::after { transform: translateX(2px); }
+
+.dash-card-number {
+  position: relative;
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1;
+  margin: 0 0 0.55rem;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
+
+.dash-card-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.dash-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+}
+
+.dash-card-row-label {
+  color: var(--color-text-secondary);
+}
+
+.dash-card-row-value {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 768px) {
+  .dashboard-page { padding: 2.5rem 2rem; }
+  .dashboard-title { font-size: 2.5rem; }
+  .dashboard-header { padding: 2.5rem 2.5rem; }
+}
+
+/* Re-usable hover card class (still used by RoomsPage summary tiles) */
+.app-card {
+  transition: box-shadow var(--t-base), transform var(--t-base), border-color var(--t-base);
+}
+.app-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
+}
+
+.dashboard-page-enter { animation: slideUp var(--t-slow); }

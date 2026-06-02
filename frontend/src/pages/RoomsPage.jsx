@@ -6,10 +6,11 @@ import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
 
+const API_BASE = import.meta.env.VITE_API_BASE ?? '';
+
 const styles = {
   page: {
     minHeight: '100vh',
-    backgroundColor: '#f8f7f4',
     fontFamily: "'DM Sans', sans-serif",
     padding: '2rem 1.5rem',
     boxSizing: 'border-box',
@@ -19,15 +20,13 @@ const styles = {
     margin: '0 0 0.25rem 0',
     fontSize: '1.6rem',
     fontWeight: '800',
-    color: '#111827',
+    color: '#fff',
     letterSpacing: '-0.02em',
+    textShadow: '0 2px 12px rgba(0,0,0,0.55)',
   },
-  subtitle: { margin: 0, fontSize: '0.9rem', color: '#6b7280' },
+  subtitle: { margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 6px rgba(0,0,0,0.5)' },
   summaryRow: { display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' },
   summaryCard: {
-    backgroundColor: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '10px',
     padding: '0.75rem 1.1rem',
     display: 'flex',
     flexDirection: 'column',
@@ -36,24 +35,20 @@ const styles = {
   },
   summaryLabel: {
     fontSize: '0.72rem',
-    color: '#9ca3af',
+    color: '#6b7280',
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   },
   summaryCount: { fontSize: '1.5rem', fontWeight: '800', color: '#111827', lineHeight: 1 },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: '12px',
-    border: '1px solid #e5e7eb',
     overflow: 'hidden',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
   },
   errorWrap: { marginBottom: '1.25rem' },
   tableHeader: {
     display: 'grid',
     gridTemplateColumns: '140px 1fr 1fr',
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'rgba(249, 250, 251, 0.6)',
     borderBottom: '1px solid #e5e7eb',
     padding: '0.65rem 1rem',
   },
@@ -88,7 +83,7 @@ export default function RoomsPage() {
     setLoading(true);
     setFetchError(null);
     try {
-      const res = await fetch('/api/rooms');
+      const res = await fetch(`${API_BASE}/api/rooms`, { credentials: 'include' });
       const data = await res.json();
       if (!data.success) throw new Error(data.error || 'Failed to load rooms');
       setRooms(data.data);
@@ -112,8 +107,9 @@ export default function RoomsPage() {
     setUpdatingIds((prev) => new Set(prev).add(roomId));
 
     try {
-      const res = await fetch(`/api/rooms/${roomId}/status`, {
+      const res = await fetch(`${API_BASE}/api/rooms/${roomId}/status`, {
         method: 'PUT',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -155,7 +151,7 @@ export default function RoomsPage() {
               { key: 'occupied', label: 'Occupied' },
               { key: 'needs-cleaning', label: 'Needs Cleaning' },
             ].map(({ key, label }) => (
-              <div key={key} style={styles.summaryCard}>
+              <div key={key} className="app-card" style={styles.summaryCard}>
                 <span style={styles.summaryLabel}>{label}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={styles.summaryCount}>{counts[key]}</span>
@@ -175,7 +171,7 @@ export default function RoomsPage() {
           </div>
         )}
 
-        <div style={styles.card}>
+        <div className="app-card" style={styles.card}>
           {loading ? (
             <LoadingState message="Loading rooms…" />
           ) : rooms.length === 0 && !fetchError ? (

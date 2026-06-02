@@ -1,0 +1,166 @@
+/* enhance.css — clean photo backdrop + card polish */
+
+.layout {
+  background-image: url('/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  isolation: isolate;
+  position: relative;
+}
+
+.layout::before,
+.layout::after { display: none; }
+
+.layout-main { position: relative; z-index: 1; }
+
+/* ---------- Cards stay glass so the photo shows through ---------- */
+.task-card,
+.request-row,
+.booking-row,
+.app-card {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 6px 20px rgba(15, 26, 46, 0.12),
+    0 2px 6px rgba(15, 26, 46, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+  transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
+}
+
+.task-card:hover,
+.request-row:hover,
+.booking-row:hover,
+.app-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 20px 44px rgba(15, 26, 46, 0.20),
+    0 8px 16px rgba(15, 26, 46, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(176, 141, 87, 0.32) !important;
+}
+
+/* Status-colored left accents */
+.task-card        { border-left: 3px solid var(--amber-600) !important; }
+.task-card:has(.task-status-completed) { border-left-color: var(--sage-600) !important; }
+.request-row      { border-left: 3px solid var(--burgundy-600) !important; }
+.booking-row      { border-left: 3px solid var(--teal-600) !important; }
+.booking-row.is-today { border-left-color: var(--accent) !important; }
+
+/* Heading + brass underline */
+.tasks-page > h1,
+.requests-header h1,
+.bookings-header h1 {
+  position: relative;
+  padding-bottom: 10px;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+.tasks-page > h1::after,
+.requests-header h1::after,
+.bookings-header h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 52px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dk) 100%);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Frosted filter pills */
+.tasks-filters {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 4px 12px rgba(15, 26, 46, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+.tasks-filter.active {
+  background: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-800) 100%) !important;
+  box-shadow: 0 2px 6px rgba(15, 26, 46, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Status pills */
+.task-status,
+.booking-status,
+.booking-tag {
+  font-weight: 700 !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.task-status-pending {
+  background: rgba(251, 241, 217, 0.95) !important;
+  border-color: rgba(154, 108, 20, 0.35) !important;
+  box-shadow: 0 0 0 3px rgba(194, 137, 31, 0.14);
+}
+.task-status-completed {
+  background: rgba(231, 239, 233, 0.95) !important;
+  border-color: rgba(74, 110, 87, 0.32) !important;
+  box-shadow: 0 0 0 3px rgba(93, 138, 107, 0.14);
+}
+.booking-status-checked-in {
+  background: rgba(231, 239, 233, 0.95) !important;
+  border-color: rgba(74, 110, 87, 0.32) !important;
+}
+.booking-status-confirmed {
+  background: rgba(230, 240, 240, 0.95) !important;
+  border-color: rgba(32, 88, 90, 0.30) !important;
+  color: var(--teal-700) !important;
+}
+.booking-tag-today {
+  background: rgba(176, 141, 87, 0.25) !important;
+  border-color: rgba(176, 141, 87, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.18), 0 0 14px rgba(176, 141, 87, 0.30);
+  color: var(--accent-dk) !important;
+}
+
+/* Brass primary button */
+.btn-brass {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  min-height: 40px;
+  padding: 0 18px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dk) 100%);
+  color: #fff;
+  border: 1px solid var(--accent-dk);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.92rem;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(176, 141, 87, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: background var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
+}
+.btn-brass:hover:not(:disabled) {
+  background: linear-gradient(180deg, var(--accent-dk) 0%, #765c3a 100%);
+  transform: translateY(-1px);
+}
+.btn-brass:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Fade-up list anim */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tasks-list > li,
+.requests-list > li,
+.bookings-list > li {
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.tasks-list > li:nth-child(1), .requests-list > li:nth-child(1), .bookings-list > li:nth-child(1) { animation-delay: 0.04s; }
+.tasks-list > li:nth-child(2), .requests-list > li:nth-child(2), .bookings-list > li:nth-child(2) { animation-delay: 0.10s; }
+.tasks-list > li:nth-child(3), .requests-list > li:nth-child(3), .bookings-list > li:nth-child(3) { animation-delay: 0.16s; }
+.tasks-list > li:nth-child(4), .requests-list > li:nth-child(4), .bookings-list > li:nth-child(4) { animation-delay: 0.22s; }
+.tasks-list > li:nth-child(n+5), .requests-list > li:nth-child(n+5), .bookings-list > li:nth-child(n+5) { animation-delay: 0.28s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tasks-list > li, .requests-list > li, .bookings-list > li { animation: none; }
+}
