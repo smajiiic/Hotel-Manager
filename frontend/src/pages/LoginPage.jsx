@@ -13,7 +13,6 @@ function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname ?? '/tasks'
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -25,8 +24,8 @@ function LoginPage() {
     setError(null)
     setSubmitting(true)
     try {
-      await login(username, password)
-      navigate(from, { replace: true })
+      const result = await login(username, password)
+      navigate(location.state?.from?.pathname ?? (result?.role === 'manager' ? '/dashboard' : '/tasks'), { replace: true })
     } catch (err) {
       setError(loginErrorMessage(err))
     } finally {
