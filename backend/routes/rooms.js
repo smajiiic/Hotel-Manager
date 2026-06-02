@@ -4,6 +4,7 @@ const Room = require('../models/Room');
 const Task = require('../models/Task');
 const Booking = require('../models/Booking');
 const roomService = require('../services/RoomService');
+const roomOpsFacade = require('../services/RoomOperationsFacade');
 const { requireAuth, requireRole } = require('../middleware/auth');
 
 const VALID_STATUSES = ['occupied', 'available', 'needs-cleaning'];
@@ -84,6 +85,30 @@ router.put('/:id/status', requireRole('reception', 'cleaning'), async (req, res)
     if (io) io.emit('rooms:updated', updated);
 
     send(res, ok(updated));
+  } catch (err) {
+    send(res, fail(err.message));
+  }
+});
+
+// Checkout turnover — reception only. Delegates the multi-step operation to the
+// RoomOperationsFacade (closes the active booking + sets the room to
+// needs-cleaning), then mirrors the PUT-status side effects: auto-create the
+// cleaning task and broadcast the live socket events so every open plan updates.
+router.post('/:id/checkout', requireRole('reception'), async (req, res) => {
+  try {
+    const result = await roomOpsFacade.checkoutRoom(req.params.id);
+    if (!result.success) {
+      return send(res, fail(result.error || 'Checkout failed', result.error === 'Room not found' ? 404 : 500));
+    }
+
+    const io = req.app.get('io');
+    await maybeCreateCleaningTask(result.data.room, io);
+    if (io) {
+      io.emit('rooms:updated', result.data.room);
+      io.emit('bookings:updated');
+    }
+
+    send(res, ok(result.data));
   } catch (err) {
     send(res, fail(err.message));
   }

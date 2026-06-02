@@ -1,3 +1,5 @@
+const Room = require('../models/Room');
+
 class RoomService {
   constructor() {
     this.subs = [];
@@ -15,15 +17,16 @@ class RoomService {
     }
   }
 
+  // roomId is the Mongo _id. Persists the new status, then notifies observers
+  // with the updated document. Returns the updated room (or null if not found).
   async updateRoomStatus(roomId, newStatus) {
-    console.log(`Room ${roomId} status shifted to: ${newStatus}`);
-
-    for (let sub of this.subs) {
-      if (typeof sub.onRoomStatusChanged === 'function') {
-        sub.onRoomStatusChanged(roomId, newStatus);
-      }
-    }
-    return { success: true };
+    const updated = await Room.findByIdAndUpdate(
+      roomId,
+      { status: newStatus },
+      { new: true, runValidators: true }
+    );
+    if (updated) this.notifyObservers(updated);
+    return updated;
   }
 }
 
