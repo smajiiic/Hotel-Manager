@@ -1,23 +1,45 @@
 /* ---------- Design Tokens ---------- */
 :root {
-  /* Brand palette — Modern minimal: deep navy + warm cream */
-  --navy-900: #0f1a2e;
-  --navy-800: #1a2942;
-  --navy-700: #2a3c5c;
-  --navy-600: #455373;
-  --navy-500: #5a6478;
-  --navy-300: #94a0b5;
-  --navy-200: #c7cdd9;
-  --navy-100: #e8ecf3;
+  /* Brand palette — Operational dashboard: deep teal on limestone/stone.
+     The --navy-* / --cream-* names are kept for backwards compatibility, but
+     their VALUES are now the teal/limestone system so every page that consumes
+     these tokens re-skins automatically. New code should prefer --ibh-* below. */
 
-  --cream-50:  #fdfbf6;
-  --cream-100: #faf7f0;
-  --cream-200: #f3eee2;
-  --cream-300: #e6e1d3;
+  /* Teal ink scale (--navy-800 is the primary brand teal #0F6E56) */
+  --navy-900: #0a4a3a;   /* darkest teal ink */
+  --navy-800: #0f6e56;   /* PRIMARY — deep teal */
+  --navy-700: #158069;
+  --navy-600: #2f9079;
+  --navy-500: #5a7d74;   /* muted teal-gray (secondary text) */
+  --navy-300: #9aa8a3;   /* tertiary text */
+  --navy-200: #c7d2cd;
+  --navy-100: #e5ece9;
+
+  /* Limestone / stone neutrals */
+  --cream-50:  #fbfaf7;
+  --cream-100: #f6f4ee;   /* page background — limestone */
+  --cream-200: #efece3;
+  --cream-300: #e2ddd0;   /* hairline border */
   --cream-400: #c8c1ad;
 
-  --accent:    #b08d57;        /* brass — used sparingly */
-  --accent-dk: #8e7044;
+  --accent:    #0f6e56;        /* teal — primary accent */
+  --accent-dk: #0a4a3a;
+
+  /* Canonical brand tokens (prefer these in new dashboard code) */
+  --ibh-teal:        #0f6e56;
+  --ibh-teal-dark:   #0a4a3a;
+  --ibh-teal-soft:   #e3efea;
+  --ibh-limestone:   #f6f4ee;
+  --ibh-stone:       #efece3;
+
+  /* Status palette — green = available, rose = occupied, amber = needs-cleaning.
+     Kept consistent with StatusBadge so plan fills and badges match. */
+  --ibh-available:      #1f7a3c;
+  --ibh-available-fill: #d1fae5;
+  --ibh-occupied:       #a01b1b;
+  --ibh-occupied-fill:  #fee2e2;
+  --ibh-cleaning:       #8a5a00;
+  --ibh-cleaning-fill:  #fef3c7;
 
   /* Semantic */
   --color-text-primary:   var(--navy-900);

@@ -1,0 +1,98 @@
+.ibh-floorplan-wrap {
+  width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  /* allow pinch-zoom + scroll on phones instead of dropping the plan */
+  touch-action: pinch-zoom pan-x pan-y;
+  background: var(--ibh-limestone, #f6f4ee);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-radius: 12px;
+}
+
+.ibh-floorplan-svg {
+  display: block;
+  width: 100%;
+  /* keeps room labels legible on small screens — wrapper scrolls horizontally */
+  min-width: 640px;
+  height: auto;
+}
+
+.ibh-wall {
+  fill: var(--color-surface, #fff);
+  stroke: var(--ibh-teal-dark, #0a4a3a);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.ibh-corridor { fill: rgba(15, 110, 86, 0.05); }
+
+.ibh-door-leaf,
+.ibh-door-arc {
+  fill: none;
+  stroke: var(--ibh-teal-dark, #0a4a3a);
+  stroke-width: 1.5;
+}
+.ibh-door-arc { opacity: 0.5; }
+.ibh-door-gap { stroke: var(--color-surface, #fff); stroke-width: 4; }
+
+.ibh-zone-rect {
+  fill: rgba(15, 110, 86, 0.07);
+  stroke: var(--ibh-teal, #0f6e56);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+.ibh-zone-label {
+  fill: var(--ibh-teal-dark, #0a4a3a);
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.ibh-room-rect {
+  stroke: var(--ibh-teal-dark, #0a4a3a);
+  stroke-width: 2;
+  transition: fill 0.2s ease, stroke-width 0.12s ease;
+}
+.ibh-room { outline: none; }
+.ibh-room.is-interactive { cursor: pointer; }
+.ibh-room.is-interactive:hover .ibh-room-rect,
+.ibh-room:focus-visible .ibh-room-rect {
+  stroke-width: 4;
+}
+.ibh-room.is-selected .ibh-room-rect {
+  stroke: var(--ibh-teal, #0f6e56);
+  stroke-width: 4.5;
+}
+.ibh-room-number {
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  fill: #1f2937;
+  pointer-events: none;
+}
+.ibh-room-label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.ibh-flag-badge { fill: var(--ibh-teal, #0f6e56); }
+.ibh-flag-glyph {
+  fill: #fff;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.ibh-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

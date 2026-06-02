@@ -1,7 +1,9 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import AuthProvider from './components/AuthProvider.jsx'
 import Layout from './components/Layout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import AppShell from './dashboard/components/AppShell.jsx'
+import RoleHome from './dashboard/RoleHome.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import TasksPage from './pages/TasksPage.jsx'
@@ -16,8 +18,14 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+
+          {/* Role-aware dashboard home — shared AppShell wraps all three roles */}
+          <Route element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
+            <Route index element={<RoleHome />} />
+          </Route>
+
+          {/* Legacy module pages — drill-in targets keep the original NavBar layout */}
           <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-            <Route index element={<Navigate to="/tasks" replace />} />
             <Route
               path="/dashboard"
               element={
@@ -38,6 +46,7 @@ function App() {
               }
             />
           </Route>
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
