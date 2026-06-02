@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Room = require('../models/Room');
 const Task = require('../models/Task');
+const Booking = require('../models/Booking');
 const roomService = require('../services/RoomService');
 
 const VALID_STATUSES = ['occupied', 'available', 'needs-cleaning'];
@@ -10,8 +11,7 @@ const ok = (data, status = 200) => ({ status, body: { success: true, data } });
 const fail = (error, status = 500) => ({ status, body: { success: false, error } });
 const send = (res, { status, body }) => res.status(status).json(body);
 
-// When a room flips to 'needs-cleaning', create a cleaning task (idempotent).
-async function maybeCreateCleaningTask(room) {
+async function maybeCreateCleaningTask(room, io) {
   try {
     if (room.status !== 'needs-cleaning') return;
     const existing = await Task.findOne({
@@ -25,6 +25,7 @@ async function maybeCreateCleaningTask(room) {
       roomId: room.roomNumber,
       status: 'pending',
     });
+    if (io) io.emit('tasks:updated');
     console.log(`Auto-created cleaning task for room ${room.roomNumber}`);
   } catch (err) {
     console.error('maybeCreateCleaningTask failed:', err.message);
@@ -44,20 +45,36 @@ router.put('/:id/status', async (req, res) => {
   try {
     const { status } = req.body || {};
     if (!VALID_STATUSES.includes(status)) {
+      return send(res, fail(`Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`, 400));
+    }
+
+    // Find the room first to get its roomNumber
+    const room = await Room.findById(req.params.id);
+    if (!room) return send(res, fail('Room not found', 404));
+
+    // Block status change if there's an active checked-in booking for this room
+    const activeBooking = await Booking.findOne({
+      roomId: room.roomNumber,
+      occupancyStatus: 'checked-in',
+    });
+
+    if (activeBooking) {
       return send(res, fail(
-        `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`,
-        400
+        `Cannot change status — Room ${room.roomNumber} is occupied by ${activeBooking.guestName} (checked in until ${activeBooking.checkOut})`,
+        409
       ));
     }
+
     const updated = await Room.findByIdAndUpdate(
       req.params.id,
       { status },
       { new: true, runValidators: true }
     );
-    if (!updated) return send(res, fail('Room not found', 404));
 
+    const io = req.app.get('io');
     roomService.notifyObservers(updated);
-    await maybeCreateCleaningTask(updated);
+    await maybeCreateCleaningTask(updated, io);
+    if (io) io.emit('rooms:updated', updated);
 
     send(res, ok(updated));
   } catch (err) {
