@@ -5,6 +5,7 @@ import StatusBadge from '../components/StatusBadge';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
+import { useSocketEvent } from '../hooks/useSocket';
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? '';
 
@@ -97,6 +98,8 @@ export default function RoomsPage() {
   useEffect(() => {
     fetchRooms();
   }, [fetchRooms]);
+
+  useSocketEvent("rooms:updated", fetchRooms);
 
   const handleStatusChange = useCallback(async (roomId, newStatus) => {
     const prevRooms = rooms;

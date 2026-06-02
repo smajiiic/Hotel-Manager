@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Room = require('../models/Room');
 const Task = require('../models/Task');
-const Booking = require('../models/Booking');
 const roomService = require('../services/RoomService');
 
 const VALID_STATUSES = ['occupied', 'available', 'needs-cleaning'];
@@ -47,29 +46,12 @@ router.put('/:id/status', async (req, res) => {
     if (!VALID_STATUSES.includes(status)) {
       return send(res, fail(`Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`, 400));
     }
-
-    // Find the room first to get its roomNumber
-    const room = await Room.findById(req.params.id);
-    if (!room) return send(res, fail('Room not found', 404));
-
-    // Block status change if there's an active checked-in booking for this room
-    const activeBooking = await Booking.findOne({
-      roomId: room.roomNumber,
-      occupancyStatus: 'checked-in',
-    });
-
-    if (activeBooking) {
-      return send(res, fail(
-        `Cannot change status — Room ${room.roomNumber} is occupied by ${activeBooking.guestName} (checked in until ${activeBooking.checkOut})`,
-        409
-      ));
-    }
-
     const updated = await Room.findByIdAndUpdate(
       req.params.id,
       { status },
       { new: true, runValidators: true }
     );
+    if (!updated) return send(res, fail('Room not found', 404));
 
     const io = req.app.get('io');
     roomService.notifyObservers(updated);
