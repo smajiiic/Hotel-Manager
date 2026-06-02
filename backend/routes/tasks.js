@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
+const Room = require('../models/Room');
 
 const ok = (data, status = 200) => ({ status, body: { success: true, data } });
 const fail = (error, status = 500) => ({ status, body: { success: false, error } });
@@ -45,6 +46,20 @@ router.patch('/:id/complete', async (req, res) => {
       req.params.id, { status: 'completed' }, { new: true }
     );
     if (!completed) return send(res, fail('Task not found', 404));
+
+    // If this is a cleaning task, auto-flip the room to 'available'
+    if (/clean/i.test(completed.description)) {
+      const room = await Room.findOneAndUpdate(
+        { roomNumber: completed.roomId, status: 'needs-cleaning' },
+        { status: 'available' },
+        { new: true }
+      );
+      if (room) {
+        emit(req, 'rooms:updated', room);
+        console.log(`Auto-set room ${room.roomNumber} to available after cleaning task done`);
+      }
+    }
+
     emit(req, 'tasks:updated');
     send(res, ok(completed));
   } catch (err) { send(res, fail(err.message)); }
