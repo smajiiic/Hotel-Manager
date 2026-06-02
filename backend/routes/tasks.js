@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
 const Room = require('../models/Room');
+const { requireAuth, requireRole } = require('../middleware/auth');
 
 const ok = (data, status = 200) => ({ status, body: { success: true, data } });
 const fail = (error, status = 500) => ({ status, body: { success: false, error } });
@@ -11,14 +12,16 @@ const emit = (req, event, data) => {
   if (io) io.emit(event, data);
 };
 
-router.get('/', async (req, res) => {
+// Any authenticated role can view tasks.
+router.get('/', requireAuth, async (req, res) => {
   try {
     const tasks = await Task.find().sort({ createdAt: -1 });
     send(res, ok(tasks));
   } catch (err) { send(res, fail(err.message)); }
 });
 
-router.post('/', async (req, res) => {
+// Only reception creates tasks.
+router.post('/', requireRole('reception'), async (req, res) => {
   try {
     const newTask = new Task({
       description: req.body.description,
@@ -31,7 +34,8 @@ router.post('/', async (req, res) => {
   } catch (err) { send(res, fail(err.message, 400)); }
 });
 
-router.delete('/:id', async (req, res) => {
+// Only reception deletes tasks.
+router.delete('/:id', requireRole('reception'), async (req, res) => {
   try {
     const removed = await Task.findByIdAndDelete(req.params.id);
     if (!removed) return send(res, fail('Task not found', 404));
@@ -40,7 +44,8 @@ router.delete('/:id', async (req, res) => {
   } catch (err) { send(res, fail(err.message)); }
 });
 
-router.patch('/:id/complete', async (req, res) => {
+// Reception and cleaning may mark tasks complete.
+router.patch('/:id/complete', requireRole('reception', 'cleaning'), async (req, res) => {
   try {
     const completed = await Task.findByIdAndUpdate(
       req.params.id, { status: 'completed' }, { new: true }
@@ -65,7 +70,8 @@ router.patch('/:id/complete', async (req, res) => {
   } catch (err) { send(res, fail(err.message)); }
 });
 
-router.patch('/:id/reopen', async (req, res) => {
+// Only reception reopens a completed task.
+router.patch('/:id/reopen', requireRole('reception'), async (req, res) => {
   try {
     const reopened = await Task.findByIdAndUpdate(
       req.params.id, { status: 'pending' }, { new: true }

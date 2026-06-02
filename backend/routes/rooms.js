@@ -4,6 +4,7 @@ const Room = require('../models/Room');
 const Task = require('../models/Task');
 const Booking = require('../models/Booking');
 const roomService = require('../services/RoomService');
+const { requireAuth, requireRole } = require('../middleware/auth');
 
 const VALID_STATUSES = ['occupied', 'available', 'needs-cleaning'];
 
@@ -32,7 +33,8 @@ async function maybeCreateCleaningTask(room, io) {
   }
 }
 
-router.get('/', async (req, res) => {
+// Any authenticated role can view the rooms.
+router.get('/', requireAuth, async (req, res) => {
   try {
     const rooms = await Room.find().sort({ roomNumber: 1 });
     send(res, ok(rooms));
@@ -41,11 +43,16 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.put('/:id/status', async (req, res) => {
+// Reception may set any status; cleaning may only flip a room to 'available'.
+router.put('/:id/status', requireRole('reception', 'cleaning'), async (req, res) => {
   try {
     const { status } = req.body || {};
     if (!VALID_STATUSES.includes(status)) {
       return send(res, fail(`Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`, 400));
+    }
+
+    if (req.session.role === 'cleaning' && status !== 'available') {
+      return send(res, fail('Cleaning staff can only set a room to available', 403));
     }
 
     // Find room to get its number
