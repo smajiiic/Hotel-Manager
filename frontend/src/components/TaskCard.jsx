@@ -36,7 +36,7 @@ const actionsRowStyles = {
 }
 
 function TaskCard({ task, room, role, onComplete, onReopen, onDelete }) {
-  const canComplete = task.status === 'pending' && role !== 'manager'
+  const canComplete = task.status === 'pending'
   const canReopen = task.status === 'completed' && !!onReopen
   const canDelete = !!onDelete
 
