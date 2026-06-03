@@ -104,6 +104,60 @@
 .ibh-legend-divider { width: 1px; height: 18px; background: var(--color-border, #e2ddd0); }
 .ibh-legend-hint { margin-left: auto; color: var(--color-text-tertiary, #9aa8a3); }
 
-@media (max-width: 720px) {
+/* ── Responsive ───────────────────────────────────────────────────────────
+   The wide 2.4:1 plan is letterboxed inside a flex container on desktop. On the
+   collapsed-shell width and below, the content zone becomes narrow and (often)
+   short, which would squeeze the meet-fit SVG into a tiny strip with huge empty
+   marble bands and unusably small room tap targets. Below the shell breakpoint
+   we instead let the SVG own its natural aspect ratio (width:100% + height:auto)
+   so it scales fluidly to the available width and the rooms stay as large as the
+   width allows. */
+@media (max-width: 900px) {
+  /* Stop the wrap from forcing a fixed letterbox height; let it grow to the
+     SVG's intrinsic (aspect-ratio) height instead. */
+  .ibh-floorplan-wrap {
+    flex: 0 0 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding: 6px;
+  }
+  /* viewBox + width:100% + height:auto → fluid scaling, no internal scroll. */
+  .ibh-floorplan-svg {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1680 / 700;
+  }
   .ibh-legend-hint { margin-left: 0; }
+}
+
+@media (max-width: 600px) {
+  .ibh-plan-head { padding: 0 2px 8px; }
+  .ibh-floor-label { font-size: 1.05rem; }
+  /* Keep the booking-mode toggle a comfortable tap target. */
+  .ibh-fs-btn { min-height: 44px; padding: 0 12px; }
+
+  /* The plan is very wide (2.4:1); at phone widths a fluid-fit render makes the
+     rooms quite small. Allow the user to swipe the plan horizontally so each
+     room keeps a usable tap target, while the page itself never overflows. */
+  .ibh-floorplan-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    padding: 6px;
+  }
+  .ibh-floorplan-svg {
+    width: 100%;
+    height: auto;
+    /* Give each room a usable size: scale the plan so it is at least ~1.7× the
+       viewport wide so rooms keep a tappable size; the wrap scrolls horizontally
+       to reveal the rest, while the page itself never overflows. */
+    min-width: 170vw;
+    flex: 0 0 auto;
+    aspect-ratio: 1680 / 700;
+  }
+
+  /* Legend: tighter gaps and full-width hint so nothing is clipped at 320px. */
+  .ibh-legend { gap: 10px 14px; padding-top: 8px; }
+  .ibh-legend-hint { flex-basis: 100%; margin-top: 2px; }
 }

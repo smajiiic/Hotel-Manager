@@ -10,6 +10,9 @@
   gap: 16px;
   flex-wrap: wrap;
 }
+/* Let the heading/subtext block shrink so long copy wraps instead of pushing
+   the add button off-screen on narrow widths. */
+.ibh-guests-head > div { min-width: 0; }
 .ibh-guests-head h1 {
   font-family: var(--font-display);
   font-size: 1.5rem;
@@ -56,7 +59,7 @@
 
 /* Roster sections */
 .ibh-guest-section { display: flex; flex-direction: column; gap: 10px; }
-.ibh-guest-section-head { display: flex; align-items: center; gap: 10px; }
+.ibh-guest-section-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ibh-guest-section-head h2 {
   font-family: var(--font-display);
   font-size: 1.05rem;
@@ -76,7 +79,7 @@
   align-items: center;
   justify-content: center;
 }
-.ibh-guest-section-hint { color: var(--color-text-tertiary, #9aa8a3); font-size: 0.82rem; }
+.ibh-guest-section-hint { color: var(--color-text-tertiary, #9aa8a3); font-size: 0.82rem; min-width: 0; }
 .ibh-guest-empty { color: var(--color-text-tertiary, #9aa8a3); font-size: 0.88rem; margin: 0 0 2px; }
 
 .ibh-guest-list { display: flex; flex-direction: column; gap: 8px; }
@@ -123,9 +126,23 @@
 
 .ibh-guest-card-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
-@media (max-width: 640px) {
-  .ibh-resv-grid { grid-template-columns: 1fr; }
-  .ibh-guest-card { flex-wrap: wrap; }
-  .ibh-guest-card-actions { width: 100%; }
-  .ibh-mini-btn { flex: 1; justify-content: center; }
+@media (max-width: 900px) {
+  /* Reservation form action row: let the two buttons wrap/grow rather than
+     crowd against the right edge on the collapsed shell. */
+  .ibh-resv-actions { flex-wrap: wrap; }
+}
+
+@media (max-width: 600px) {
+  /* Tighten card/form padding on phones (kept >= 10px). The card flex-wrap,
+     actions full-width, and resv-grid single column are owned by enhance.css. */
+  .ibh-resv-form { padding: 14px; }
+  .ibh-guest-card { padding: 12px; gap: 10px; }
+
+  /* The wrapped action cluster spans the card full width — let each button
+     grow evenly and center its label so they read as a balanced pair. */
+  .ibh-guest-card-actions .ibh-mini-btn { flex: 1; justify-content: center; }
+
+  /* Reservation form buttons fill the row so they stay tappable at 320px. */
+  .ibh-resv-actions .primary,
+  .ibh-resv-actions .ghost { flex: 1; }
 }

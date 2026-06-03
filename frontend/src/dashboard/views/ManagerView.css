@@ -11,3 +11,56 @@
   font-size: 1.1rem;
   color: var(--ibh-teal-dark, #0a4a3a);
 }
+
+/* ========================================================================
+   RESPONSIVE — manager analytics home.
+   The shell collapses to one column at <=900px (handled globally). Here we
+   stop the multi-column metric grids and the large display headlines from
+   forcing horizontal scroll on tablets and phones. Scoped to this view so we
+   only adjust the manager layout, not the shared components elsewhere.
+   ======================================================================== */
+
+@media (max-width: 900px) {
+  /* Lower the auto-fit floor so metric tiles never demand more width than the
+     collapsed main column can give (the 200px floor can overflow ~320px). */
+  .ibh-manager-view .ibh-metrics {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .ibh-manager-view .ibh-chart-card {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Lead + secondary metric tiles stack to a single column on phones. */
+  .ibh-manager-view .ibh-metrics {
+    grid-template-columns: 1fr;
+  }
+  .ibh-manager-view .ibh-metrics--secondary {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .ibh-manager-view .ibh-metrics--secondary .ibh-metric {
+    flex: initial;
+  }
+
+  /* Let the big stat value shrink slightly and wrap if a value runs long, so a
+     tile can never push the page wider than ~320px. */
+  .ibh-manager-view .ibh-metric-value {
+    font-size: 1.45rem;
+    white-space: normal;
+  }
+
+  /* Display headline in the checkout-crunch card scales down to fit. */
+  .ibh-manager-view .ibh-crunch-headline {
+    font-size: 1.2rem;
+  }
+  .ibh-manager-view .ibh-crunch {
+    padding: 14px 16px;
+  }
+
+  .ibh-manager-view .ibh-chart-card {
+    padding: 12px;
+  }
+}

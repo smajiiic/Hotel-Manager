@@ -17,8 +17,11 @@
   cursor: pointer;
 }
 .ibh-guest-row:hover { background: var(--ibh-stone, #efece3); text-decoration: none; }
-.ibh-guest-name { font-weight: 700; }
-.ibh-guest-meta { color: var(--color-text-secondary, #5a7d74); font-size: 0.85rem; flex: 1; }
+/* Guest name is user data: let it shrink/wrap so it never pushes the chevron
+   off-screen on a narrow phone. */
+.ibh-guest-name { font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
+.ibh-guest-meta { color: var(--color-text-secondary, #5a7d74); font-size: 0.85rem; flex: 1; min-width: 0; }
+.ibh-guest-row > svg { flex-shrink: 0; }
 
 .ibh-note-callout {
   display: flex;
@@ -100,15 +103,19 @@
 .ibh-checkin-form { display: flex; flex-direction: column; gap: 10px; }
 .ibh-checkin-resv {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   background: var(--ibh-teal-soft, #e3efea);
   color: var(--ibh-teal-dark, #0a4a3a);
   border-radius: 8px;
   padding: 8px 10px;
   font-size: 0.82rem;
+  line-height: 1.4;
 }
-.ibh-checkin-resv svg { flex-shrink: 0; }
+.ibh-checkin-resv svg { flex-shrink: 0; margin-top: 2px; }
+/* The reservation summary holds a guest name + date range; allow it to wrap so
+   it can never overflow the bottom sheet on a 320px phone. */
+.ibh-checkin-resv span { min-width: 0; overflow-wrap: anywhere; }
 .ibh-field { display: flex; flex-direction: column; gap: 4px; }
 .ibh-field > span { font-size: 0.78rem; font-weight: 600; color: var(--color-text-secondary, #5a7d74); }
 .ibh-field input {
@@ -126,8 +133,13 @@
   outline-offset: 1px;
   border-color: var(--ibh-teal, #0f6e56);
 }
-.ibh-field-row { display: flex; gap: 8px; }
-.ibh-field-row .ibh-field { flex: 1; min-width: 0; }
+/* Two date inputs side by side. Native date controls carry an intrinsic min
+   width, so on very narrow phones we let the row wrap to a single column
+   (flex-basis 140px) rather than force horizontal overflow — no media query
+   needed since wrapping triggers exactly when the pair no longer fits. */
+.ibh-field-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.ibh-field-row .ibh-field { flex: 1 1 140px; min-width: 0; }
+.ibh-field-row .ibh-field input { min-width: 0; }
 .ibh-field-err { margin: 0; font-size: 0.8rem; color: var(--status-danger-text, #a01b1b); }
 
 .ibh-action-row { display: flex; gap: 8px; }
@@ -146,9 +158,12 @@
 .ibh-quickadd-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
 .ibh-quickinfo { margin: 0; display: flex; flex-direction: column; gap: 8px; }
-.ibh-quickinfo > div { display: flex; align-items: center; justify-content: space-between; }
-.ibh-quickinfo dt { display: inline-flex; align-items: center; gap: 8px; margin: 0; color: var(--color-text-secondary, #5a7d74); font-size: 0.85rem; }
-.ibh-quickinfo dd { margin: 0; font-weight: 600; color: var(--color-text-primary, #0a4a3a); font-size: 0.88rem; }
+.ibh-quickinfo > div { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ibh-quickinfo dt { display: inline-flex; align-items: center; gap: 8px; margin: 0; color: var(--color-text-secondary, #5a7d74); font-size: 0.85rem; min-width: 0; }
+.ibh-quickinfo dt svg { flex-shrink: 0; }
+/* The value can be a date range (Booking row); let it shrink and sit right so a
+   long label + range never overflows the panel on a narrow phone. */
+.ibh-quickinfo dd { margin: 0; font-weight: 600; color: var(--color-text-primary, #0a4a3a); font-size: 0.88rem; min-width: 0; text-align: right; overflow-wrap: anywhere; }
 
 .ibh-drillins { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
 .ibh-drillin {
@@ -162,11 +177,13 @@
   color: var(--ibh-teal-dark, #0a4a3a);
 }
 .ibh-drillin:hover { background: #d6e9e2; text-decoration: none; }
+.ibh-drillin > svg { flex-shrink: 0; }
 .ibh-drillin-icon {
   width: 36px; height: 36px; border-radius: 10px;
   background: #fff; color: var(--ibh-teal, #0f6e56);
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.ibh-drillin-text { flex: 1; display: flex; flex-direction: column; }
+.ibh-drillin-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.ibh-drillin-text strong, .ibh-drillin-text span { overflow-wrap: anywhere; }
 .ibh-drillin-text strong { font-size: 0.92rem; }
 .ibh-drillin-text span { font-size: 0.78rem; color: var(--color-text-secondary, #5a7d74); }

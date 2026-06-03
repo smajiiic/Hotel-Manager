@@ -73,8 +73,9 @@
   margin-bottom: 10px;
 }
 
-@media (max-width: 560px) {
-  .ibh-queue-item { flex-direction: column; align-items: stretch; }
+@media (max-width: 600px) {
+  .ibh-queue-item { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 14px; }
   .ibh-queue-actions { flex-direction: column; }
-  .ibh-queue-actions button { width: 100%; }
+  /* Full-width stacked buttons; drop the 132px floor so they never push past a ~320px phone. */
+  .ibh-queue-actions button { width: 100%; min-width: 0; }
 }

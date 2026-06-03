@@ -131,6 +131,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ---------- Responsive base ---------- *
+   App-wide guards so every page scales on any phone or tablet. Standard
+   breakpoints used across the app: tablet <= 900px, phone <= 600px.
+   `overflow-x: clip` prevents stray horizontal scroll WITHOUT turning the
+   element into a scroll container (so it won't break `position: sticky`). */
+html {
+  /* Stop iOS/Android from auto-inflating text on orientation change. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* Media never forces the page wider than the viewport. */
+img, picture, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Long unbroken strings (emails, URLs, IDs) wrap instead of overflowing. */
+h1, h2, h3, h4, h5, h6, p, li, td, th, dd, dt, figcaption {
+  overflow-wrap: break-word;
+}
+
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 var(--space-3);
   font-family: var(--font-display);

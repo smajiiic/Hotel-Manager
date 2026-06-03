@@ -20,3 +20,47 @@
   background: var(--color-surface, #fff);
 }
 .ibh-drill-link:hover { background: var(--ibh-teal-soft, #e3efea); text-decoration: none; }
+
+/* ── Responsive ───────────────────────────────────────────────────────────
+   Reception home embeds the metrics grid + the FloorPlan plan card. On the
+   desktop the plan card lives in a fixed-height (100vh) shell and uses flex:1
+   to fill leftover space. On the collapsed single-column shell that leftover
+   space shrinks once the metric cards stack, crushing the SVG to an unreadable
+   sliver. Below, we let the reception view flow naturally and give the plan a
+   sensible minimum height so it stays legible while the content column (which
+   is already overflow-y:auto in the shell) scrolls. Scoped to the reception
+   view via its data-testid so other role views are untouched. */
+@media (max-width: 900px) {
+  .ibh-role-view[data-testid="reception-view"] {
+    /* Flow naturally and let the shell's content column scroll instead of
+       crushing the plan into the remaining flex space. */
+    flex: 0 0 auto;
+    min-height: 0;
+    gap: 14px;
+  }
+  /* The plan card no longer fights for leftover height — it takes a stable,
+     readable height and the page scrolls past it. */
+  .ibh-role-view[data-testid="reception-view"] .ibh-plan-card {
+    flex: 0 0 auto;
+  }
+  .ibh-role-view[data-testid="reception-view"] .ibh-floorplan-wrap {
+    min-height: 360px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ibh-role-view[data-testid="reception-view"] {
+    gap: 12px;
+  }
+  /* Guarantee a single metric-card column on the narrowest phones (320px) so
+     a 200px min-track can never force horizontal overflow. */
+  .ibh-role-view[data-testid="reception-view"] .ibh-metrics {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  /* A touch shorter on phones, still legible. */
+  .ibh-role-view[data-testid="reception-view"] .ibh-floorplan-wrap {
+    min-height: 300px;
+    padding: 4px;
+  }
+}

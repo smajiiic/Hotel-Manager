@@ -202,3 +202,32 @@
 @media (min-width: 480px) {
   .login-card { padding: var(--space-10) var(--space-8); }
 }
+
+/* Phone: tighten page + card padding so the 440px card and its form fit
+   comfortably down to 320px without horizontal scroll, and keep the
+   absolutely-positioned overlays from reaching the screen edges. */
+@media (max-width: 600px) {
+  .login-page {
+    padding: var(--space-5) var(--space-3);
+  }
+
+  .login-brand-overlay {
+    top: var(--space-4);
+    left: var(--space-4);
+    right: var(--space-4);
+    font-size: 1rem;
+  }
+
+  .login-card {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .login-footer-overlay {
+    max-width: calc(100% - var(--space-8));
+    bottom: var(--space-4);
+  }
+}

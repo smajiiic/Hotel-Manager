@@ -10,7 +10,7 @@
   gap: 16px;
   flex-wrap: wrap;
 }
-.ibh-section-title { display: flex; align-items: center; gap: 12px; }
+.ibh-section-title { display: flex; align-items: center; gap: 12px; min-width: 0; flex-wrap: wrap; }
 .ibh-section-title h1 {
   font-family: var(--font-display);
   font-size: 1.5rem;
@@ -127,3 +127,26 @@
   cursor: pointer;
 }
 .ibh-icon-btn:hover { background: var(--ibh-stone, #efece3); }
+
+/* ---- Responsive: tablet / collapsed shell ---- */
+@media (max-width: 900px) {
+  /* Let the head wrap cleanly: title block and add button take their own rows
+     instead of fighting for one line via space-between. */
+  .ibh-section-head { gap: 12px; }
+  /* Filter chips can wrap instead of forcing a horizontal scroll. */
+  .ibh-filter-row { flex-wrap: wrap; }
+}
+
+/* ---- Responsive: phone ---- */
+@media (max-width: 600px) {
+  .ibh-section-head { gap: 10px; }
+  .ibh-section-title { gap: 8px; }
+  .ibh-section-title h1 { font-size: 1.3rem; }
+  /* On the narrowest screens give the add button full width so its 44px tap
+     target (from enhance.css) is comfortable and never crowds the title. */
+  .ibh-section-add { width: 100%; }
+  /* Filter row stretches and chips share the width; they still wrap if needed. */
+  .ibh-filter-row { gap: 4px; align-self: stretch; }
+  .ibh-filter-chip { flex: 1 1 auto; padding: 0 12px; }
+  .ibh-section-empty { padding: 22px 4px; }
+}

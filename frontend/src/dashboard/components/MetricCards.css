@@ -50,3 +50,28 @@
 .ibh-metric-trend.is-down { color: #a01b1b; }
 .ibh-metric-link { font-size: 0.78rem; font-weight: 700; color: var(--ibh-teal, #0f6e56); text-decoration: none; }
 .ibh-metric-link:hover { text-decoration: underline; }
+
+/* Tablet / collapsed-shell: single row of cards can get cramped — let tracks
+   relax so they never force overflow. */
+@media (max-width: 900px) {
+  .ibh-metrics {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  .ibh-metrics--secondary .ibh-metric { flex: 1 1 200px; }
+}
+
+/* Phone: one card per row; ensure the big number + label can shrink without
+   forcing horizontal scroll. */
+@media (max-width: 600px) {
+  .ibh-metrics {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .ibh-metrics--secondary { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .ibh-metrics--secondary .ibh-metric { flex: initial; }
+  .ibh-metric { padding: 12px 14px; gap: 10px; }
+  /* The value carries white-space:nowrap; allow it to shrink/wrap so a long
+     value (e.g. "3 · 12 · 0") can never overflow the card on narrow screens. */
+  .ibh-metric-value { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+}

@@ -7,6 +7,9 @@
 }
 .ibh-history-item:last-child { border-bottom: none; }
 .ibh-history-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-.ibh-history-body { min-width: 0; }
-.ibh-history-line { font-size: 0.9rem; color: var(--color-text-primary, #0a4a3a); }
-.ibh-history-meta { font-size: 0.78rem; color: var(--color-text-tertiary, #9aa8a3); margin-top: 2px; }
+/* min-width:0 lets the flex text column shrink below content size; overflow-wrap
+   on the text divs (not covered by global.css's element-list guard) breaks long
+   unbroken user names / emails in h.by so they never widen the bottom sheet. */
+.ibh-history-body { min-width: 0; flex: 1; }
+.ibh-history-line { font-size: 0.9rem; color: var(--color-text-primary, #0a4a3a); overflow-wrap: anywhere; }
+.ibh-history-meta { font-size: 0.78rem; color: var(--color-text-tertiary, #9aa8a3); margin-top: 2px; overflow-wrap: anywhere; }

@@ -56,13 +56,36 @@
 @media (max-width: 900px) {
   .ibh-shell,
   .ibh-shell.is-collapsed,
-  .ibh-shell.is-room-selected {
+  .ibh-shell.is-room-selected,
+  .ibh-shell.is-fullscreen {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: var(--ibh-topbar-h) 1fr;
     grid-template-areas: 'topbar' 'content';
   }
-  .ibh-shell.is-fullscreen { grid-template-columns: minmax(0, 1fr); }
-  .ibh-shell-content { padding: 14px; }
+
+  /* Pull the sidebar OUT of the grid flow and turn it into an off-canvas
+     drawer. This MUST be `.ibh-shell .ibh-sidebar` (specificity 0,2,0) so it
+     beats the desktop `.ibh-shell .ibh-sidebar { position: static }` rule
+     above — the plain `.ibh-sidebar` drawer rule in Sidebar.css (0,1,0) loses
+     that battle, which left the sidebar in-flow and squeezed the content to a
+     sliver on phones. Fixed + translateX(-100%) parks it off-screen until the
+     hamburger adds .is-open. */
+  .ibh-shell .ibh-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 60;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+  .ibh-shell .ibh-sidebar.is-open { transform: translateX(0); }
+
+  .ibh-shell-content {
+    padding: 14px;
+    /* content now owns the full width; never let it scroll sideways */
+    overflow-x: clip;
+  }
   .ibh-shell-scrim {
     display: block;
     position: fixed;

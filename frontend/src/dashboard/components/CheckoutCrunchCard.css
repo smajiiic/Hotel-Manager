@@ -16,7 +16,7 @@
   gap: 12px;
   flex-wrap: wrap;
 }
-.ibh-crunch-title { margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--ibh-teal-dark, #0a4a3a); }
+.ibh-crunch-title { margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--ibh-teal-dark, #0a4a3a); min-width: 0; }
 .ibh-crunch-deadline {
   font-size: 0.78rem;
   font-weight: 700;
@@ -27,7 +27,9 @@
 
 .ibh-crunch-headline {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  /* Scale headline down on narrow phones so the "X due by … · Y ready · Z remaining"
+     line fits ~320px without forcing horizontal overflow. */
+  font-size: clamp(1.15rem, 5vw, 1.5rem);
   font-weight: 600;
   color: var(--color-text-primary, #0a4a3a);
   margin: 10px 0;
@@ -50,3 +52,22 @@
 .ibh-crunch.tone-warn .ibh-crunch-bar-fill { background: var(--status-warning-text, #8a5a00); }
 
 .ibh-crunch-foot { font-size: 0.8rem; color: var(--color-text-secondary, #5a7d74); margin-top: 6px; }
+
+@media (max-width: 900px) {
+  .ibh-crunch {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ibh-crunch {
+    padding: 14px;
+  }
+  /* Stack the title and deadline into a single column so the uppercase
+     deadline tag never collides with a wrapped title on phones. */
+  .ibh-crunch-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

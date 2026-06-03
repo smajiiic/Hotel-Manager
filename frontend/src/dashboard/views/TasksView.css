@@ -55,9 +55,18 @@
 .ibh-task-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .ibh-icon-only { padding: 0; width: 34px; justify-content: center; }
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
+  /* Tighten the form a touch in the collapsed shell; keeps >= 10px padding. */
+  .ibh-task-form { padding: 14px; }
+}
+
+@media (max-width: 600px) {
+  /* Stack the room/description row into one column on phones (was 640px). */
   .ibh-task-form-grid { grid-template-columns: 1fr; }
+  /* Let the card's action cluster drop below the body so nothing is clipped. */
   .ibh-task-card { flex-wrap: wrap; }
   .ibh-task-actions { width: 100%; }
   .ibh-task-actions .ibh-mini-btn:not(.ibh-icon-only) { flex: 1; justify-content: center; }
+  /* Filter chips can wrap rather than force horizontal scroll on the narrowest screens. */
+  .ibh-filter-row { flex-wrap: wrap; }
 }

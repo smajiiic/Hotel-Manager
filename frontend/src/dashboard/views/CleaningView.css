@@ -19,3 +19,28 @@
   color: var(--ibh-teal-dark, #0a4a3a);
   border-bottom-color: var(--ibh-teal, #0f6e56);
 }
+
+/* Phone: tabs share the row width with tighter padding so the labels never
+   crowd or overflow at ~320px, while keeping the 44px+ tap target. The queue
+   rows are scoped here (TaskQueue.css owns its own stacking at 560px) so the
+   cleaning view stacks across the full phone range without an in-between gap. */
+@media (max-width: 600px) {
+  .ibh-tabs { gap: 0; }
+  .ibh-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 8px;
+    text-align: center;
+  }
+
+  [data-testid='cleaning-view'] .ibh-queue-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  [data-testid='cleaning-view'] .ibh-queue-actions { flex-direction: column; }
+  [data-testid='cleaning-view'] .ibh-queue-actions button {
+    width: 100%;
+    min-width: 0;
+  }
+}
