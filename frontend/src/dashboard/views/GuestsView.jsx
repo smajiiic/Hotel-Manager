@@ -64,7 +64,7 @@ function ReservationForm({ rooms, busy, onSubmit, onCancel }) {
           <span>Room</span>
           <select value={roomNumber} onChange={(e) => setRoomNumber(e.target.value)} disabled={busy}>
             {rooms.map((r) => (
-              <option key={r.roomNumber} value={r.roomNumber}>Room {r.roomNumber}</option>
+              <option key={r.roomNumber} value={r.roomNumber}>Room {r.roomNumber} — {r.status}</option>
             ))}
           </select>
         </label>
@@ -218,7 +218,7 @@ export default function GuestsView() {
     <section className="ibh-role-view ibh-guests-view" data-testid="guests-view" aria-labelledby="guests-heading">
       <header className="ibh-guests-head">
         <div>
-          <h1 id="guests-heading">Guests</h1>
+          <h1 id="guests-heading">Bookings</h1>
           <p className="muted">Who's in-house, arriving, and booked ahead.</p>
         </div>
         {canManage && !showForm && (

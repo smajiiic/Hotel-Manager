@@ -9,14 +9,14 @@ import { useNotifications } from '../hooks/useNotifications.js';
 
 // Floor-plan home subtitle is role-specific; other sections name themselves.
 const HOME_SUBTITLE = {
-  reception: 'Floor plan · 15 rooms',
+  reception: 'Rooms · 15 rooms',
   cleaning: 'Task queue',
   manager: 'Operations overview',
 };
 const SECTION_SUBTITLE = {
   '/tasks': 'Tasks',
   '/requests': 'Guest notes',
-  '/guests': 'Guests',
+  '/guests': 'Bookings',
   '/settings': 'Settings',
 };
 
