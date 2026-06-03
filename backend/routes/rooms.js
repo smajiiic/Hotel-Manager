@@ -114,4 +114,29 @@ router.post('/:id/checkout', requireRole('reception'), async (req, res) => {
   }
 });
 
+// Check-in turnover — reception only. Delegates to the RoomOperationsFacade
+// (creates/activates a booking + flips the room to occupied), then broadcasts
+// the live socket events so every open plan updates. Mirror of /checkout.
+router.post('/:id/checkin', requireRole('reception'), async (req, res) => {
+  try {
+    const result = await roomOpsFacade.checkinRoom(req.params.id, req.body || {});
+    if (!result.success) {
+      const code = result.error === 'Room not found' ? 404
+        : /already|booked|not available/i.test(result.error || '') ? 409
+        : 400;
+      return send(res, fail(result.error || 'Check-in failed', code));
+    }
+
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('rooms:updated', result.data.room);
+      io.emit('bookings:updated');
+    }
+
+    send(res, ok(result.data));
+  } catch (err) {
+    send(res, fail(err.message));
+  }
+});
+
 module.exports = router;
