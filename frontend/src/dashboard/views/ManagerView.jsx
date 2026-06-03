@@ -12,7 +12,7 @@ import { buildRoomViewModels } from '../lib/roomViewModel.js';
 import { computeReceptionMetrics } from '../lib/metrics.js';
 import { round } from '../lib/format.js';
 import { getManagerMetrics, getRoomStatusHistory } from '../data/managerMetrics.js';
-import { IconClipboard, IconChat, IconBed, IconFloorPlan } from '../components/icons.jsx';
+import { IconReports, IconClipboard, IconChat, IconBed, IconFloorPlan } from '../components/icons.jsx';
 import { useDashboard } from '../DashboardContext.jsx';
 
 // Manager read-only analytics. The metric cards + heatmap are derived from LIVE
@@ -41,8 +41,18 @@ export default function ManagerView() {
   const taskCompletionPct = tasks.length ? round((completedTasks / tasks.length) * 100) : 0;
   const outstandingNotes = requests.filter((r) => !r.resolved).length;
 
-  // Lead metrics — live task + note backlog.
+  // Lead metrics — the manager-only insights reception can't see. Turnaround has
+  // no real source yet (no checkout→available timing is tracked), so it shows a
+  // representative placeholder from the mock module until a metrics endpoint lands.
   const leadItems = [
+    {
+      key: 'turnaround',
+      label: 'Avg turnaround',
+      value: `${round(metrics.avgTurnaround.minutes)} min`,
+      sub: 'checkout → available',
+      tone: 'teal',
+      Icon: IconReports,
+    },
     {
       key: 'tasks',
       label: 'Tasks today',

@@ -60,6 +60,9 @@ describe('ManagerView — cards reflect live rooms / tasks / notes', () => {
     render(<ManagerView />);
     await screen.findByTestId('checkout-crunch');
 
+    // Avg turnaround — placeholder figure from the mock module (no live source yet)
+    expect(within(screen.getByTestId('metric-turnaround')).getByText(/min$/)).toBeInTheDocument();
+    expect(within(screen.getByTestId('metric-turnaround')).getByText('checkout → available')).toBeInTheDocument();
     // 2 completed of 5 tasks
     expect(within(screen.getByTestId('metric-tasks')).getByText('2 done')).toBeInTheDocument();
     expect(within(screen.getByTestId('metric-tasks')).getByText(/3 outstanding .* 40% complete/)).toBeInTheDocument();
