@@ -164,3 +164,160 @@
 @media (prefers-reduced-motion: reduce) {
   .tasks-list > li, .requests-list > li, .bookings-list > li { animation: none; }
 }
+
+/* ========================================================================
+   MOBILE OPTIMIZATIONS — fix sidebar overlap, prevent horizontal scroll,
+   shrink tight dashboard layouts on phones.
+   ======================================================================== */
+
+@media (max-width: 900px) {
+  /* Prevent horizontal scroll across the whole shell */
+  html, body, #root {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Sidebar drawer: cap at 280px so it doesn't dominate tiny screens */
+  .ibh-sidebar {
+    width: min(280px, 85vw) !important;
+    max-width: 85vw;
+  }
+
+  /* Stronger scrim so the page behind feels disabled when drawer is open */
+  .ibh-shell-scrim {
+    background: rgba(10, 30, 40, 0.55) !important;
+    backdrop-filter: blur(2px);
+  }
+
+  /* Force content to fit viewport width — no horizontal overflow */
+  .ibh-shell-content,
+  .ibh-shell {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Dashboard cards: tighten padding so content has more room */
+  .ibh-metric-card,
+  .ibh-plan-card,
+  .ibh-section-card,
+  .ibh-guest-card {
+    padding: 12px !important;
+  }
+
+  /* Floor plan: ensure SVG scales properly */
+  .ibh-floorplan-svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Tap targets: minimum 44px for accessibility */
+  .ibh-nav-item,
+  .ibh-mini-btn,
+  .ibh-checkin-btn,
+  button[type="submit"],
+  button[type="button"] {
+    min-height: 44px;
+  }
+
+  /* Guest cards: stack vertically on small screens for breathing room */
+  .ibh-guest-card {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+cd /c/Users/Mirza/Desktop/Hotel-Manager
+git stash push -- .env 2>/dev/null
+
+cat >> frontend/src/styles/enhance.css << 'MOBILEEOF'
+
+/* ========================================================================
+   MOBILE OPTIMIZATIONS — fix sidebar overlap, prevent horizontal scroll,
+   shrink tight dashboard layouts on phones.
+   ======================================================================== */
+
+@media (max-width: 900px) {
+  /* Prevent horizontal scroll across the whole shell */
+  html, body, #root {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Sidebar drawer: cap at 280px so it doesn't dominate tiny screens */
+  .ibh-sidebar {
+    width: min(280px, 85vw) !important;
+    max-width: 85vw;
+  }
+
+  /* Stronger scrim so the page behind feels disabled when drawer is open */
+  .ibh-shell-scrim {
+    background: rgba(10, 30, 40, 0.55) !important;
+    backdrop-filter: blur(2px);
+  }
+
+  /* Force content to fit viewport width — no horizontal overflow */
+  .ibh-shell-content,
+  .ibh-shell {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Dashboard cards: tighten padding so content has more room */
+  .ibh-metric-card,
+  .ibh-plan-card,
+  .ibh-section-card,
+  .ibh-guest-card {
+    padding: 12px !important;
+  }
+
+  /* Floor plan: ensure SVG scales properly */
+  .ibh-floorplan-svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Tap targets: minimum 44px for accessibility */
+  .ibh-nav-item,
+  .ibh-mini-btn,
+  .ibh-checkin-btn,
+  button[type="submit"],
+  button[type="button"] {
+    min-height: 44px;
+  }
+
+  /* Guest cards: stack vertically on small screens for breathing room */
+  .ibh-guest-card {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .ibh-guest-card-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Reservation form: stack inputs to single column */
+  .ibh-resv-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* TopBar: smaller padding so subtitle has room */
+  .ibh-topbar {
+    padding: 0 12px !important;
+  }
+
+  /* Hide room rail / detail panel completely on mobile — it doesn't fit */
+  .ibh-shell .ibh-detail-panel,
+  .ibh-shell .ibh-room-rail {
+    display: none !important;
+  }
+}
+
+@media (max-width: 560px) {
+  /* Even tighter on phones */
+  .ibh-shell-content { padding: 10px !important; }
+  .ibh-metric-card { padding: 10px !important; font-size: 0.9rem; }
+  .ibh-sidebar { width: min(260px, 80vw) !important; }
+  .ibh-guests-head h1,
+  #notes-heading,
+  #guests-heading {
+    font-size: 1.3rem !important;
+  }
+}
