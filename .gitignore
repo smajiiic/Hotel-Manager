@@ -1,2 +1,6 @@
 node_modules/
 .env
+
+# Local-only demo seed — superseded by the canonical seed.js (now 101-115).
+# Kept on disk for ad-hoc demos; not a second source of seed truth in the repo.
+hotel-seeding-script/demo-seed.js
