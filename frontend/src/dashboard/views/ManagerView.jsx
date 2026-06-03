@@ -2,7 +2,6 @@ import './ManagerView.css';
 import FloorPlan from '../components/FloorPlan.jsx';
 import MetricCards from '../components/MetricCards.jsx';
 import CheckoutCrunchCard from '../components/CheckoutCrunchCard.jsx';
-import LineChart from '../components/LineChart.jsx';
 import ManagerRoomDetail from '../components/ManagerRoomDetail.jsx';
 import LoadingState from '../../components/LoadingState.jsx';
 import ErrorState from '../../components/ErrorState.jsx';
@@ -30,13 +29,6 @@ export default function ManagerView() {
   const roomViewModels = buildRoomViewModels(rooms, tasks, requests); // no bookings → no guest data
   const selectedRoom = roomViewModels.find((r) => r.roomNumber === selectedNumber) ?? null;
   const history = selectedRoom ? getRoomStatusHistory(selectedRoom.roomNumber) : [];
-
-  // Cumulative tasks-completed line through the day (pure; series is tiny).
-  const chartData = metrics.tasksByHour.map((p, i, arr) => ({
-    label: p.hour.slice(0, 5),
-    value: arr.slice(0, i + 1).reduce((sum, x) => sum + x.completed, 0),
-  }));
-  const chartTotal = chartData.length ? chartData[chartData.length - 1].value : 0;
 
   // Lead metrics — the manager-only insights reception can't see.
   const leadItems = [
@@ -95,14 +87,6 @@ export default function ManagerView() {
           <CheckoutCrunchCard {...metrics.checkoutCrunch} />
 
           <MetricCards items={leadItems} />
-
-          <div className="ibh-chart-card">
-            <LineChart
-              data={chartData}
-              title="Tasks completed through the day"
-              ariaLabel={`Cumulative tasks completed through the day, reaching ${chartTotal} by end of day.`}
-            />
-          </div>
 
           <MetricCards items={secondaryItems} variant="secondary" />
 

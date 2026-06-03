@@ -1,11 +1,3 @@
-.ibh-chart-card {
-  background: var(--color-surface, #fff);
-  border: 1px solid var(--color-border, #e2ddd0);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 18px;
-}
-
 .ibh-section-h {
   margin: 10px 0 2px;
   font-size: 1.1rem;
@@ -25,10 +17,6 @@
      collapsed main column can give (the 200px floor can overflow ~320px). */
   .ibh-manager-view .ibh-metrics {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  }
-
-  .ibh-manager-view .ibh-chart-card {
-    padding: 14px;
   }
 }
 
@@ -58,9 +46,5 @@
   }
   .ibh-manager-view .ibh-crunch {
     padding: 14px 16px;
-  }
-
-  .ibh-manager-view .ibh-chart-card {
-    padding: 12px;
   }
 }

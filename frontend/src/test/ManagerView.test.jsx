@@ -52,10 +52,10 @@ describe('ManagerView — analytics cards render the shaped (mock) data', () => 
     expect(screen.getByTestId('metric-mix')).toBeInTheDocument();
   });
 
-  test('renders exactly one chart (tasks completed through the day)', async () => {
+  test('does not render the tasks-completed chart', async () => {
     render(<ManagerView />);
     await screen.findByTestId('checkout-crunch');
-    expect(screen.getByText('Tasks completed through the day')).toBeInTheDocument();
+    expect(screen.queryByText('Tasks completed through the day')).not.toBeInTheDocument();
   });
 
   test('renders the floor plan as a read-only heatmap (no interactive affordance)', async () => {
