@@ -15,7 +15,7 @@ const NAV = [
   { key: 'floorplan', label: 'Rooms', Icon: IconFloorPlan, to: '/', end: true, roles: ['reception', 'cleaning'] },
   { key: 'guests', label: 'Bookings', Icon: IconPerson, to: '/guests', roles: ['reception', 'manager'] },
   { key: 'tasks', label: 'Tasks', Icon: IconTasks, to: '/tasks', badge: true, roles: ['reception', 'cleaning', 'manager'] },
-  { key: 'notes', label: 'Guest notes', Icon: IconNotes, to: '/requests', roles: ['reception', 'cleaning', 'manager'] },
+  { key: 'notes', label: 'Requests', Icon: IconNotes, to: '/requests', roles: ['reception', 'cleaning', 'manager'] },
   { key: 'settings', label: 'Settings', Icon: IconSettings, to: '/settings', roles: ['reception', 'cleaning', 'manager'] },
 ];
 

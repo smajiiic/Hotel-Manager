@@ -15,7 +15,7 @@ const HOME_SUBTITLE = {
 };
 const SECTION_SUBTITLE = {
   '/tasks': 'Tasks',
-  '/requests': 'Guest notes',
+  '/requests': 'Requests',
   '/guests': 'Bookings',
   '/settings': 'Settings',
 };

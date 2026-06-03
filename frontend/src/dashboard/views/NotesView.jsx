@@ -126,7 +126,7 @@ export default function NotesView() {
     <section className="ibh-role-view ibh-notes-view" data-testid="notes-view" aria-labelledby="notes-heading">
       <header className="ibh-section-head">
         <div className="ibh-section-title">
-          <h1 id="notes-heading">Guest notes</h1>
+          <h1 id="notes-heading">Requests</h1>
           <span className="ibh-count-pill">{openCount} open</span>
         </div>
         {canEdit && !showForm && (
