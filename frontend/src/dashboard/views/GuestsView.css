@@ -1,0 +1,131 @@
+/* Guest roster view. Reuses shared panel form helpers (.ibh-field, .primary,
+   .ghost, .ibh-panel-error, .ibh-checkin-btn) which are global once bundled. */
+
+.ibh-guests-view { display: flex; flex-direction: column; gap: 18px; }
+
+.ibh-guests-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.ibh-guests-head h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--ibh-teal-dark, #0a4a3a);
+  margin: 0;
+}
+.ibh-guests-head .muted { margin: 2px 0 0; color: var(--color-text-secondary, #5a7d74); font-size: 0.9rem; }
+
+/* Add-reservation button — auto width (overrides the full-width check-in base). */
+.ibh-guests-add {
+  width: auto;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* .ibh-mini-btn + .ibh-icon-btn now live in shared sectionView.css */
+
+/* Reservation form */
+.ibh-resv-form {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ibh-resv-form-head { display: flex; align-items: center; justify-content: space-between; }
+.ibh-resv-form-head h2 { font-family: var(--font-display); font-size: 1.05rem; margin: 0; color: var(--ibh-teal-dark, #0a4a3a); }
+.ibh-resv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ibh-resv-grid .ibh-field select {
+  min-height: 42px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--color-border, #e2ddd0);
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #0a4a3a);
+  font: inherit;
+}
+.ibh-resv-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* Roster sections */
+.ibh-guest-section { display: flex; flex-direction: column; gap: 10px; }
+.ibh-guest-section-head { display: flex; align-items: center; gap: 10px; }
+.ibh-guest-section-head h2 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin: 0;
+  color: var(--ibh-teal-dark, #0a4a3a);
+}
+.ibh-guest-count {
+  min-width: 24px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--ibh-teal-soft, #e3efea);
+  color: var(--ibh-teal-dark, #0a4a3a);
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ibh-guest-section-hint { color: var(--color-text-tertiary, #9aa8a3); font-size: 0.82rem; }
+.ibh-guest-empty { color: var(--color-text-tertiary, #9aa8a3); font-size: 0.88rem; margin: 0 0 2px; }
+
+.ibh-guest-list { display: flex; flex-direction: column; gap: 8px; }
+.ibh-guest-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.ibh-guest-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ibh-teal-soft, #e3efea);
+  color: var(--ibh-teal, #0f6e56);
+}
+.ibh-guest-main { flex: 1; min-width: 0; }
+.ibh-guest-card-name { margin: 0; font-weight: 700; color: var(--color-text-primary, #0a4a3a); }
+.ibh-guest-card-sub {
+  margin: 2px 0 0;
+  font-size: 0.83rem;
+  color: var(--color-text-secondary, #5a7d74);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ibh-guest-dot { color: var(--color-text-tertiary, #9aa8a3); }
+.ibh-guest-flag {
+  background: var(--status-warning-bg, #fdf2dc);
+  color: var(--status-warning-text, #8a5a00);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.ibh-guest-card-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  .ibh-resv-grid { grid-template-columns: 1fr; }
+  .ibh-guest-card { flex-wrap: wrap; }
+  .ibh-guest-card-actions { width: 100%; }
+  .ibh-mini-btn { flex: 1; justify-content: center; }
+}

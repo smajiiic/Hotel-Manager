@@ -1,0 +1,13 @@
+.ibh-chart-card {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.ibh-section-h {
+  margin: 10px 0 2px;
+  font-size: 1.1rem;
+  color: var(--ibh-teal-dark, #0a4a3a);
+}

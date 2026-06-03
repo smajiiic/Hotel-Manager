@@ -1,0 +1,80 @@
+.ibh-queue {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ibh-queue-item {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-left-width: 4px;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.ibh-queue-item.tier-turnover { border-left-color: #8a5a00; }
+.ibh-queue-item.tier-cleaning { border-left-color: var(--ibh-teal, #0f6e56); }
+.ibh-queue-item.tier-general { border-left-color: var(--color-border-strong, #c8c1ad); }
+
+.ibh-queue-main { min-width: 0; flex: 1; }
+.ibh-queue-room {
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--ibh-teal-dark, #0a4a3a);
+  font-variant-numeric: tabular-nums;
+}
+.ibh-queue-title {
+  font-size: 0.95rem;
+  color: var(--color-text-primary, #0a4a3a);
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+.ibh-queue-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.ibh-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+.ibh-tag.tag-turnover { background: var(--status-warning-bg, #fdf2dc); color: var(--status-warning-text, #8a5a00); }
+.ibh-tag.tag-cleaning { background: var(--ibh-teal-soft, #e3efea); color: var(--ibh-teal-dark, #0a4a3a); }
+.ibh-queue-since { font-size: 0.74rem; color: var(--color-text-tertiary, #9aa8a3); }
+
+.ibh-queue-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+.ibh-queue-actions button {
+  min-height: 48px;      /* large touch target — phone-critical role */
+  min-width: 132px;
+  font-weight: 700;
+}
+.ibh-complete-btn {
+  background: var(--ibh-teal, #0f6e56);
+  border-color: var(--ibh-teal, #0f6e56);
+  color: #fff;
+}
+.ibh-complete-btn:hover:not(:disabled) {
+  background: var(--ibh-teal-dark, #0a4a3a);
+  border-color: var(--ibh-teal-dark, #0a4a3a);
+}
+
+.ibh-queue-error {
+  font-size: 0.88rem;
+  color: var(--status-danger-text, #a01b1b);
+  background: var(--status-danger-bg, #fdecec);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 560px) {
+  .ibh-queue-item { flex-direction: column; align-items: stretch; }
+  .ibh-queue-actions { flex-direction: column; }
+  .ibh-queue-actions button { width: 100%; }
+}

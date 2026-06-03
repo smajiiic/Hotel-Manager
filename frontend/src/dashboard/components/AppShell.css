@@ -1,0 +1,73 @@
+.ibh-shell {
+  --ibh-topbar-h: 72px;
+  display: grid;
+  grid-template-columns: 212px minmax(0, 1fr) 0px;
+  grid-template-rows: var(--ibh-topbar-h) 1fr;
+  grid-template-areas:
+    'sidebar topbar topbar'
+    'sidebar content rail';
+  height: 100vh;
+  overflow: hidden;
+  background: var(--ibh-limestone, #f4f1ea);
+  transition: grid-template-columns 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Two-state layout (desktop) */
+.ibh-shell.is-collapsed { grid-template-columns: 72px minmax(0, 1fr) 0px; }
+.ibh-shell.is-room-selected { grid-template-columns: 72px minmax(0, 1fr) 360px; }
+
+/* Fullscreen booking mode — hide sidebar + topbar, keep plan (+ rail if open) */
+.ibh-shell.is-fullscreen {
+  --ibh-topbar-h: 0px;
+  grid-template-columns: 0px minmax(0, 1fr) 0px;
+  grid-template-rows: 0px 1fr;
+}
+.ibh-shell.is-fullscreen.is-room-selected { grid-template-columns: 0px minmax(0, 1fr) 360px; }
+.ibh-shell.is-fullscreen .ibh-sidebar,
+.ibh-shell.is-fullscreen .ibh-topbar { display: none; }
+
+.ibh-shell .ibh-sidebar { grid-area: sidebar; position: static; height: 100%; overflow: hidden; }
+.ibh-shell .ibh-topbar { grid-area: topbar; height: var(--ibh-topbar-h); box-sizing: border-box; }
+
+.ibh-shell-content {
+  grid-area: content;
+  overflow-y: auto;
+  min-width: 0;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background:
+    radial-gradient(90% 60% at 100% 0%, rgba(176, 130, 74, 0.05) 0%, transparent 55%),
+    radial-gradient(80% 60% at 0% 100%, rgba(15, 110, 86, 0.04) 0%, transparent 55%);
+}
+
+/* Each role view fills the content zone; the plan card grows + fits inside. */
+.ibh-role-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+}
+
+.ibh-shell-scrim { display: none; }
+
+@media (max-width: 900px) {
+  .ibh-shell,
+  .ibh-shell.is-collapsed,
+  .ibh-shell.is-room-selected {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--ibh-topbar-h) 1fr;
+    grid-template-areas: 'topbar' 'content';
+  }
+  .ibh-shell.is-fullscreen { grid-template-columns: minmax(0, 1fr); }
+  .ibh-shell-content { padding: 14px; }
+  .ibh-shell-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 74, 58, 0.4);
+    z-index: 55;
+  }
+}

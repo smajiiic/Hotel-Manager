@@ -71,23 +71,23 @@ const roomsData = [
   { roomNumber: 108, status: 'available' },
   { roomNumber: 109, status: 'available' },
   { roomNumber: 110, status: 'available' },
-  { roomNumber: 201, status: 'available' },
-  { roomNumber: 202, status: 'occupied' },
-  { roomNumber: 203, status: 'needs-cleaning' },
-  { roomNumber: 204, status: 'available' },
-  { roomNumber: 205, status: 'available' },
+  { roomNumber: 111, status: 'available' },
+  { roomNumber: 112, status: 'occupied' },
+  { roomNumber: 113, status: 'needs-cleaning' },
+  { roomNumber: 114, status: 'available' },
+  { roomNumber: 115, status: 'available' },
 ];
 
 const tasksData = [
   { description: 'Change towels',    roomId: 103, status: 'pending' },
   { description: 'Fix bathroom tap', roomId: 107, status: 'pending' },
-  { description: 'Deep clean',       roomId: 203, status: 'pending' },
-  { description: 'Replace pillow',   roomId: 202, status: 'completed' },
+  { description: 'Deep clean',       roomId: 113, status: 'pending' },
+  { description: 'Replace pillow',   roomId: 112, status: 'completed' },
 ];
 
 const requestsData = [
   { note: 'Guest in 104 requested extra blanket', roomId: 104 },
-  { note: 'Room 202 - VIP guest, handle carefully', roomId: 202 },
+  { note: 'Room 112 - VIP guest, handle carefully', roomId: 112 },
   { note: 'Room 106 checkout delayed until 14:00', roomId: 106 },
 ];
 
@@ -104,11 +104,11 @@ const bookingsData = [
   { guestName: 'Ana Kovač',           roomId: 102, checkIn: dateOffset(0),  checkOut: dateOffset(3), occupancyStatus: 'checked-in' },
   { guestName: 'Jasmin Begić',        roomId: 101, checkIn: dateOffset(-1), checkOut: dateOffset(2), occupancyStatus: 'checked-in' },
   { guestName: 'Selma Dizdar',        roomId: 107, checkIn: dateOffset(-3), checkOut: dateOffset(1), occupancyStatus: 'checked-in' },
-  { guestName: 'Marko Jurić',         roomId: 202, checkIn: dateOffset(-2), checkOut: dateOffset(2), occupancyStatus: 'checked-in' },
+  { guestName: 'Marko Jurić',         roomId: 112, checkIn: dateOffset(-2), checkOut: dateOffset(2), occupancyStatus: 'checked-in' },
   // upcoming
   { guestName: 'Sara Petrović',       roomId: 109, checkIn: dateOffset(1),  checkOut: dateOffset(4), occupancyStatus: 'confirmed' },
   { guestName: 'Damir Bajraktarević', roomId: 108, checkIn: dateOffset(2),  checkOut: dateOffset(6), occupancyStatus: 'confirmed' },
-  { guestName: 'Lana Smajić',         roomId: 204, checkIn: dateOffset(4),  checkOut: dateOffset(9), occupancyStatus: 'confirmed' },
+  { guestName: 'Lana Smajić',         roomId: 114, checkIn: dateOffset(4),  checkOut: dateOffset(9), occupancyStatus: 'confirmed' },
 ];
 
 async function seedDatabase() {

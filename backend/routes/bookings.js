@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Booking = require('../models/Booking');
 const Room = require('../models/Room');
+const { requireRole } = require('../middleware/auth');
 
 const VALID_STATUSES = ['confirmed', 'checked-in', 'checked-out'];
 
@@ -40,7 +41,8 @@ async function autoCheckoutOverdue(io) {
   }
 }
 
-router.get('/', async (req, res) => {
+// Reception and manager can view bookings; cleaning has no booking access.
+router.get('/', requireRole('reception', 'manager'), async (req, res) => {
   try {
     await autoCheckoutOverdue(req.app.get('io'));
     const bookings = await Booking.find().sort({ checkIn: 1 });
@@ -48,7 +50,8 @@ router.get('/', async (req, res) => {
   } catch (err) { send(res, fail(err.message)); }
 });
 
-router.post('/', async (req, res) => {
+// Only reception creates bookings.
+router.post('/', requireRole('reception'), async (req, res) => {
   try {
     const { guestName, roomId, checkIn, checkOut, occupancyStatus } = req.body || {};
 
@@ -92,7 +95,8 @@ router.post('/', async (req, res) => {
   } catch (err) { send(res, fail(err.message, 400)); }
 });
 
-router.delete('/:id', async (req, res) => {
+// Only reception deletes bookings.
+router.delete('/:id', requireRole('reception'), async (req, res) => {
   try {
     const removed = await Booking.findByIdAndDelete(req.params.id);
     if (!removed) return send(res, fail('Booking not found', 404));

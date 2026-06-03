@@ -24,8 +24,9 @@ function LoginPage() {
     setError(null)
     setSubmitting(true)
     try {
-      const result = await login(username, password)
-      navigate(location.state?.from?.pathname ?? (result?.role === 'manager' ? '/dashboard' : '/tasks'), { replace: true })
+      await login(username, password)
+      // Land on the role-aware home ("/"); RoleHome dispatches to the right view.
+      navigate(location.state?.from?.pathname ?? '/', { replace: true })
     } catch (err) {
       setError(loginErrorMessage(err))
     } finally {

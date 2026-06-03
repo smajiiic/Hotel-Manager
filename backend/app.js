@@ -13,7 +13,6 @@ const roomRoutes = require('./routes/rooms');
 const bookingRoutes = require('./routes/bookings');
 const taskRoutes = require('./routes/tasks');
 const requestRoutes = require('./routes/requests');
-const roomOpsFacade = require('./services/RoomOperationsFacade');
 
 const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
@@ -45,11 +44,6 @@ app.use('/api/rooms', roomRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/requests', requestRoutes);
-
-app.get('/test-checkout', async (req, res) => {
-  const result = await roomOpsFacade.checkoutRoom('101');
-  res.json(result);
-});
 
 app.get('/', (req, res) => res.send('Hotel Manager Backend is running...'));
 

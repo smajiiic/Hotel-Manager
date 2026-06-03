@@ -1,0 +1,90 @@
+/* Docked detail rail (desktop): occupies the right rail column, no backdrop.
+   The view renders this on room selection; it covers the shell's placeholder. */
+.ibh-panel-backdrop {
+  position: fixed;
+  top: var(--ibh-topbar-h, 72px);
+  right: 0;
+  bottom: 0;
+  width: 360px;
+  background: transparent;
+  display: block;
+  z-index: 45;
+}
+
+.ibh-panel {
+  width: 360px;
+  height: 100%;
+  background: var(--color-surface, #fff);
+  border-left: 1px solid var(--color-border, #e2ddd0);
+  box-shadow: -8px 0 24px rgba(10, 74, 58, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: ibh-fade 0.15s ease;
+}
+
+@keyframes ibh-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ibh-slide-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.ibh-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 12px;
+  position: sticky;
+  top: 0;
+  background: var(--color-surface, #fff);
+  z-index: 1;
+}
+.ibh-panel-title { margin: 0; font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; color: var(--ibh-teal-dark, #0a4a3a); }
+.ibh-panel-subtitle { margin: 2px 0 0; font-size: 0.82rem; color: var(--color-text-secondary, #5a7d74); }
+.ibh-panel-close {
+  min-height: 40px;
+  min-width: 40px;
+  width: auto;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary, #5a7d74);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ibh-panel-close:hover { background: var(--ibh-stone, #efece3); }
+
+.ibh-panel-body { padding: 4px 18px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+.ibh-panel-section { display: flex; flex-direction: column; gap: 8px; }
+.ibh-panel-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary, #5a7d74);
+  margin: 0;
+}
+.ibh-empty-line { font-size: 0.85rem; color: var(--color-text-tertiary, #9aa8a3); }
+
+@media (max-width: 900px) {
+  .ibh-panel-backdrop {
+    inset: 0;
+    top: 0;
+    width: auto;
+    background: rgba(10, 74, 58, 0.22);
+    display: flex;
+    align-items: flex-end;
+    z-index: 60;
+  }
+  .ibh-panel {
+    width: 100%;
+    height: auto;
+    max-height: 88vh;
+    border-left: none;
+    border-radius: 16px 16px 0 0;
+    animation: ibh-slide-up 0.2s ease;
+  }
+}

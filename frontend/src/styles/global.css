@@ -1,23 +1,52 @@
 /* ---------- Design Tokens ---------- */
 :root {
-  /* Brand palette — Modern minimal: deep navy + warm cream */
-  --navy-900: #0f1a2e;
-  --navy-800: #1a2942;
-  --navy-700: #2a3c5c;
-  --navy-600: #455373;
-  --navy-500: #5a6478;
-  --navy-300: #94a0b5;
-  --navy-200: #c7cdd9;
-  --navy-100: #e8ecf3;
+  /* Brand palette — Operational dashboard: deep teal on limestone/stone.
+     The --navy-* / --cream-* names are kept for backwards compatibility, but
+     their VALUES are now the teal/limestone system so every page that consumes
+     these tokens re-skins automatically. New code should prefer --ibh-* below. */
 
-  --cream-50:  #fdfbf6;
-  --cream-100: #faf7f0;
-  --cream-200: #f3eee2;
-  --cream-300: #e6e1d3;
+  /* Teal ink scale (--navy-800 is the primary brand teal #0F6E56) */
+  --navy-900: #0a4a3a;   /* darkest teal ink */
+  --navy-800: #0f6e56;   /* PRIMARY — deep teal */
+  --navy-700: #158069;
+  --navy-600: #2f9079;
+  --navy-500: #5a7d74;   /* muted teal-gray (secondary text) */
+  --navy-300: #9aa8a3;   /* tertiary text */
+  --navy-200: #c7d2cd;
+  --navy-100: #e5ece9;
+
+  /* Limestone / stone neutrals */
+  --cream-50:  #fbfaf7;
+  --cream-100: #f6f4ee;   /* page background — limestone */
+  --cream-200: #efece3;
+  --cream-300: #e2ddd0;   /* hairline border */
   --cream-400: #c8c1ad;
 
-  --accent:    #b08d57;        /* brass — used sparingly */
-  --accent-dk: #8e7044;
+  --accent:    #0f6e56;        /* teal — primary accent */
+  --accent-dk: #0a4a3a;
+
+  /* Canonical brand tokens (prefer these in new dashboard code) */
+  --ibh-teal:        #0f6e56;
+  --ibh-teal-dark:   #0a4a3a;
+  --ibh-teal-ink:    #073529;   /* deepest teal for gradients */
+  --ibh-teal-soft:   #e3efea;
+  --ibh-limestone:   #f4f1ea;
+  --ibh-marble:      #faf8f3;
+  --ibh-stone:       #ece7db;
+
+  /* Brass — the heritage accent (used sparingly, like inlay) */
+  --ibh-brass:       #b0824a;
+  --ibh-brass-dark:  #8a6534;
+  --ibh-brass-soft:  #efe3cf;
+
+  /* Status palette — green = available, rose = occupied, amber = needs-cleaning.
+     Kept consistent with StatusBadge so plan fills and badges match. */
+  --ibh-available:      #1f7a3c;
+  --ibh-available-fill: #d1fae5;
+  --ibh-occupied:       #a01b1b;
+  --ibh-occupied-fill:  #fee2e2;
+  --ibh-cleaning:       #8a5a00;
+  --ibh-cleaning-fill:  #fef3c7;
 
   /* Semantic */
   --color-text-primary:   var(--navy-900);
@@ -69,9 +98,13 @@
   --space-10: 40px;
   --space-12: 48px;
 
-  /* Type */
+  /* Type — Bricolage Grotesque (modern display) + DM Sans for UI/body */
   --font-sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
+
+  /* Marble canvas + brass-tinted elevation */
+  --shadow-soft: 0 1px 2px rgba(28, 20, 8, 0.04), 0 8px 24px rgba(28, 20, 8, 0.06);
+  --shadow-raise: 0 2px 6px rgba(28, 20, 8, 0.06), 0 18px 40px rgba(28, 20, 8, 0.1);
 
   /* Motion */
   --t-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -100,15 +133,39 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 var(--space-3);
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  font-family: var(--font-display);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--color-text-primary);
 }
 
-h1 { font-size: 1.875rem; letter-spacing: -0.025em; font-weight: 800; }
-h2 { font-size: 1.375rem; letter-spacing: -0.02em; }
-h3 { font-size: 1.125rem; }
+h1 { font-size: 1.95rem; letter-spacing: -0.015em; font-weight: 600; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; }
+
+/* ---------- Heritage helpers ---------- */
+.ibh-display { font-family: var(--font-display); }
+
+/* Settings: "use system fonts" preference — skips the web-font download */
+html.ibh-system-fonts {
+  --font-display: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Orchestrated entrance — staggered reveal on load */
+@keyframes ibh-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ibh-reveal > * { animation: ibh-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+.ibh-reveal > *:nth-child(1) { animation-delay: 0.04s; }
+.ibh-reveal > *:nth-child(2) { animation-delay: 0.1s; }
+.ibh-reveal > *:nth-child(3) { animation-delay: 0.16s; }
+.ibh-reveal > *:nth-child(4) { animation-delay: 0.22s; }
+@media (prefers-reduced-motion: reduce) {
+  .ibh-reveal > * { animation: none; }
+}
 
 p { margin: 0 0 var(--space-3); }
 
@@ -302,6 +359,19 @@ label {
 /* ---------- Utility ---------- */
 .muted { color: var(--color-text-secondary); }
 .tiny  { font-size: 0.78rem; }
+
+/* Visually hidden but available to screen readers (text-equivalents, live regions) */
+.ibh-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* ---------- Extended palette (dramatic redesign) ---------- */
 :root {

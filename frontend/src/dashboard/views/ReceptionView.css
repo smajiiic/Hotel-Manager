@@ -1,0 +1,22 @@
+.ibh-view-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.ibh-view-head h1 { margin: 0 0 2px; }
+
+.ibh-drill-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.ibh-drill-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ibh-teal, #0f6e56);
+  border: 1px solid var(--ibh-teal, #0f6e56);
+  border-radius: 999px;
+  padding: 6px 12px;
+  text-decoration: none;
+  background: var(--color-surface, #fff);
+}
+.ibh-drill-link:hover { background: var(--ibh-teal-soft, #e3efea); text-decoration: none; }

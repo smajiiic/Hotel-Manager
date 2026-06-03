@@ -14,7 +14,7 @@ function ProtectedRoute({ children, roles }) {
   }
 
   if (roles && !roles.includes(role)) {
-    return <Navigate to="/tasks" replace />
+    return <Navigate to="/" replace />
   }
 
   return children

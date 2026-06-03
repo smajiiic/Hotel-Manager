@@ -1,0 +1,21 @@
+.ibh-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border, #e2ddd0);
+  margin: 12px 0 16px;
+}
+.ibh-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  min-height: 44px;
+  padding: 0 16px;
+  font-weight: 700;
+  color: var(--color-text-secondary, #5a7d74);
+}
+.ibh-tab:hover:not(:disabled) { background: var(--ibh-teal-soft, #e3efea); }
+.ibh-tab[aria-selected='true'] {
+  color: var(--ibh-teal-dark, #0a4a3a);
+  border-bottom-color: var(--ibh-teal, #0f6e56);
+}
