@@ -1,0 +1,64 @@
+.ibh-notes-view { display: flex; flex-direction: column; gap: 16px; }
+
+/* New-note form */
+.ibh-note-form {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ibh-note-form-head { display: flex; align-items: center; justify-content: space-between; }
+.ibh-note-form-head h2 { font-family: var(--font-display); font-size: 1.05rem; margin: 0; color: var(--ibh-teal-dark, #0a4a3a); }
+.ibh-note-room { max-width: 200px; }
+.ibh-note-form select {
+  min-height: 42px; padding: 8px 10px; border-radius: 9px;
+  border: 1px solid var(--color-border, #e2ddd0); background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #0a4a3a); font: inherit;
+}
+.ibh-note-form textarea {
+  min-height: 72px; resize: vertical; padding: 10px 12px; border-radius: 9px;
+  border: 1px solid var(--color-border, #e2ddd0); background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #0a4a3a); font: inherit; line-height: 1.45;
+}
+.ibh-note-form-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* Note feed */
+.ibh-note-list { display: flex; flex-direction: column; gap: 8px; }
+.ibh-note-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-radius: 12px;
+  padding: 14px 16px 14px 18px;
+  overflow: hidden;
+  transition: box-shadow var(--t-fast), transform var(--t-fast);
+}
+.ibh-note-card:hover { box-shadow: var(--shadow-raise); transform: translateY(-1px); }
+.ibh-note-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--ibh-brass, #b0824a); }
+.ibh-note-card.is-resolved .ibh-note-accent { background: #1f7a3c; }
+.ibh-note-card.is-resolved { background: #fbfaf7; }
+
+.ibh-note-body { flex: 1; min-width: 0; }
+.ibh-note-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.ibh-note-resolved-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 0.72rem; font-weight: 700; color: #1f7a3c;
+}
+.ibh-note-text { margin: 0; color: var(--color-text-primary, #0a4a3a); line-height: 1.5; white-space: pre-wrap; }
+.ibh-note-card.is-resolved .ibh-note-text { color: var(--color-text-secondary, #5a7d74); }
+.ibh-note-meta { margin: 6px 0 0; font-size: 0.78rem; color: var(--color-text-tertiary, #9aa8a3); }
+
+.ibh-note-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  .ibh-note-card { flex-wrap: wrap; }
+  .ibh-note-actions { width: 100%; }
+  .ibh-note-actions .ibh-mini-btn:not(.ibh-icon-only) { flex: 1; justify-content: center; }
+}

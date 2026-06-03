@@ -21,6 +21,13 @@ export function buildRoomViewModels(rooms = [], tasks = [], requests = [], booki
       (b) => sameRoom(b.roomId, roomNumber) && b.occupancyStatus === 'checked-in'
     );
 
+    // The next upcoming reservation (a 'confirmed', not-yet-arrived booking) for
+    // this room — used to pre-fill check-in. Kept separate from `booking` (the
+    // in-house guest) so existing checked-in semantics are untouched.
+    const reservation = (bookings || [])
+      .filter((b) => sameRoom(b.roomId, roomNumber) && b.occupancyStatus === 'confirmed')
+      .sort((a, b) => String(a.checkIn).localeCompare(String(b.checkIn)))[0] ?? null;
+
     return {
       ...room,
       roomNumber,
@@ -32,6 +39,7 @@ export function buildRoomViewModels(rooms = [], tasks = [], requests = [], booki
       hasTask: openTasks.length > 0,
       hasNote: openNotes.length > 0,
       booking: booking ?? null,
+      reservation,
       guestName: booking?.guestName ?? null,
       checkOut: booking?.checkOut ?? null,
     };

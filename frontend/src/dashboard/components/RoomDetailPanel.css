@@ -1,36 +1,74 @@
-/* Body content for the reception/cleaning action panel. The dialog shell
-   (backdrop, header, focus management) lives in DetailPanelShell.css; generic
-   helpers (.ibh-panel-section, .ibh-panel-section-title, .ibh-empty-line) too. */
+/* Body content for the reception/cleaning action panel. Shell + generic helpers
+   live in DetailPanelShell.css. */
 
-.ibh-guest-card {
-  background: var(--ibh-teal-soft, #e3efea);
-  border: 1px solid var(--ibh-teal, #0f6e56);
+.ibh-guest-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-height: 0;
+  color: var(--color-text-primary, #0a4a3a);
+  cursor: pointer;
+}
+.ibh-guest-row:hover { background: var(--ibh-stone, #efece3); text-decoration: none; }
+.ibh-guest-name { font-weight: 700; }
+.ibh-guest-meta { color: var(--color-text-secondary, #5a7d74); font-size: 0.85rem; flex: 1; }
+
+.ibh-note-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--status-warning-bg, #fdf2dc);
+  color: var(--status-warning-text, #8a5a00);
+  border: 1px solid #f2dca0;
   border-radius: 10px;
   padding: 10px 12px;
+  font-size: 0.88rem;
+  line-height: 1.4;
 }
-.ibh-guest-name { font-weight: 700; color: var(--ibh-teal-dark, #0a4a3a); }
-.ibh-guest-meta { font-size: 0.85rem; color: var(--color-text-secondary, #5a7d74); }
+.ibh-note-callout svg { flex-shrink: 0; margin-top: 2px; }
 
-.ibh-item-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.ibh-item {
-  background: var(--ibh-limestone, #f6f4ee);
-  border: 1px solid var(--color-border, #e2ddd0);
+.ibh-panel-error {
+  font-size: 0.85rem;
+  color: var(--status-danger-text, #a01b1b);
+  background: var(--status-danger-bg, #fdecec);
   border-radius: 8px;
   padding: 8px 10px;
-  font-size: 0.88rem;
 }
-.ibh-item-meta { font-size: 0.74rem; color: var(--color-text-tertiary, #9aa8a3); margin-top: 2px; }
 
-.ibh-segmented { display: flex; gap: 6px; }
-.ibh-segmented button { flex: 1; min-height: 44px; padding: 0 6px; font-size: 0.82rem; }
+.ibh-segmented { display: flex; gap: 8px; }
+.ibh-segmented button {
+  flex: 1;
+  min-height: 58px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-secondary, #5a7d74);
+}
 .ibh-segmented button[aria-pressed='true'] {
-  background: var(--ibh-teal, #0f6e56);
+  background: var(--ibh-teal-soft, #e3efea);
   border-color: var(--ibh-teal, #0f6e56);
-  color: #fff;
+  color: var(--ibh-teal-dark, #0a4a3a);
 }
 
 .ibh-checkout-btn {
   width: 100%;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: var(--ibh-teal, #0f6e56);
   border-color: var(--ibh-teal, #0f6e56);
   color: #fff;
@@ -41,21 +79,94 @@
   border-color: var(--ibh-teal-dark, #0a4a3a);
 }
 
+/* Check-in: primary action button mirrors checkout; form is a compact stack. */
+.ibh-checkin-btn {
+  width: 100%;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--ibh-teal, #0f6e56);
+  border-color: var(--ibh-teal, #0f6e56);
+  color: #fff;
+  font-weight: 700;
+}
+.ibh-checkin-btn:hover:not(:disabled) {
+  background: var(--ibh-teal-dark, #0a4a3a);
+  border-color: var(--ibh-teal-dark, #0a4a3a);
+}
+
+.ibh-checkin-form { display: flex; flex-direction: column; gap: 10px; }
+.ibh-checkin-resv {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ibh-teal-soft, #e3efea);
+  color: var(--ibh-teal-dark, #0a4a3a);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+}
+.ibh-checkin-resv svg { flex-shrink: 0; }
+.ibh-field { display: flex; flex-direction: column; gap: 4px; }
+.ibh-field > span { font-size: 0.78rem; font-weight: 600; color: var(--color-text-secondary, #5a7d74); }
+.ibh-field input {
+  min-height: 42px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--color-border, #e2ddd0);
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #0a4a3a);
+  font: inherit;
+  width: 100%;
+}
+.ibh-field input:focus-visible {
+  outline: 2px solid var(--ibh-teal, #0f6e56);
+  outline-offset: 1px;
+  border-color: var(--ibh-teal, #0f6e56);
+}
+.ibh-field-row { display: flex; gap: 8px; }
+.ibh-field-row .ibh-field { flex: 1; min-width: 0; }
+.ibh-field-err { margin: 0; font-size: 0.8rem; color: var(--status-danger-text, #a01b1b); }
+
+.ibh-action-row { display: flex; gap: 8px; }
+.ibh-outline-btn {
+  flex: 1;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
 .ibh-quickadd { display: flex; flex-direction: column; gap: 8px; }
 .ibh-quickadd textarea { min-height: 64px; resize: vertical; }
 .ibh-quickadd-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
-.ibh-panel-hint {
-  font-size: 0.8rem;
-  color: var(--status-warning-text, #8a5a00);
-  background: var(--status-warning-bg, #fdf2dc);
-  border-radius: 8px;
-  padding: 8px 10px;
+.ibh-quickinfo { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.ibh-quickinfo > div { display: flex; align-items: center; justify-content: space-between; }
+.ibh-quickinfo dt { display: inline-flex; align-items: center; gap: 8px; margin: 0; color: var(--color-text-secondary, #5a7d74); font-size: 0.85rem; }
+.ibh-quickinfo dd { margin: 0; font-weight: 600; color: var(--color-text-primary, #0a4a3a); font-size: 0.88rem; }
+
+.ibh-drillins { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.ibh-drillin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--ibh-teal-soft, #e3efea);
+  text-decoration: none;
+  color: var(--ibh-teal-dark, #0a4a3a);
 }
-.ibh-panel-error {
-  font-size: 0.85rem;
-  color: var(--status-danger-text, #a01b1b);
-  background: var(--status-danger-bg, #fdecec);
-  border-radius: 8px;
-  padding: 8px 10px;
+.ibh-drillin:hover { background: #d6e9e2; text-decoration: none; }
+.ibh-drillin-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: #fff; color: var(--ibh-teal, #0f6e56);
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
+.ibh-drillin-text { flex: 1; display: flex; flex-direction: column; }
+.ibh-drillin-text strong { font-size: 0.92rem; }
+.ibh-drillin-text span { font-size: 0.78rem; color: var(--color-text-secondary, #5a7d74); }

@@ -2,10 +2,14 @@
 // StatusBadge's palette (green = available, rose = occupied, amber =
 // needs-cleaning) so the floor plan and the badges read as one system.
 
+// `fill` is the pale base (kept stable — a test pins it). `rich` is the
+// saturated overlay tint used to make rooms pop on the plan without changing
+// the asserted `fill` attribute.
 export const STATUS_META = {
   available: {
     label: 'Available',
     fill: '#d1fae5',
+    rich: '#86e3ad',
     stroke: '#6ee7b7',
     dot: '#1f7a3c',
     text: '#065f46',
@@ -13,6 +17,7 @@ export const STATUS_META = {
   occupied: {
     label: 'Occupied',
     fill: '#fee2e2',
+    rich: '#f5a3a3',
     stroke: '#fca5a5',
     dot: '#a01b1b',
     text: '#991b1b',
@@ -20,6 +25,7 @@ export const STATUS_META = {
   'needs-cleaning': {
     label: 'Needs Cleaning',
     fill: '#fef3c7',
+    rich: '#fbd66a',
     stroke: '#fcd34d',
     dot: '#8a5a00',
     text: '#92400e',
@@ -29,6 +35,7 @@ export const STATUS_META = {
 const FALLBACK = {
   label: 'Unknown',
   fill: '#f3f4f6',
+  rich: '#e5e7eb',
   stroke: '#d1d5db',
   dot: '#6b7280',
   text: '#374151',

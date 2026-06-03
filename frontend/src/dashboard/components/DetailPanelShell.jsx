@@ -11,7 +11,7 @@ import { useEffect, useRef } from 'react';
  *
  * Props: title, onClose, testId, children (the panel body).
  */
-export default function DetailPanelShell({ title, onClose, testId, children }) {
+export default function DetailPanelShell({ title, subtitle, onClose, testId, children }) {
   const closeRef = useRef(null);
   const panelRef = useRef(null);
   const onCloseRef = useRef(onClose);
@@ -85,7 +85,10 @@ export default function DetailPanelShell({ title, onClose, testId, children }) {
         ref={panelRef}
       >
         <header className="ibh-panel-header">
-          <h2 id={titleId} className="ibh-panel-title">{title}</h2>
+          <div>
+            <h2 id={titleId} className="ibh-panel-title">{title}</h2>
+            {subtitle && <p className="ibh-panel-subtitle">{subtitle}</p>}
+          </div>
           <button
             type="button"
             className="ibh-panel-close"

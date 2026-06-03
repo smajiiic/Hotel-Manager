@@ -1,0 +1,129 @@
+/* Shared chrome for the in-shell section views (Tasks, Guest notes). Reuses the
+   dashboard tokens so every section reads as one designed surface. The card
+   helpers from GuestsView.css (.ibh-mini-btn, .ibh-icon-btn, .ibh-field,
+   .ibh-checkin-btn, .ibh-panel-error) are global once bundled and reused here. */
+
+.ibh-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.ibh-section-title { display: flex; align-items: center; gap: 12px; }
+.ibh-section-title h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--ibh-teal-dark, #0a4a3a);
+  margin: 0;
+}
+.ibh-count-pill {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--ibh-teal-soft, #e3efea);
+  color: var(--ibh-teal-dark, #0a4a3a);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ibh-section-add {
+  width: auto;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* Filter chips */
+.ibh-filter-row { display: inline-flex; gap: 6px; background: var(--ibh-stone, #efece3); padding: 4px; border-radius: 12px; align-self: flex-start; }
+.ibh-filter-chip {
+  min-height: 34px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--color-text-secondary, #5a7d74);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--t-fast), color var(--t-fast);
+}
+.ibh-filter-chip:hover { color: var(--ibh-teal-dark, #0a4a3a); }
+.ibh-filter-chip.is-active {
+  background: var(--color-surface, #fff);
+  color: var(--ibh-teal-dark, #0a4a3a);
+  box-shadow: var(--shadow-soft, 0 1px 3px rgba(0,0,0,0.08));
+}
+
+/* Room chip used across cards */
+.ibh-room-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 7px;
+  background: var(--ibh-teal-soft, #e3efea);
+  color: var(--ibh-teal-dark, #0a4a3a);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.ibh-section-empty {
+  color: var(--color-text-tertiary, #9aa8a3);
+  font-size: 0.92rem;
+  padding: 28px 4px;
+  text-align: center;
+  border: 1px dashed var(--color-border, #e2ddd0);
+  border-radius: 14px;
+}
+
+/* Card entrance — subtle staggered rise (delay set inline per index). */
+@keyframes ibh-card-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ibh-rise-in { animation: ibh-card-rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+@media (prefers-reduced-motion: reduce) { .ibh-rise-in { animation: none; } }
+
+/* Shared compact action buttons + icon button (used by Guests/Tasks/Notes). */
+.ibh-mini-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--color-border, #e2ddd0);
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #0a4a3a);
+}
+.ibh-mini-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ibh-mini-btn.is-checkin { background: var(--ibh-teal, #0f6e56); border-color: var(--ibh-teal, #0f6e56); color: #fff; }
+.ibh-mini-btn.is-checkin:hover:not(:disabled) { background: var(--ibh-teal-dark, #0a4a3a); border-color: var(--ibh-teal-dark, #0a4a3a); }
+.ibh-mini-btn.is-checkout { color: var(--ibh-teal-dark, #0a4a3a); }
+.ibh-mini-btn.is-checkout:hover:not(:disabled) { background: var(--ibh-teal-soft, #e3efea); }
+.ibh-mini-btn.is-ghost { color: var(--color-text-secondary, #5a7d74); }
+.ibh-mini-btn.is-ghost:hover:not(:disabled) { background: var(--ibh-stone, #efece3); }
+
+.ibh-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary, #5a7d74);
+  cursor: pointer;
+}
+.ibh-icon-btn:hover { background: var(--ibh-stone, #efece3); }

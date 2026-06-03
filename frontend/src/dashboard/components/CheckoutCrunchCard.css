@@ -26,8 +26,9 @@
 }
 
 .ibh-crunch-headline {
-  font-size: 1.35rem;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
   color: var(--color-text-primary, #0a4a3a);
   margin: 10px 0;
   font-variant-numeric: tabular-nums;

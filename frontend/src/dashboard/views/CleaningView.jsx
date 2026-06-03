@@ -12,15 +12,18 @@ import { buildCleaningQueue, isCleaningTask } from '../lib/cleaningQueue.js';
 import { buildRoomViewModels } from '../lib/roomViewModel.js';
 import { completeTask } from '../../api/tasksApi.js';
 import { updateRoomStatus } from '../../api/roomsApi.js';
+import { useDashboard } from '../DashboardContext.jsx';
 
 // Cleaning can read rooms/tasks/notes, complete tasks, and flip a cleaned room to
 // available — nothing else. No guest names, no checkout, no task/note creation.
 const CLEANING_CAPS = {
   setStatus: true,
   checkout: false,
+  checkin: false,
   createTask: false,
   createNote: false,
   showGuest: false,
+  bookings: false,
 };
 
 export default function CleaningView() {
@@ -30,8 +33,8 @@ export default function CleaningView() {
   // No useBookings on purpose — cleaning has no booking access, so guest data is
   // never fetched (defense in depth alongside the backend 403 and showGuest=false).
 
+  const { selectedNumber, setSelectedNumber, fullscreen, setFullscreen } = useDashboard();
   const [tab, setTab] = useState('queue');
-  const [selectedNumber, setSelectedNumber] = useState(null);
   const [busyIds, setBusyIds] = useState(new Set());
   const [actionError, setActionError] = useState(null);
   const [liveMessage, setLiveMessage] = useState('');
@@ -48,7 +51,7 @@ export default function CleaningView() {
   const closePanel = useCallback(() => {
     setSelectedNumber(null);
     setActionError(null);
-  }, []);
+  }, [setSelectedNumber]);
 
   const runAction = async (id, fn, refetchers) => {
     setBusyIds((prev) => new Set(prev).add(id));
@@ -95,53 +98,37 @@ export default function CleaningView() {
   };
 
   return (
-    <section data-testid="cleaning-view" aria-labelledby="cleaning-heading">
+    <section className="ibh-role-view" data-testid="cleaning-view" aria-labelledby="cleaning-heading">
+      <h1 id="cleaning-heading" className="ibh-sr-only">Task queue</h1>
       {/* Screen-reader announcements for queue changes (the list re-renders silently otherwise) */}
-      <div
-        role="status"
-        aria-live="polite"
-        style={{
-          position: 'absolute',
-          width: 1,
-          height: 1,
-          padding: 0,
-          margin: -1,
-          overflow: 'hidden',
-          clip: 'rect(0 0 0 0)',
-          whiteSpace: 'nowrap',
-          border: 0,
-        }}
-      >
-        {liveMessage}
-      </div>
+      <div className="ibh-sr-only" role="status" aria-live="polite">{liveMessage}</div>
 
-      <h1 id="cleaning-heading">Task queue</h1>
-      <p className="muted">Your work, most urgent first — checkout turnovers at the top.</p>
-
-      <div className="ibh-tabs" role="tablist" aria-label="Cleaning views">
-        <button
-          type="button"
-          role="tab"
-          id="tab-queue"
-          aria-selected={tab === 'queue'}
-          aria-controls="panel-queue"
-          className="ibh-tab"
-          onClick={() => setTab('queue')}
-        >
-          Queue
-        </button>
-        <button
-          type="button"
-          role="tab"
-          id="tab-plan"
-          aria-selected={tab === 'plan'}
-          aria-controls="panel-plan"
-          className="ibh-tab"
-          onClick={() => setTab('plan')}
-        >
-          Floor plan
-        </button>
-      </div>
+      {!fullscreen && (
+        <div className="ibh-tabs" role="tablist" aria-label="Cleaning views">
+          <button
+            type="button"
+            role="tab"
+            id="tab-queue"
+            aria-selected={tab === 'queue'}
+            aria-controls="panel-queue"
+            className="ibh-tab"
+            onClick={() => setTab('queue')}
+          >
+            Queue
+          </button>
+          <button
+            type="button"
+            role="tab"
+            id="tab-plan"
+            aria-selected={tab === 'plan'}
+            aria-controls="panel-plan"
+            className="ibh-tab"
+            onClick={() => setTab('plan')}
+          >
+            Floor plan
+          </button>
+        </div>
+      )}
 
       {error && (
         <div style={{ marginBottom: 16 }}>
@@ -172,6 +159,8 @@ export default function CleaningView() {
               setSelectedNumber(room.roomNumber);
             }}
             title="Cleaning floor plan"
+            fullscreen={fullscreen}
+            onFullscreen={() => setFullscreen((f) => !f)}
           />
         </div>
       )}

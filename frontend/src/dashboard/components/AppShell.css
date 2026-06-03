@@ -1,99 +1,73 @@
 .ibh-shell {
-  min-height: 100vh;
+  --ibh-topbar-h: 72px;
+  display: grid;
+  grid-template-columns: 212px minmax(0, 1fr) 0px;
+  grid-template-rows: var(--ibh-topbar-h) 1fr;
+  grid-template-areas:
+    'sidebar topbar topbar'
+    'sidebar content rail';
+  height: 100vh;
+  overflow: hidden;
+  background: var(--ibh-limestone, #f4f1ea);
+  transition: grid-template-columns 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Two-state layout (desktop) */
+.ibh-shell.is-collapsed { grid-template-columns: 72px minmax(0, 1fr) 0px; }
+.ibh-shell.is-room-selected { grid-template-columns: 72px minmax(0, 1fr) 360px; }
+
+/* Fullscreen booking mode — hide sidebar + topbar, keep plan (+ rail if open) */
+.ibh-shell.is-fullscreen {
+  --ibh-topbar-h: 0px;
+  grid-template-columns: 0px minmax(0, 1fr) 0px;
+  grid-template-rows: 0px 1fr;
+}
+.ibh-shell.is-fullscreen.is-room-selected { grid-template-columns: 0px minmax(0, 1fr) 360px; }
+.ibh-shell.is-fullscreen .ibh-sidebar,
+.ibh-shell.is-fullscreen .ibh-topbar { display: none; }
+
+.ibh-shell .ibh-sidebar { grid-area: sidebar; position: static; height: 100%; overflow: hidden; }
+.ibh-shell .ibh-topbar { grid-area: topbar; height: var(--ibh-topbar-h); box-sizing: border-box; }
+
+.ibh-shell-content {
+  grid-area: content;
+  overflow-y: auto;
+  min-width: 0;
+  padding: 20px 24px;
   display: flex;
   flex-direction: column;
-  background: var(--ibh-limestone, #f6f4ee);
+  gap: 18px;
+  background:
+    radial-gradient(90% 60% at 100% 0%, rgba(176, 130, 74, 0.05) 0%, transparent 55%),
+    radial-gradient(80% 60% at 0% 100%, rgba(15, 110, 86, 0.04) 0%, transparent 55%);
 }
 
-.ibh-shell-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4, 16px);
-  padding: 12px 20px;
-  background: var(--color-surface, #fff);
-  border-bottom: 1px solid var(--color-border, #e2ddd0);
-}
-
-.ibh-shell-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--ibh-teal-dark, #0a4a3a);
-  font-size: 1.05rem;
-  text-decoration: none;
-}
-.ibh-shell-brand-mark {
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  background: var(--ibh-teal, #0f6e56);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.ibh-shell-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ibh-role-pill {
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--ibh-teal-dark, #0a4a3a);
-  background: var(--ibh-teal-soft, #e3efea);
-  border: 1px solid var(--ibh-teal, #0f6e56);
-  border-radius: 999px;
-  padding: 4px 10px;
-}
-
-.ibh-shell-user {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.ibh-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--ibh-teal, #0f6e56);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-.ibh-shell-username { font-weight: 600; font-size: 0.9rem; }
-
-.ibh-shell-signout {
-  min-height: 36px;
-  padding: 0 12px;
-  font-size: 0.85rem;
-}
-
-.ibh-shell-main {
+/* Each role view fills the content zone; the plan card grows + fits inside. */
+.ibh-role-view {
   flex: 1;
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
 }
 
-@media (max-width: 560px) {
-  .ibh-shell-username { display: none; }
-  .ibh-shell-main { padding: 14px; }
+.ibh-shell-scrim { display: none; }
+
+@media (max-width: 900px) {
+  .ibh-shell,
+  .ibh-shell.is-collapsed,
+  .ibh-shell.is-room-selected {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--ibh-topbar-h) 1fr;
+    grid-template-areas: 'topbar' 'content';
+  }
+  .ibh-shell.is-fullscreen { grid-template-columns: minmax(0, 1fr); }
+  .ibh-shell-content { padding: 14px; }
+  .ibh-shell-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 74, 58, 0.4);
+    z-index: 55;
+  }
 }

@@ -1,0 +1,116 @@
+.ibh-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  background: var(--color-surface, #fff);
+  border-bottom: 1px solid var(--color-border, #e2ddd0);
+}
+.ibh-topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.ibh-topbar-title { margin: 0; font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; color: var(--ibh-teal-dark, #0a4a3a); letter-spacing: -0.01em; }
+.ibh-topbar-sub { margin: 2px 0 0; font-size: 0.85rem; color: var(--color-text-secondary, #5a7d74); }
+
+.ibh-topbar-right { display: flex; align-items: center; gap: 14px; }
+
+/* Static role indicator (not interactive) */
+.ibh-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--ibh-teal-soft, #e3efea);
+  color: var(--ibh-teal-dark, #0a4a3a);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.ibh-role-pill svg { color: var(--ibh-teal, #0f6e56); }
+
+.ibh-bell { position: relative; background: transparent; border: none; padding: 8px; color: var(--color-text-secondary, #5a7d74); cursor: pointer; min-height: 0; }
+.ibh-bell-badge {
+  position: absolute; top: 2px; right: 2px;
+  background: #e23b3b; color: #fff;
+  font-size: 0.62rem; font-weight: 800;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+
+.ibh-avatar-wrap { position: relative; }
+.ibh-avatar {
+  position: relative;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--ibh-teal, #0f6e56);
+  color: #fff; font-weight: 700;
+  font-family: var(--font-display);
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid var(--ibh-brass, #b0824a); cursor: pointer; padding: 0;
+}
+.ibh-avatar-online {
+  position: absolute; right: 0; bottom: 0;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #34d27b; border: 2px solid #fff;
+}
+/* Shared dropdown (bell + account) */
+.ibh-menu {
+  position: absolute;
+  right: 0;
+  top: 54px;
+  background: #fff;
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-radius: 12px;
+  box-shadow: var(--shadow-raise);
+  padding: 6px;
+  z-index: 70;
+  animation: ibh-fade 0.12s ease;
+}
+.ibh-acct-menu { min-width: 200px; }
+.ibh-bell-menu { min-width: 320px; max-width: 360px; }
+.ibh-menu-head {
+  padding: 8px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary, #5a7d74);
+  border-bottom: 1px solid var(--color-border, #e2ddd0);
+  margin-bottom: 4px;
+}
+.ibh-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #0a4a3a);
+  cursor: pointer;
+  min-height: 0;
+}
+.ibh-menu-item:hover { background: var(--ibh-teal-soft, #e3efea); }
+.ibh-menu-item-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ibh-menu-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--color-text-tertiary, #9aa8a3); }
+.ibh-menu-dot.type-overdue { background: #a01b1b; }
+.ibh-menu-dot.type-room { background: #8a5a00; }
+.ibh-menu-dot.type-task { background: var(--ibh-teal, #0f6e56); }
+.ibh-menu-empty { padding: 14px 10px; font-size: 0.86rem; color: var(--color-text-tertiary, #9aa8a3); text-align: center; }
+.ibh-menu-more { padding: 8px 10px 4px; font-size: 0.78rem; color: var(--color-text-tertiary, #9aa8a3); }
+
+.ibh-hamburger { display: none; background: transparent; border: none; padding: 6px; color: var(--ibh-teal-dark, #0a4a3a); cursor: pointer; min-height: 0; }
+
+@media (max-width: 900px) {
+  .ibh-hamburger { display: inline-flex; }
+  .ibh-topbar { padding: 12px 16px; }
+  .ibh-role-pill .ibh-role-pill-label { display: none; }
+}
+@media (max-width: 560px) {
+  .ibh-topbar-title { font-size: 1.05rem; }
+}

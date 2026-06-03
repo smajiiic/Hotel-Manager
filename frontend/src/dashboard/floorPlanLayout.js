@@ -1,66 +1,60 @@
-// Static floor-plan geometry for the Isa Begov Hamam hotel (15 rooms, 101–115).
+// Static floor-plan geometry for the 15-room single-floor hotel (101–115).
+// Physical layout is frontend-owned; only room status comes from the API.
 //
-// Physical layout is NOT backend data — only room *status* comes from the API.
-// This module is the single source of truth for where things sit on the plan,
-// owned by the frontend. Coordinates are in SVG user units against VIEWBOX.
-//
-// Shape: an L. A long top arm holds a north row (101–107) above a corridor and
-// a south row (108–111) below it; the building then returns down a shorter
-// right-hand wing (112–115) with Stairs anchoring its foot. Reception sits by
-// the entrance with a distinct Hamam & spa zone beside it.
-//
-// Each room carries a `door` = { side, at }: which wall the doorway is cut into
-// (N/S/E/W, the side facing a corridor) and `at` = fraction along that wall
-// (0–1). FloorPlan derives the doorway gap + swing arc from this.
+// Wide landscape plan so it fills the content zone with little wasted space: a
+// circulation spine off the main entrance past Reception, the Hamam & spa, and
+// the Stairs, branching into a horizontal corridor serving a double-loaded room
+// block — north row 101–108 (doors south) and south row 109–115 (doors north).
+// Every room door opens onto a corridor; no floating rooms.
 
-export const VIEWBOX = { width: 980, height: 620 };
+// Wide aspect (~2.4:1) to match the on-page content area.
+export const VIEWBOX = { width: 1680, height: 700 };
 
-// Outer wall outline of the L-shaped building, as an SVG polygon point string.
-export const BUILDING_OUTLINE =
-  '40,40 940,40 940,580 520,580 520,300 40,300';
+// Rectangular building shell.
+export const BUILDING_OUTLINE = '36,36 1644,36 1644,644 36,644';
 
-// Corridor floors (drawn as a subtle fill so the circulation reads clearly).
+// Corridor floors (the circulation system).
 export const CORRIDORS = [
-  { id: 'corridor-h', x: 40, y: 154, w: 900, h: 56 }, // top arm hallway
-  { id: 'corridor-v', x: 695, y: 300, w: 70, h: 280 }, // right wing hallway
+  { id: 'corridor-spine', x: 330, y: 60, w: 140, h: 584 }, // vertical spine off the entrance
+  { id: 'corridor-main', x: 470, y: 280, w: 1150, h: 80 }, // horizontal, serves the room block
 ];
 
-// Non-room zones.
 export const ZONES = [
-  { key: 'reception', label: 'Reception', type: 'reception', x: 450, y: 215, w: 160, h: 85 },
-  { key: 'hamam', label: 'Hamam & spa', type: 'hamam', x: 630, y: 222, w: 300, h: 70 },
-  { key: 'stairs', label: 'Stairs', type: 'stairs', x: 700, y: 455, w: 60, h: 110 },
+  { key: 'hamam', label: 'Hamam & spa', type: 'hamam', x: 60, y: 60, w: 270, h: 300 },
+  { key: 'reception', label: 'Reception', type: 'reception', x: 60, y: 380, w: 270, h: 264 },
+  { key: 'stairs', label: 'Stairs', type: 'stairs', x: 345, y: 70, w: 110, h: 150 },
 ];
 
-// Main entrance — a doorway cut into the south wall, just below Reception.
-export const ENTRANCE = { x: 480, y: 300, side: 'S', label: 'Entrance' };
+// Main entrance — doorway cut into the south wall below Reception.
+export const ENTRANCE = { x: 195, y: 644, side: 'S', label: 'Main entrance' };
 
-// roomNumber → geometry + door. Keyed by Number to match the backend roomNumber.
 export const ROOM_LAYOUT = {
-  // North row of the top arm — doors open south onto the top hallway.
-  101: { x: 60, y: 58, w: 105, h: 96, door: { side: 'S', at: 0.5 } },
-  102: { x: 181, y: 58, w: 105, h: 96, door: { side: 'S', at: 0.5 } },
-  103: { x: 302, y: 58, w: 105, h: 96, door: { side: 'S', at: 0.5 } },
-  104: { x: 423, y: 58, w: 105, h: 96, door: { side: 'S', at: 0.5 } },
-  105: { x: 544, y: 58, w: 105, h: 96, door: { side: 'S', at: 0.5 } },
-  106: { x: 665, y: 58, w: 105, h: 96, door: { side: 'S', at: 0.5 } },
-  107: { x: 786, y: 58, w: 105, h: 96, door: { side: 'S', at: 0.5 } },
+  // North row — doors open south onto the horizontal corridor.
+  101: { x: 478, y: 60, w: 128, h: 220, door: { side: 'S', at: 0.5 } },
+  102: { x: 622, y: 60, w: 128, h: 220, door: { side: 'S', at: 0.5 } },
+  103: { x: 766, y: 60, w: 128, h: 220, door: { side: 'S', at: 0.5 } },
+  104: { x: 910, y: 60, w: 128, h: 220, door: { side: 'S', at: 0.5 } },
+  105: { x: 1054, y: 60, w: 128, h: 220, door: { side: 'S', at: 0.5 } },
+  106: { x: 1198, y: 60, w: 128, h: 220, door: { side: 'S', at: 0.5 } },
+  107: { x: 1342, y: 60, w: 128, h: 220, door: { side: 'S', at: 0.5 } },
+  108: { x: 1486, y: 60, w: 128, h: 220, door: { side: 'S', at: 0.5 } },
 
-  // South row of the top arm — doors open north onto the top hallway.
-  108: { x: 60, y: 210, w: 85, h: 88, door: { side: 'N', at: 0.5 } },
-  109: { x: 155, y: 210, w: 85, h: 88, door: { side: 'N', at: 0.5 } },
-  110: { x: 250, y: 210, w: 85, h: 88, door: { side: 'N', at: 0.5 } },
-  111: { x: 345, y: 210, w: 85, h: 88, door: { side: 'N', at: 0.5 } },
-
-  // Right wing — west column doors open east, east column doors open west,
-  // both onto the vertical hallway.
-  112: { x: 545, y: 330, w: 150, h: 110, door: { side: 'E', at: 0.5 } },
-  114: { x: 545, y: 455, w: 150, h: 110, door: { side: 'E', at: 0.5 } },
-  113: { x: 765, y: 330, w: 150, h: 110, door: { side: 'W', at: 0.5 } },
-  115: { x: 765, y: 455, w: 150, h: 110, door: { side: 'W', at: 0.5 } },
+  // South row — doors open north onto the horizontal corridor.
+  109: { x: 478, y: 360, w: 148, h: 240, door: { side: 'N', at: 0.5 } },
+  110: { x: 642, y: 360, w: 148, h: 240, door: { side: 'N', at: 0.5 } },
+  111: { x: 806, y: 360, w: 148, h: 240, door: { side: 'N', at: 0.5 } },
+  112: { x: 970, y: 360, w: 148, h: 240, door: { side: 'N', at: 0.5 } },
+  113: { x: 1134, y: 360, w: 148, h: 240, door: { side: 'N', at: 0.5 } },
+  114: { x: 1298, y: 360, w: 148, h: 240, door: { side: 'N', at: 0.5 } },
+  115: { x: 1462, y: 360, w: 148, h: 240, door: { side: 'N', at: 0.5 } },
 };
 
-// Room numbers in display order (101–115).
+// Zone doors onto the vertical spine.
+export const ZONE_DOORS = [
+  { x: 60, y: 60, w: 270, h: 300, door: { side: 'E', at: 0.6 } }, // Hamam → spine
+  { x: 60, y: 380, w: 270, h: 264, door: { side: 'E', at: 0.4 } }, // Reception → spine
+];
+
 export const ROOM_NUMBERS = Object.keys(ROOM_LAYOUT)
   .map(Number)
   .sort((a, b) => a - b);
