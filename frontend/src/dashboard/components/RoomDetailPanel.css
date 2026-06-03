@@ -39,9 +39,10 @@
 }
 .ibh-panel-title { margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--ibh-teal-dark, #0a4a3a); }
 .ibh-panel-close {
-  min-height: 34px;
-  width: 34px;
-  padding: 0;
+  min-height: 44px;
+  min-width: 44px;
+  width: auto;
+  padding: 0 10px;
   border-radius: 8px;
   font-size: 1.1rem;
   line-height: 1;
@@ -80,7 +81,7 @@
 .ibh-empty-line { font-size: 0.85rem; color: var(--color-text-tertiary, #9aa8a3); }
 
 .ibh-segmented { display: flex; gap: 6px; }
-.ibh-segmented button { flex: 1; min-height: 38px; padding: 0 6px; font-size: 0.82rem; }
+.ibh-segmented button { flex: 1; min-height: 44px; padding: 0 6px; font-size: 0.82rem; }
 .ibh-segmented button[aria-pressed='true'] {
   background: var(--ibh-teal, #0f6e56);
   border-color: var(--ibh-teal, #0f6e56);

@@ -92,7 +92,11 @@ export default function RoomDetailPanel({
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = prevOverflow;
-      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
+      // Restore focus to the trigger. Guard on .focus (not instanceof HTMLElement)
+      // so the SVG <g> room group on the floor-plan tab is restored too.
+      if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+        previouslyFocused.focus();
+      }
     };
   }, []);
 
