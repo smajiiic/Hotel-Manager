@@ -1,0 +1,12 @@
+.ibh-history { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.ibh-history-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border, #e2ddd0);
+}
+.ibh-history-item:last-child { border-bottom: none; }
+.ibh-history-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.ibh-history-body { min-width: 0; }
+.ibh-history-line { font-size: 0.9rem; color: var(--color-text-primary, #0a4a3a); }
+.ibh-history-meta { font-size: 0.78rem; color: var(--color-text-tertiary, #9aa8a3); margin-top: 2px; }

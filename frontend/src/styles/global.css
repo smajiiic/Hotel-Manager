@@ -325,6 +325,19 @@ label {
 .muted { color: var(--color-text-secondary); }
 .tiny  { font-size: 0.78rem; }
 
+/* Visually hidden but available to screen readers (text-equivalents, live regions) */
+.ibh-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- Extended palette (dramatic redesign) ---------- */
 :root {
   --teal-700: #20585a;

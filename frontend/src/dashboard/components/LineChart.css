@@ -1,0 +1,18 @@
+.ibh-chart { margin: 0; }
+.ibh-chart-title {
+  font-weight: 700;
+  color: var(--ibh-teal-dark, #0a4a3a);
+  margin: 0 0 8px;
+}
+.ibh-chart-svg { display: block; width: 100%; height: auto; }
+.ibh-chart-axis { stroke: var(--color-border, #e2ddd0); stroke-width: 1; }
+.ibh-chart-area { fill: rgba(15, 110, 86, 0.08); stroke: none; }
+.ibh-chart-line {
+  fill: none;
+  stroke: var(--ibh-teal, #0f6e56);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.ibh-chart-dot { fill: var(--ibh-teal, #0f6e56); }
+.ibh-chart-xlabel { fill: var(--color-text-tertiary, #9aa8a3); font-size: 11px; }

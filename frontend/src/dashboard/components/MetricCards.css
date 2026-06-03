@@ -1,9 +1,16 @@
 .ibh-metrics {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 12px;
   margin: 0 0 18px;
 }
+
+/* Small, left-aligned secondary tiles that don't stretch to fill the row. */
+.ibh-metrics--secondary {
+  display: flex;
+  flex-wrap: wrap;
+}
+.ibh-metrics--secondary .ibh-metric { flex: 0 1 220px; }
 
 .ibh-metric {
   background: var(--color-surface, #fff);
@@ -32,11 +39,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+.ibh-metric-sub {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary, #5a7d74);
+}
+
 .ibh-metric.tone-available { border-left-color: #1f7a3c; }
 .ibh-metric.tone-occupied { border-left-color: #a01b1b; }
 .ibh-metric.tone-cleaning { border-left-color: #8a5a00; }
 .ibh-metric.tone-teal { border-left-color: var(--ibh-teal, #0f6e56); }
-
-@media (max-width: 640px) {
-  .ibh-metrics { grid-template-columns: repeat(2, 1fr); }
-}
