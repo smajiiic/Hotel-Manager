@@ -86,6 +86,13 @@
     /* content now owns the full width; never let it scroll sideways */
     overflow-x: clip;
   }
+
+  /* Size each view to its CONTENT, not the full viewport. With flex:1 the view
+     stretches to fill the content area even when the page is short (e.g. a
+     near-empty cleaning queue), leaving a large blank band below that you can
+     scroll into. Sizing to content removes that trailing dead space; tall pages
+     still scroll naturally. */
+  .ibh-role-view { flex: 0 0 auto; }
   .ibh-shell-scrim {
     display: block;
     position: fixed;
