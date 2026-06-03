@@ -174,7 +174,7 @@ export default function RoomDetailPanel({
             {allowedStatuses.map((s) => {
               const Icon = STATUS_ICON[s];
               return (
-                <button key={s} type="button" aria-pressed={room.status === s} disabled={busy || room.status === s} onClick={() => onSetStatus(s)}>
+                <button key={s} type="button" data-status={s} aria-pressed={room.status === s} disabled={busy || room.status === s} onClick={() => onSetStatus(s)}>
                   {Icon && <Icon size={18} />}
                   <span>{statusMeta(s).label}</span>
                 </button>

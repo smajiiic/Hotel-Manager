@@ -59,11 +59,26 @@
   font-weight: 600;
   color: var(--color-text-secondary, #5a7d74);
 }
-.ibh-segmented button[aria-pressed='true'] {
-  background: var(--ibh-teal-soft, #e3efea);
-  border-color: var(--ibh-teal, #0f6e56);
-  color: var(--ibh-teal-dark, #0a4a3a);
-}
+/* Each status option wears its own status color (green = available,
+   rose = occupied, amber = needs-cleaning) so the choice reads at a glance —
+   icon + label tinted, with a faint matching border. */
+.ibh-segmented button[data-status='available']      { color: var(--ibh-available, #1f7a3c); border-color: #a7e6c4; }
+.ibh-segmented button[data-status='occupied']       { color: var(--ibh-occupied, #a01b1b);  border-color: #f3b6b6; }
+.ibh-segmented button[data-status='needs-cleaning'] { color: var(--ibh-cleaning, #8a5a00);  border-color: #f0d488; }
+
+/* Hover (a selectable option): wash in the pale status fill. */
+.ibh-segmented button[data-status='available']:hover:not(:disabled)      { background: var(--ibh-available-fill, #d1fae5); border-color: var(--ibh-available, #1f7a3c); }
+.ibh-segmented button[data-status='occupied']:hover:not(:disabled)       { background: var(--ibh-occupied-fill, #fee2e2);  border-color: var(--ibh-occupied, #a01b1b); }
+.ibh-segmented button[data-status='needs-cleaning']:hover:not(:disabled) { background: var(--ibh-cleaning-fill, #fef3c7);  border-color: var(--ibh-cleaning, #8a5a00); }
+
+/* Current status (pressed): solid status fill so it reads as the active state. */
+.ibh-segmented button[aria-pressed='true'][data-status='available']      { background: var(--ibh-available-fill, #d1fae5); border-color: var(--ibh-available, #1f7a3c); color: #065f46; }
+.ibh-segmented button[aria-pressed='true'][data-status='occupied']       { background: var(--ibh-occupied-fill, #fee2e2);  border-color: var(--ibh-occupied, #a01b1b);  color: #991b1b; }
+.ibh-segmented button[aria-pressed='true'][data-status='needs-cleaning'] { background: var(--ibh-cleaning-fill, #fef3c7);  border-color: var(--ibh-cleaning, #8a5a00);  color: #92400e; }
+
+/* The current-status button is disabled (can't re-set the same status); keep it
+   fully legible instead of the global 50% dim so its color still reads. */
+.ibh-segmented button[aria-pressed='true']:disabled { opacity: 1; cursor: default; }
 
 .ibh-checkout-btn {
   width: 100%;
