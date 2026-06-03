@@ -136,24 +136,19 @@
   /* Keep the booking-mode toggle a comfortable tap target. */
   .ibh-fs-btn { min-height: 44px; padding: 0 12px; }
 
-  /* The plan is very wide (2.4:1); at phone widths a fluid-fit render makes the
-     rooms quite small. Allow the user to swipe the plan horizontally so each
-     room keeps a usable tap target, while the page itself never overflows. */
+  /* The plan must be fully visible at a glance — fit it to the card width with
+     NO sideways scroll. (A previous horizontal-scroll approach pushed ~60% of
+     the rooms off the card's right edge, so they looked like half-cut green
+     blocks with the card edge "blocking" the view.) The 2.4:1 plan scales down
+     to the available width; every room stays on screen. */
   .ibh-floorplan-wrap {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    justify-content: flex-start;
+    overflow: hidden;
+    justify-content: center;
     padding: 6px;
   }
   .ibh-floorplan-svg {
     width: 100%;
     height: auto;
-    /* Give each room a usable size: scale the plan so it is at least ~1.7× the
-       viewport wide so rooms keep a tappable size; the wrap scrolls horizontally
-       to reveal the rest, while the page itself never overflows. */
-    min-width: 170vw;
-    flex: 0 0 auto;
     aspect-ratio: 1680 / 700;
   }
 
