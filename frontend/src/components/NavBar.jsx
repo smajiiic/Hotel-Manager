@@ -6,11 +6,10 @@ import '../styles/navbar.css'
 const linksByRole = {
   reception: ['tasks', 'requests', 'rooms', 'bookings'],
   cleaning: ['tasks', 'requests', 'rooms'],
-  manager: ['dashboard', 'tasks', 'requests', 'rooms', 'bookings'],
+  manager: ['tasks', 'requests', 'rooms', 'bookings'],
 }
 
 const labels = {
-  dashboard: 'Dashboard',
   tasks: 'Tasks',
   requests: 'Requests',
   rooms: 'Rooms',
@@ -80,6 +79,10 @@ function NavBar() {
           className={`navbar-collapse ${menuOpen ? 'is-open' : ''}`}
         >
           <nav className="navbar-links" aria-label="Main">
+            {/* Single link back to the role-aware dashboard home */}
+            <NavLink to="/" end className="navbar-link" onClick={close}>
+              Dashboard
+            </NavLink>
             {links.map((key) => (
               <NavLink
                 key={key}

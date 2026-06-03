@@ -1,0 +1,42 @@
+.ibh-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 0 0 18px;
+}
+
+.ibh-metric {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2ddd0);
+  border-left-width: 4px;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ibh-metric-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary, #5a7d74);
+}
+
+.ibh-metric-value {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-text-primary, #0a4a3a);
+  font-variant-numeric: tabular-nums;
+}
+
+.ibh-metric.tone-available { border-left-color: #1f7a3c; }
+.ibh-metric.tone-occupied { border-left-color: #a01b1b; }
+.ibh-metric.tone-cleaning { border-left-color: #8a5a00; }
+.ibh-metric.tone-teal { border-left-color: var(--ibh-teal, #0f6e56); }
+
+@media (max-width: 640px) {
+  .ibh-metrics { grid-template-columns: repeat(2, 1fr); }
+}

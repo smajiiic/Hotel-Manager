@@ -28,24 +28,24 @@ function renderNavBar({ role, logout = vi.fn() }) {
 beforeEach(() => vi.clearAllMocks())
 
 describe('NavBar — role-aware nav links', () => {
-  test('reception sees Tasks, Requests, Rooms, Bookings (no Dashboard)', () => {
+  test('reception sees Dashboard, Tasks, Requests, Rooms, Bookings', () => {
     renderNavBar({ role: 'reception' })
 
+    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^tasks$/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^requests$/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^rooms$/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^bookings$/i })).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
   })
 
-  test('cleaning sees Tasks, Requests, Rooms (no Bookings, no Dashboard)', () => {
+  test('cleaning sees Dashboard, Tasks, Requests, Rooms (no Bookings)', () => {
     renderNavBar({ role: 'cleaning' })
 
+    expect(screen.getByRole('link', { name: /^dashboard$/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^tasks$/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^requests$/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^rooms$/i })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /^bookings$/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /^dashboard$/i })).not.toBeInTheDocument()
   })
 
   test('manager sees Dashboard, Tasks, Requests, Rooms, Bookings', () => {
