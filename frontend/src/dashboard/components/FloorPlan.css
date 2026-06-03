@@ -113,6 +113,17 @@
    so it scales fluidly to the available width and the rooms stay as large as the
    width allows. */
 @media (max-width: 900px) {
+  /* The plan card must size to its content, NOT stretch with flex:1. In views
+     where the plan sits at the bottom of a tall scrolling stack (e.g. the
+     manager dashboard), flex:1 has no free space to grow into and collapses the
+     card to ~0 height, clipping the plan and leaving only a green sliver of the
+     Booking-mode button. Sizing to content keeps the plan fully visible; on
+     mobile the SVG is width-constrained, so this loses nothing in fullscreen. */
+  .ibh-plan-card {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
   /* Stop the wrap from forcing a fixed letterbox height; let it grow to the
      SVG's intrinsic (aspect-ratio) height instead. */
   .ibh-floorplan-wrap {
